@@ -15,6 +15,7 @@
 		5F0D159126B9492B00469A09 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0D159026B9492B00469A09 /* AuthModel.swift */; };
 		5F0D159326B9494800469A09 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0D159226B9494800469A09 /* AuthViewModel.swift */; };
 		5F0D159826B955AA00469A09 /* userAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0D159726B955AA00469A09 /* userAuth.swift */; };
+		5F82904926B989B20091FEB0 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F82904826B989B20091FEB0 /* LoginView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		5F0D159026B9492B00469A09 /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
 		5F0D159226B9494800469A09 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		5F0D159726B955AA00469A09 /* userAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = userAuth.swift; sourceTree = "<group>"; };
+		5F82904826B989B20091FEB0 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 			children = (
 				5F0D157E26B948E400469A09 /* SceneDelegate.swift */,
 				5F0D157C26B948E400469A09 /* AppDelegate.swift */,
+				5F82904726B989850091FEB0 /* View */,
 				5F0D159426B9495300469A09 /* ViewModel */,
 				5F0D159526B9496400469A09 /* Model */,
 				5F0D159626B9559600469A09 /* Manager */,
@@ -95,6 +98,14 @@
 				5F0D159726B955AA00469A09 /* userAuth.swift */,
 			);
 			path = Manager;
+			sourceTree = "<group>";
+		};
+		5F82904726B989850091FEB0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				5F82904826B989B20091FEB0 /* LoginView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,6 +178,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F82904926B989B20091FEB0 /* LoginView.swift in Sources */,
 				5F0D159826B955AA00469A09 /* userAuth.swift in Sources */,
 				5F0D159326B9494800469A09 /* AuthViewModel.swift in Sources */,
 				5F0D157D26B948E400469A09 /* AppDelegate.swift in Sources */,

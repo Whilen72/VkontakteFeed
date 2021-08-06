@@ -1,17 +1,30 @@
 //
-//  userAuth.swift
+//  LoginView.swift
 //  VkontakteFeed
 //
 //  Created by Alexey Kniazev on 3.08.21.
 //
 
-import Foundation
+import UIKit
 import AuthenticationServices
 
-class Auth {
+class LoginView: UIViewController, ASWebAuthenticationPresentationContextProviding {
     
-    let urlAuth = "https://oauth.vk.com/authorize?client_id=7918001&display=mobile&redirect_uri=https://vk.com/feed&response_type=token"
-
+    @IBOutlet weak var loginButtonOutlet: UIButton!
+    
+    @IBAction func loginAction(_ sender: Any) {
+        getAuthTokenWithWebLogin()
+    }
+    
+//    private var logginButton: UIButton = {
+//        var button = UIButton()
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.setTitle("Loggin in to VK", for: .normal)
+//        button.backgroundColor = .black
+//        return button
+//    }()
+    
+    
     var webAuthSession: ASWebAuthenticationSession?
     //...
     
@@ -32,8 +45,16 @@ class Auth {
             // Do what you now that you've got the token, or use the callBack URL
             print(oauthToken ?? "No OAuth Token")
         })
-      //  self.webAuthSession?.presentationContextProvider = context
+      //  
         // Kick it off
+        self.webAuthSession?.presentationContextProvider = self
         self.webAuthSession?.start()
         }
+    
+    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
+            return self.view.window ?? ASPresentationAnchor()
     }
+    
+  
+    
+}
