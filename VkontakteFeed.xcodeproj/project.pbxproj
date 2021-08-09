@@ -13,9 +13,13 @@
 		5F0D158626B948E500469A09 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F0D158526B948E500469A09 /* Assets.xcassets */; };
 		5F0D158926B948E500469A09 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F0D158726B948E500469A09 /* LaunchScreen.storyboard */; };
 		5F0D159126B9492B00469A09 /* AuthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0D159026B9492B00469A09 /* AuthModel.swift */; };
-		5F0D159326B9494800469A09 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0D159226B9494800469A09 /* AuthViewModel.swift */; };
 		5F0D159826B955AA00469A09 /* userAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0D159726B955AA00469A09 /* userAuth.swift */; };
-		5F82904926B989B20091FEB0 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F82904826B989B20091FEB0 /* LoginView.swift */; };
+		5F2A008726BD871000965A84 /* FriendsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2A008626BD871000965A84 /* FriendsCell.swift */; };
+		5F2A008926BEA20000965A84 /* FriendsListNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2A008826BEA20000965A84 /* FriendsListNetwork.swift */; };
+		5F2ACFA826BD480B002585F0 /* FrindesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2ACFA726BD480B002585F0 /* FrindesListView.swift */; };
+		5F2ACFAF26BD69C8002585F0 /* FriendsListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2ACFAE26BD69C8002585F0 /* FriendsListModel.swift */; };
+		5F82904926B989B20091FEB0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F82904826B989B20091FEB0 /* LoginViewController.swift */; };
+		5FB2D2F926C14FFB0088490E /* AuthWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB2D2F826C14FFB0088490E /* AuthWebViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,9 +31,13 @@
 		5F0D158826B948E500469A09 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5F0D158A26B948E500469A09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5F0D159026B9492B00469A09 /* AuthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthModel.swift; sourceTree = "<group>"; };
-		5F0D159226B9494800469A09 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
 		5F0D159726B955AA00469A09 /* userAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = userAuth.swift; sourceTree = "<group>"; };
-		5F82904826B989B20091FEB0 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		5F2A008626BD871000965A84 /* FriendsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsCell.swift; sourceTree = "<group>"; };
+		5F2A008826BEA20000965A84 /* FriendsListNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListNetwork.swift; sourceTree = "<group>"; };
+		5F2ACFA726BD480B002585F0 /* FrindesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrindesListView.swift; sourceTree = "<group>"; };
+		5F2ACFAE26BD69C8002585F0 /* FriendsListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListModel.swift; sourceTree = "<group>"; };
+		5F82904826B989B20091FEB0 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		5FB2D2F826C14FFB0088490E /* AuthWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthWebViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +87,7 @@
 		5F0D159426B9495300469A09 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				5F0D159226B9494800469A09 /* AuthViewModel.swift */,
+				5F2ACFAB26BD4832002585F0 /* FriendsListViewModel */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -88,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				5F0D159026B9492B00469A09 /* AuthModel.swift */,
+				5F2ACFAE26BD69C8002585F0 /* FriendsListModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -100,10 +109,29 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
+		5F2A008526BD86F600965A84 /* FriendsList */ = {
+			isa = PBXGroup;
+			children = (
+				5F2ACFA726BD480B002585F0 /* FrindesListView.swift */,
+				5F2A008626BD871000965A84 /* FriendsCell.swift */,
+			);
+			path = FriendsList;
+			sourceTree = "<group>";
+		};
+		5F2ACFAB26BD4832002585F0 /* FriendsListViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				5F2A008826BEA20000965A84 /* FriendsListNetwork.swift */,
+			);
+			path = FriendsListViewModel;
+			sourceTree = "<group>";
+		};
 		5F82904726B989850091FEB0 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				5F82904826B989B20091FEB0 /* LoginView.swift */,
+				5F82904826B989B20091FEB0 /* LoginViewController.swift */,
+				5FB2D2F826C14FFB0088490E /* AuthWebViewController.swift */,
+				5F2A008526BD86F600965A84 /* FriendsList */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -178,9 +206,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F82904926B989B20091FEB0 /* LoginView.swift in Sources */,
+				5F2A008726BD871000965A84 /* FriendsCell.swift in Sources */,
+				5F82904926B989B20091FEB0 /* LoginViewController.swift in Sources */,
+				5F2A008926BEA20000965A84 /* FriendsListNetwork.swift in Sources */,
+				5FB2D2F926C14FFB0088490E /* AuthWebViewController.swift in Sources */,
 				5F0D159826B955AA00469A09 /* userAuth.swift in Sources */,
-				5F0D159326B9494800469A09 /* AuthViewModel.swift in Sources */,
+				5F2ACFA826BD480B002585F0 /* FrindesListView.swift in Sources */,
+				5F2ACFAF26BD69C8002585F0 /* FriendsListModel.swift in Sources */,
 				5F0D157D26B948E400469A09 /* AppDelegate.swift in Sources */,
 				5F0D157F26B948E400469A09 /* SceneDelegate.swift in Sources */,
 				5F0D159126B9492B00469A09 /* AuthModel.swift in Sources */,

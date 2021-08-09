@@ -5,4 +5,8 @@
 //  Created by Alexey Kniazev on 6.08.21.
 //
 
-import Foundation
+import UIKit
+
+class FriendsCell: UITableViewCell {
+    
+}
