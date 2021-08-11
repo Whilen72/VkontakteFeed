@@ -7,11 +7,13 @@
 
 import Foundation
 
-struct loginModel {
+struct authorizeUrl: Codable {
+    var authorize_url = [loginModel]()
+}
+
+struct loginModel: Codable {
    var access_token: String
-   var expires_in: Int
-   var user_id: Int
-    
-    
+   var expires_in: String
+   var user_id: String
 }
 

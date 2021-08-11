@@ -9,7 +9,7 @@ import Foundation
 import AuthenticationServices
 
 class Auth {
-    
+    static 
     let urlAuth = "https://oauth.vk.com/authorize?client_id=7918001&display=mobile&redirect_uri=https://vk.com/feed&response_type=token"
 
     var webAuthSession: ASWebAuthenticationSession?
