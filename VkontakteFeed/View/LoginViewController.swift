@@ -7,6 +7,7 @@
 
 import UIKit
 import WebKit
+import Foundation
 
 class LoginView: UIViewController, WKUIDelegate {
     
@@ -19,7 +20,7 @@ class LoginView: UIViewController, WKUIDelegate {
     var key = "com.example.www.token"
     let header = "access_token"
     let webView = WKWebView(frame: .zero)
-    var authorizeData: String = ""
+    var valueArray = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +50,11 @@ class LoginView: UIViewController, WKUIDelegate {
 
             webView.load(request)
     }
+    func goToFriendsList() {
+        let vc = FriendListController()
+        present(vc, animated: true, completion: nil)
+        
+    }
 
 }
 // authorize_url https%3A%2F%2Foauth.vk.com%2Fblank.html%23access_token%3D29a510bd74dfe5340e737a772db5879d11c03a367203cb0a7ce63d362f850f0dbae1de0a64961d8c28e34%26expires_in%3D86400%26user_id%3D189129628“
@@ -57,29 +63,24 @@ extension LoginView: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         let token = (navigationResponse.response as! HTTPURLResponse).allHeaderFields[header] as? String
         if let urlComponents = URLComponents(url: navigationResponse.response.url!, resolvingAgainstBaseURL: true),let queryItems = urlComponents.queryItems {
-
-            // for example, we will get the first item name and value:
-            let name = queryItems[1].name
-            let value = queryItems[1].value
-            let hostName = urlComponents.host
-            print(name,"\n value is ///////// ", value!)
-            print("/////////////////////////////////// \n", hostName!, "\n ///////////////////////////////// \n")
-            // response -> URL->String take token and expirasion
-            authorizeData = value!
-            
-        }
-//             if let str = queryItems[1].value {
-//                let arr = str.components(separatedBy:"&")
-//                var data = [String:Any]()
-//                for row in arr {
-//                    let pairs = row.components(separatedBy:"=")
-//                    data[pairs[0]] = pairs[1]
-//            }
-//                let message = data["access_token"]
-//                let sig = data["signature"]
-//                print(message!, sig!)
-//        }
-//        
+          
+          let value = queryItems[1].value
+          let stringResult = value!.contains(header)
+          
+          if stringResult == true {
+             let encodedString =  value?.removingPercentEncoding
+            let separators = CharacterSet(charactersIn: "&=")
+             let stringArray = encodedString?.components(separatedBy: separators)
+                                               
+            Network.accessToken = (stringArray![1])
+            Network.expireTime = (stringArray![3])
+            Network.userId = (stringArray![5])
+            goToFriendsList()
+            }
+                  //  response -> URL -> String take token and expirasion
+           
+           
+        
        if (token != nil) {
             if (UserDefaults.standard.string(forKey: key) != nil) {
                     UserDefaults.standard.removeObject(forKey: key)
@@ -90,9 +91,9 @@ extension LoginView: WKNavigationDelegate {
 
       decisionHandler(.allow)
         }
-    
-    
-    
-    
+
     }
+
+}
+    
 
