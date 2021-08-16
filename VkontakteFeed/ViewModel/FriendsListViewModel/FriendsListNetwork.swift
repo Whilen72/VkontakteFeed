@@ -15,7 +15,7 @@ class Network {
     static var accessToken = ""
     static var expireTime = ""
     static var userId = ""
-    
+    //
     let urlString = "https://api.vk.com/friends.get?params&user_id="+userId+"&params?order=name&paramscount=1&params?offset=5&params?fields=city&params?name_case=ins&params&access_token="+accessToken+"&v=5.131"
  var people = [Item]()
     
