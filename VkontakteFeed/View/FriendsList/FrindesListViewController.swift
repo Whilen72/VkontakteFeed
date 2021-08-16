@@ -16,13 +16,19 @@ class FriendListController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Network.shared.getList {
-            self.tableView.reloadData()
+        Network.shared.getList {[weak self] (result) in
+            switch result {
+            case .success(let listOf):
+                self?.data = listOf.items ?? []
+
+            case .failure(let error):
+                // Something is wrong with the JSON file or the model
+                print("Error processing json data: \(error)")
+            }
+            self!.tableView.reloadData()
         }
         tableView.dataSource = self
         tableView.delegate = self
-        
-        
     }
     
 }
@@ -36,7 +42,7 @@ extension FriendListController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
                 
         let cell = tableView.dequeueReusableCell(withIdentifier: "friendsCell", for: indexPath) as! FriendsCell
-        cell.nameLabel.text = data[indexPath.row].firstName
+        cell.nameLabel.text = "\(data[indexPath.row].id)"
       
         return cell
     }

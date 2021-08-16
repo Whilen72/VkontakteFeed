@@ -7,19 +7,30 @@
 
 import Foundation
 
-struct FreindsList: Codable {
-    let count: Int?
+struct FriendsList: Decodable {
+    let count: Int
     let items: [Item]?
 }
 
 // MARK: - Item
-struct Item: Codable {
-    let firstName: String?
-    let id: Int?
-    let lastName: String?
-    let canAccessClosed, isClosed: Bool?
-    let trackCode: String?
+struct Item: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case firstName = "first_name"
+        case id
+        case lastName = "last_name"
+        case canAccessClosed = "can_access_closed"
+        case trackCode = "track_code"
+        case photo_50
+        case isClosed = "is_closed"
+    }
 
+    let firstName: String?
+    let id: Int
+    let lastName: String?
+    let canAccessClosed: Bool?
+    let isClosed: Bool?
+    let trackCode: String
+    let photo_50: String?
 }
 
 
