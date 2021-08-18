@@ -7,7 +7,15 @@
 
 import Foundation
 
-struct  CurrentUser {
-   var id: String
-   var name: String
+struct Response: Decodable {
+    var response: [CurrentUser]?
 }
+
+struct  CurrentUser: Decodable {
+    let firstName: String?
+    let id: Int?
+    let lastName: String?
+}
+
+
+

@@ -12,17 +12,17 @@ class FriendListController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
    
-    var data = [Item]()
+   private var data = [Item]()
+    
+    // MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        Network.shared.getList {[weak self] (result) in //remove from viewDidLoad in to method
+        NetworkManager.shared.getList {[weak self] (result) in //remove from viewDidLoad in to method
             switch result {
             case .success(let listOf):
                 self?.data = listOf.items ?? []
-
             case .failure(let error):
-                
                 print("Error processing json data: \(error)")
             }
             self!.tableView.reloadData()
@@ -41,7 +41,8 @@ class FriendListController: UIViewController {
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
     }
-
+        
+    
 
 }
 
