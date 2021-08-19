@@ -10,10 +10,10 @@ import UIKit
 class FriendsCell: UITableViewCell {
     
       let nameLabel: UILabel = {
-        let labelText = UILabel()
-        labelText.numberOfLines = 1
-        labelText.textAlignment = .left
-        return labelText
+        let nameLabel = UILabel()
+        nameLabel.numberOfLines = 1
+        nameLabel.textAlignment = .left
+        return nameLabel
     }()
     
     var iconImageView: UIImageView = {

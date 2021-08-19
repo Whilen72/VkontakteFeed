@@ -12,9 +12,9 @@ struct Response: Decodable {
 }
 
 struct  CurrentUser: Decodable {
-    let firstName: String?
-    let id: Int?
-    let lastName: String?
+    let firstName: String
+    let id: Int
+    let lastName: String
 }
 
 
