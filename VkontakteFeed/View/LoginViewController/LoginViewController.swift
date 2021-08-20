@@ -61,22 +61,33 @@ extension LoginViewController: WKNavigationDelegate {
             let encodedString = value?.removingPercentEncoding
             var stringArray = encodedString?.components(separatedBy: "#")
             stringArray?.removeFirst()
-            let separators = CharacterSet(charactersIn: "&=")
-            for element: String in stringArray ?? [] {
-                stringArray = element.components(separatedBy: separators)
-            }
-            let indexesToBeRemoved: Set = [0, 2, 4]
-            stringArray = stringArray?
-                .enumerated()
-                .filter{ !indexesToBeRemoved.contains($0.offset) }
-                .map { $0.element }
-            let fetchToken =  Token(accessToken: stringArray![0], userId: stringArray![2], expiresIn: stringArray![1])
-            NetworkManager.shared.token = fetchToken
-            goToFriendsList()
+            let separators = CharacterSet(charactersIn: "&")
+            if stringArray!.count > 0 {
+               let paramString = stringArray!.first
+               let paramArray = paramString!.components(separatedBy: separators)
+               var paramDict = [String: String]()
+               for element in paramArray {
+                   if element.contains("access_token") {
+                        let accessToken = element.components(separatedBy: "=")
+                        paramDict[accessToken[0]] = accessToken[1]
+                   }
+                   if element.contains("expires_in") {
+                        let expires_in = element.components(separatedBy: "=")
+                        paramDict[expires_in[0]] = expires_in[1]
+                   }
+                   if element.contains("user_id") {
+                        let user_id = element.components(separatedBy: "=")
+                        paramDict[user_id[0]] = user_id[1]
+                   }
+               }
+                       
+                let fetchToken =  Token(accessToken: paramDict["access_token"]!, userId: paramDict["user_id"]!, expiresIn: paramDict["expires_in"]!)
+                NetworkManager.shared.token = fetchToken
+                goToFriendsList()
           }
         }
         decisionHandler(.allow)
     }
+  }
 }
-    
 

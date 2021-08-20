@@ -17,8 +17,6 @@ class NetworkManager {
     
     
     var token: Token?
-    let defaults = UserDefaults.standard
-
     private let baseUrl: String = "https://api.vk.com/method/"
 
     
@@ -98,41 +96,31 @@ class NetworkManager {
         }.resume()
     }
 
-    func checkExpireTime() {
-        
-        let expireTime = token?.expiresIn
-        let expireTimeDouble = (expireTime! as NSString).doubleValue
-        let date = Date()
-        let expireDate = date.addingTimeInterval(expireTimeDouble)
-        let savedExpireDate = defaults.object(forKey: "expire") as? Date
-        if savedExpireDate != expireDate {
-            defaults.set(token?.expiresIn, forKey: "expire") // And? for what im done that?
-            
-        }
-        
-        
+    func getHomeViewData (completion: @escaping (Result<Response, Error>)->(Void)) {
+        let param = ["":""]
+        let url = buildMethodURL(method: "users.get", params: param)
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                let decoder = JSONDecoder()
+                do {
+                    let responseModel = try decoder.decode(MainScreen.self, from: data!) // why SELF here?
+                    DispatchQueue.main.async {
+                        completion(.success(responseModel.response))
+                    }
+                } catch let error {
+                    print(error.localizedDescription)
+                }
+            }
+        }.resume()
     }
-//    func checkExpireTime() {
-//
-//        let expireTime = token?.accessToken
-//        let expireTimeDouble = (expireTime! as NSString).doubleValue
-//        let date = Date()
-//        let expireDate = date.addingTimeInterval(TimeInterval(expireTimeDouble/60))
-//
-//
-//        //let date = startDate.addingTimeInterval(TimeInterval(5.0 * 60.0))
-//    }
-
-
 }
 
     
 
 
-//https://api.vk.com/method/users.get?access_token=fee561901a977452bdab205dbedc0d6910cf1489803617c27fefc9b1c174f18b733e97213e75a06a57679&v=5.131
 
-//let expireTime = token.expireIn
-//let expireTimeDouble = (expireTime as NSString).doubleValue
 
 
 
