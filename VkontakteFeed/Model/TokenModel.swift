@@ -8,7 +8,7 @@
 import Foundation
 
 struct TokenModel {
-    let token: [Token]
+    let token: [Token]?
 }
 
 struct Token {

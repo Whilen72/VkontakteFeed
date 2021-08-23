@@ -20,6 +20,7 @@ class NetworkManager {
     private let baseUrl: String = "https://api.vk.com/method/"
 
     
+    
 // func is logged
 
     enum GetListFields: String, CaseIterable {
@@ -75,8 +76,8 @@ class NetworkManager {
         guard let url = URL.init(string: methodStr) else { fatalError() }
         return url
     }
-    
-    func getCurrentUser (completion: @escaping (Result<Response, Error>)->(Void)){
+  /*
+    func getCurrentUser (completion: @escaping (Result<Response, Error>)->(Void)) {
         let param = ["":""]
         let url = buildMethodURL(method: "account.getProfileInfo", params: param)
         URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -95,21 +96,36 @@ class NetworkManager {
             }
         }.resume()
     }
-
-    func getHomeViewData (completion: @escaping (Result<Response, Error>)->(Void)) {
-        let param = ["":""]
-        let url = buildMethodURL(method: "users.get", params: param)
+*/
+    enum getUserDataFields: String, CaseIterable {
+        case photo_400_orig, followers_count, city, online, bdate
+    }
+    
+    func getUserData (fields: [getUserDataFields] = [.photo_400_orig, .followers_count, .city, .online, .bdate], completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
+        let params: [String: String] = [
+            "fields": fields.map({ $0.rawValue }).joined(separator:",")]
+        let url = buildMethodURL(method: "users.get", params: params)
         URLSession.shared.dataTask(with: url) { (data, response, error) in
+            print(url)
             if let error = error {
                 completion(.failure(error))
             } else {
                 let decoder = JSONDecoder()
                 do {
-                    let responseModel = try decoder.decode(MainScreen.self, from: data!) // why SELF here?
-                    DispatchQueue.main.async {
-                        completion(.success(responseModel.response))
+                    struct Response: Decodable {
+                        let response: [UserInfo]?
                     }
+                    if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
+                        print(json)
+                    }
+                    let responseModel = try decoder.decode(Response.self, from: data!)
+                    print(responseModel)
+                    DispatchQueue.main.async {
+                        completion(.success(responseModel.response?.first))
+                    }
+                    
                 } catch let error {
+                    
                     print(error.localizedDescription)
                 }
             }

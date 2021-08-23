@@ -18,6 +18,9 @@ class FriendListController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NetworkManager.shared.getUserData {[weak self] (result) in
+            print("asdasdasd")
+        }
         NetworkManager.shared.getList {[weak self] (result) in //remove from viewDidLoad in to method
             switch result {
             case .success(let listOf):

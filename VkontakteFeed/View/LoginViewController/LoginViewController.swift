@@ -13,7 +13,7 @@ class LoginViewController: UIViewController, WKUIDelegate {
         
     @IBOutlet weak var loginButtonOutlet: UIButton!
    
-    let controllerInditefire = "friendsList"
+    let controllerInditefire = "HomeViewController"
 
         // MARK: - viewDidLoad
     override func viewDidLoad() {
@@ -42,11 +42,10 @@ class LoginViewController: UIViewController, WKUIDelegate {
             webView.load(request)
         }
     
-    private func goToFriendsList() {
-        let vc = self.storyboard!.instantiateViewController(withIdentifier: controllerInditefire) as! FriendListController
+    private func goToHomeViewController() {
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: controllerInditefire) as! HomeViewController
         vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true, completion: nil) // add navigation controller
-
+        present(vc, animated: true, completion: nil)
         }
 }
 
@@ -83,11 +82,11 @@ extension LoginViewController: WKNavigationDelegate {
                        
                 let fetchToken =  Token(accessToken: paramDict["access_token"]!, userId: paramDict["user_id"]!, expiresIn: paramDict["expires_in"]!)
                 NetworkManager.shared.token = fetchToken
-                goToFriendsList()
+                goToHomeViewController()
+            }
           }
         }
         decisionHandler(.allow)
     }
-  }
 }
 

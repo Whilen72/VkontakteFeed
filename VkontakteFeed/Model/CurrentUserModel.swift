@@ -7,10 +7,6 @@
 
 import Foundation
 
-struct Response: Decodable {
-    var response: [CurrentUser]?
-}
-
 struct  CurrentUser: Decodable {
     let firstName: String
     let id: Int
