@@ -24,13 +24,19 @@ struct UserInfo: Decodable {
     let id: Int
     let last_name: String
     let online: Int
-    let city: [City]
+    let city: City
     let photo_400_orig: String
     let followers_count: Int
     let bdate: String
 }
 
 struct City: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+    }
+
+    let id: Int
     let title: String
 }
   

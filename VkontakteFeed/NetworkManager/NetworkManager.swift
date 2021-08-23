@@ -118,19 +118,20 @@ class NetworkManager {
                     if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
                         print(json)
                     }
-                    let responseModel = try decoder.decode(Response.self, from: data!)
+                    let responseModel = try! decoder.decode(Response.self, from: data!)
                     print(responseModel)
                     DispatchQueue.main.async {
                         completion(.success(responseModel.response?.first))
                     }
                     
                 } catch let error {
-                    
                     print(error.localizedDescription)
+                    completion(.failure(error))
                 }
             }
         }.resume()
     }
+
 }
 
     
