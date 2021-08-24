@@ -76,17 +76,24 @@ class NetworkManager {
         guard let url = URL.init(string: methodStr) else { fatalError() }
         return url
     }
-  /*
-    func getCurrentUser (completion: @escaping (Result<Response, Error>)->(Void)) {
+  
+    func getCurrentUser (completion: @escaping (Result<CurrentUser, Error>)->(Void)) {
         let param = ["":""]
         let url = buildMethodURL(method: "account.getProfileInfo", params: param)
+        print(url)
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let error = error {
                 completion(.failure(error))
             } else {
                 let decoder = JSONDecoder()
                 do {
-                    let responceModel = try decoder.decode(Response.self, from: data!)
+                    struct Response: Decodable {
+                        let response: [CurrentUser]?
+                    }
+                    if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
+                        print(json)
+                    }
+                    let responceModel = try decoder.decode(CurrentUser.self, from: data!)
                     DispatchQueue.main.async {
                         completion(.success(responceModel))
                     }
@@ -96,7 +103,7 @@ class NetworkManager {
             }
         }.resume()
     }
-*/
+
     enum getUserDataFields: String, CaseIterable {
         case photo_400_orig, followers_count, city, online, bdate
     }
@@ -106,7 +113,6 @@ class NetworkManager {
             "fields": fields.map({ $0.rawValue }).joined(separator:",")]
         let url = buildMethodURL(method: "users.get", params: params)
         URLSession.shared.dataTask(with: url) { (data, response, error) in
-            print(url)
             if let error = error {
                 completion(.failure(error))
             } else {
@@ -115,12 +121,11 @@ class NetworkManager {
                     struct Response: Decodable {
                         let response: [UserInfo]?
                     }
-                    if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
-                        print(json)
-                    }
+//                    if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
+//                        print(json)
+//                    }
                     let responseModel = try! decoder.decode(Response.self, from: data!)
-                    print(responseModel)
-                    DispatchQueue.main.async {
+                        DispatchQueue.main.async {
                         completion(.success(responseModel.response?.first))
                     }
                     

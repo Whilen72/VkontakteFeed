@@ -25,7 +25,7 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addNavigationViewController()
+        getCurrentUser()
         launchScreen()
         takeResult()
     }
@@ -53,32 +53,32 @@ class HomeViewController: UIViewController {
 
     }
 
-    private func addNavigationViewController() {
-        let naVC = UINavigationController(rootViewController: self)
-        naVC.title = "Home page"
+    private func getCurrentUser() {
+        NetworkManager.shared.getCurrentUser { [weak self] (result) in
+            print(result)
+        }
     }
+    
+    private func launchScreen() {
+        imageView.contentMode = .scaleAspectFill
+        nameLabel.font = nameLabel.font.withSize(20)
+        nameLabel.textColor = .white
 
-   private func launchScreen() {
-    imageView.contentMode = .scaleAspectFill
+        isOnlineLabel.font = isOnlineLabel.font.withSize(8)
+        isOnlineLabel.textColor = .white
 
-    nameLabel.font = nameLabel.font.withSize(20)
-    nameLabel.textColor = .white
+        bDateLabel.font = bDateLabel.font.withSize(14)
+        cityLabel.font = cityLabel.font.withSize(14)
+        followersCounterLabel.font =  followersCounterLabel.font.withSize(14)
 
-    isOnlineLabel.font = isOnlineLabel.font.withSize(8)
-    isOnlineLabel.textColor = .white
+        imageCity.contentMode = .scaleToFill
+        imageCity.image = UIImage(systemName: "house")
 
-    bDateLabel.font = bDateLabel.font.withSize(14)
-    cityLabel.font = cityLabel.font.withSize(14)
-    followersCounterLabel.font =  followersCounterLabel.font.withSize(14)
+        imageFollowers.contentMode = .scaleToFill
+        imageFollowers.image = UIImage(systemName: "person.circle")
 
-    imageCity.contentMode = .scaleToFill
-    imageCity.image = UIImage(systemName: "house")
-
-    imageFollowers.contentMode = .scaleToFill
-    imageFollowers.image = UIImage(systemName: "person.circle")
-
-    imageBdate.contentMode = .scaleToFill
-    imageBdate.image = UIImage(systemName: "giftcard")
+        imageBdate.contentMode = .scaleToFill
+        imageBdate.image = UIImage(systemName: "giftcard")
 
 
     }
