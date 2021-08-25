@@ -21,6 +21,7 @@
 		5F7D833E26CD365A003AB124 /* QandA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D833D26CD365A003AB124 /* QandA.swift */; };
 		5F7D834526CE8CEE003AB124 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D834426CE8CEE003AB124 /* HomeViewController.swift */; };
 		5F7D834726CE916F003AB124 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D834626CE916F003AB124 /* HomeViewModel.swift */; };
+		5F7D834926D533B0003AB124 /* PhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D834826D533B0003AB124 /* PhotoModel.swift */; };
 		5F82904926B989B20091FEB0 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F82904826B989B20091FEB0 /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 		5F7D833D26CD365A003AB124 /* QandA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QandA.swift; sourceTree = "<group>"; };
 		5F7D834426CE8CEE003AB124 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		5F7D834626CE916F003AB124 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		5F7D834826D533B0003AB124 /* PhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoModel.swift; sourceTree = "<group>"; };
 		5F82904826B989B20091FEB0 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -95,6 +97,7 @@
 				58EED4DC26CA8AFC0032CA57 /* TokenModel.swift */,
 				58EED4DE26CA8B0E0032CA57 /* CurrentUserModel.swift */,
 				5F7D834626CE916F003AB124 /* HomeViewModel.swift */,
+				5F7D834826D533B0003AB124 /* PhotoModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -223,6 +226,7 @@
 				5F7D834526CE8CEE003AB124 /* HomeViewController.swift in Sources */,
 				5F7D833E26CD365A003AB124 /* QandA.swift in Sources */,
 				5F0D157D26B948E400469A09 /* AppDelegate.swift in Sources */,
+				5F7D834926D533B0003AB124 /* PhotoModel.swift in Sources */,
 				5F0D157F26B948E400469A09 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

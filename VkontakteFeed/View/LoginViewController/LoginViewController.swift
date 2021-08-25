@@ -44,9 +44,8 @@ class LoginViewController: UIViewController, WKUIDelegate {
     
     private func goToHomeViewController() {
         let vc = self.storyboard!.instantiateViewController(withIdentifier: controllerInditefire) as! HomeViewController
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true, completion: nil)
-        }
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 extension LoginViewController: WKNavigationDelegate {

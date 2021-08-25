@@ -18,22 +18,17 @@ class NetworkManager {
     
     var token: Token?
     private let baseUrl: String = "https://api.vk.com/method/"
-
     
-    
-// func is logged
-
     enum GetListFields: String, CaseIterable {
         case photo_50
     }
-    func getList(offset: Int = 0, count: Int = 20, fields: [GetListFields] = [.photo_50], completion: @escaping (Result<FriendsList, Error>)->(Void)) {
+    func getList(offset: Int = 0, count: Int = 500, fields: [GetListFields] = [.photo_50], completion: @escaping (Result<FriendsList, Error>)->(Void)) {
         let params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:","),
             "name_case": "nom",
             "offset": "\(offset)",
             "count": "\(count)",
             "order": "name",
-            "user_id": "11799823",
         ]
 
         let url = buildMethodURL(method: "friends.get", params: params)
@@ -46,7 +41,10 @@ class NetworkManager {
                     struct Responce: Decodable {
                         let response: FriendsList
                     }
-                    let responceModel = try decoder.decode(Responce.self, from: data!)
+//                    if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
+//                        print(json)
+//                    }
+                    let responceModel = try! decoder.decode(Responce.self, from: data!)
                     DispatchQueue.main.async {
                         completion(.success(responceModel.response))
                     }
@@ -90,9 +88,6 @@ class NetworkManager {
                     struct Response: Decodable {
                         let response: [CurrentUser]?
                     }
-                    if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
-                        print(json)
-                    }
                     let responceModel = try decoder.decode(CurrentUser.self, from: data!)
                     DispatchQueue.main.async {
                         completion(.success(responceModel))
@@ -105,10 +100,10 @@ class NetworkManager {
     }
 
     enum getUserDataFields: String, CaseIterable {
-        case photo_400_orig, followers_count, city, online, bdate
+        case photo_max_orig, followers_count, city, online, bdate
     }
     
-    func getUserData (fields: [getUserDataFields] = [.photo_400_orig, .followers_count, .city, .online, .bdate], completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
+    func getUserData (fields: [getUserDataFields] = [.photo_max_orig, .followers_count, .city, .online, .bdate], completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
         let params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:",")]
         let url = buildMethodURL(method: "users.get", params: params)
@@ -121,14 +116,10 @@ class NetworkManager {
                     struct Response: Decodable {
                         let response: [UserInfo]?
                     }
-//                    if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
-//                        print(json)
-//                    }
                     let responseModel = try! decoder.decode(Response.self, from: data!)
                         DispatchQueue.main.async {
                         completion(.success(responseModel.response?.first))
                     }
-                    
                 } catch let error {
                     print(error.localizedDescription)
                     completion(.failure(error))
@@ -136,9 +127,33 @@ class NetworkManager {
             }
         }.resume()
     }
-
+    func getAlbum(offset: Int = 0, count: Int = 500, completion: @escaping (Result<[SizeAndPhotoUrl], Error>)->(Void)) {
+        let params: [String: String] = [
+            "album_id": "profile",
+            "offset": "\(offset)",
+            "count": "\(count)",
+        ]
+        let url = buildMethodURL(method: "photos.get", params: params)
+        URLSession.shared.dataTask(with: url) { (data, response, error) in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                let decoder = JSONDecoder()
+                do {
+                    struct Response: Decodable {
+                        let response: Photos
+                    }
+                    let responseModel = try? decoder.decode(Response.self, from: data!)
+                    DispatchQueue.main.async {
+                        completion(.success(responseModel!.response.items?.first?.sizes ?? []))
+                    }
+                } catch let error {
+                    completion(.failure(error))
+                }
+            }
+        }.resume()
+    }
 }
-
     
 
 
