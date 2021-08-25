@@ -121,12 +121,11 @@ class HomeViewController: UIViewController {
 
     private func launchScreen() {
        
-        view.backgroundColor = .systemTeal
-        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.systemChromeMaterial)
-        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-        blurEffectView.frame = view.bounds
-        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(blurEffectView)
+//        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.regular)
+//        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+//        blurEffectView.frame = view.bounds
+//        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+//        view.addSubview(blurEffectView)
         
         view.addSubview(imageView)
         imageView.contentMode = .scaleToFill
@@ -249,5 +248,21 @@ class HomeViewController: UIViewController {
     private func goToFriendsListController() {
         let vc = self.storyboard!.instantiateViewController(withIdentifier: controllerInditefire) as! FriendListController
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func hexStringToUIColor (hex:String) -> UIColor {
+        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        if (cString.hasPrefix("#")) {
+            cString.remove(at: cString.startIndex)
+        }
+        if ((cString.count) != 6) {
+            return UIColor.gray
+        }
+        var rgbValue:UInt64 = 0
+        Scanner(string: cString).scanHexInt64(&rgbValue)
+        return UIColor( red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+                        green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+                        blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+                        alpha: CGFloat(1.0))
     }
 }
