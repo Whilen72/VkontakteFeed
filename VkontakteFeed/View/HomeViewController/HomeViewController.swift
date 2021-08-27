@@ -39,7 +39,8 @@ class HomeViewController: UIViewController {
     private let controllerInditefire = "friendsList"
     private var userData: UserInfo?
     private var friendsData = [Item]()
-    private var photosData = [SizeAndPhotoUrl]()
+    private var photosData = [Album]()
+    private let errors = "error"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,71 +63,90 @@ class HomeViewController: UIViewController {
 
     private func getUserData() {
         NetworkManager.shared.getUserData { [weak self] (result) in
+            guard let self = self else { return }
             switch result {
             case .success(let userInfo):
-                self?.userData = userInfo
+                self.userData = userInfo
+                let name = "\(self.userData!.first_name)" + "\(self.userData!.last_name)"
+                self.nameLabel.text = "\(name)"
+                let bDate = self.userData!.bdate
+                self.bDateLabel.text = "B date \(bDate)"
+                let followers = "\(self.userData!.followers_count)"
+                self.followersCounterLabel.text = "Follower: \(followers)"
+                let city = self.userData!.city.title
+                self.cityLabel.text = "City: \(city)"
+                if self.userData?.online != 0 {
+                    self.isOnlineLabel.text = "Is Online"
+                } else {
+                    self.isOnlineLabel.text = "Offline"
+                }
+                
+                guard let url = URL(string: (self.userData!.photo_max)) else { return }
+                self.loadImageFriends(url: url, downloadImageView: self.imageView)
             case .failure(let error):
                 print("Error processing json data: \(error)")
-            }
-            self?.nameLabel.text = "\(self!.userData!.first_name) \(self!.userData!.last_name)"
-            self?.bDateLabel.text = "B date \(self!.userData!.bdate)"
-            self?.followersCounterLabel.text = "Follower: \(String(describing: self!.userData!.followers_count))"
-            self?.cityLabel.text = "City: \(self!.userData!.city.title)"
-            if self?.userData?.online != 0 {
-                self?.isOnlineLabel.text = "Is Online"
-            } else {
-                self?.isOnlineLabel.text = "Offline"
             }
         }
     }
     
     private func getFriends() {
         NetworkManager.shared.getList { [weak self] (result) in
+            guard let self = self else { return }
             switch result {
             case .success(let friends):
-                self?.friendsData = friends.items ?? []
+                self.friendsData = friends.items ?? []
+                self.friendsCounterLabel.text = "Friends: \(self.friendsData.count)"
+                guard let urlFirst = URL(string: (self.friendsData.first?.photo_50)!) else { return }
+                self.loadImageFriends(url: urlFirst, downloadImageView: self.imageViewLower)
+                guard let urlSecond = URL(string: (self.friendsData[2].photo_50)!) else { return }
+                self.loadImageFriends(url: urlSecond, downloadImageView: self.imageViewMiddle)
+                guard let urlThird = URL(string: (self.friendsData[3].photo_50)!) else { return }
+                self.loadImageFriends(url: urlThird, downloadImageView: self.imageViewUpper)
             case .failure(let error):
                 print("Error processing json data: \(error)")
             }
-            self?.friendsCounterLabel.text = "Friends: \(self!.friendsData.count)"
-            guard let urlFirst = URL(string: (self?.friendsData.first?.photo_50)!) else { return }
-            self?.loadImageFriends(url: urlFirst, downloadImageView: self?.imageViewLower)
-            guard let urlSecond = URL(string: (self?.friendsData[2].photo_50)!) else { return }
-            self?.loadImageFriends(url: urlSecond, downloadImageView: self?.imageViewMiddle)
-            guard let urlThird = URL(string: (self?.friendsData[3].photo_50)!) else { return }
-            self?.loadImageFriends(url: urlThird, downloadImageView: self?.imageViewUpper)
         }
     }
     
     private func getPhotos() {
         NetworkManager.shared.getAlbum { [weak self] (result) in
-            print(result)
+            guard let self = self else { return }
             switch result {
             case .success(let photoArray):
-                self?.photosData = photoArray 
+                self.photosData = photoArray ?? []
+                var urlArray = [String]()
+                self.photosData.enumerated().forEach({ index, element in
+                    element.sizes.forEach { SizeAndPhotoUrl in
+                        if SizeAndPhotoUrl.type == "p" {
+                            urlArray.append(SizeAndPhotoUrl.url)
+                        }
+                    }
+                })
+                for url in urlArray {
+                    if urlArray.count < 3 {
+                        self.photoImageMiddle.isHidden = true
+                        self.photoImageRight.isHidden = true
+                        guard let url = URL(string: url) else { return }
+                        self.loadImageFriends(url: url, downloadImageView: self.photoImageLeft)
+                    } else {
+                        guard let url = URL(string: urlArray[1]) else { return }
+                        self.loadImageFriends(url: url, downloadImageView: self.photoImageLeft)
+                        guard let url = URL(string: urlArray[2])  else { return }
+                        self.loadImageFriends(url: url, downloadImageView: self.photoImageMiddle)
+                        guard let url = URL(string: urlArray[3]) else { return }
+                        self.loadImageFriends(url: url, downloadImageView: self.photoImageRight)
+                    }
+                }
+                let photoCount = self.photosData.count
+                self.photoLabel.text = "Photos \(photoCount)"
             case .failure(let error):
                 print("Error processing json data: \(error)")
             }
-            if (self?.photosData.count)! < 3 {
-                self?.photoImageMiddle.isHidden = true
-                self?.photoImageRight.isHidden = true
-            }
-            self?.photoLabel.text = "Photos \(self!.photosData.count)"
-            guard let url = URL(string: (self?.photosData[2].url)!) else { return }
-            self?.loadImageFriends(url: url, downloadImageView: self?.photoImageLeft)
-            guard let url = URL(string: (self?.photosData[7].url)! ) else { return }
-            self?.loadImageFriends(url: url, downloadImageView: self?.imageView)
         }
     }
 
     private func launchScreen() {
-       
-//        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.regular)
-//        let blurEffectView = UIVisualEffectView(effect: blurEffect)
-//        blurEffectView.frame = view.bounds
-//        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-//        view.addSubview(blurEffectView)
-        
+                       
         view.addSubview(imageView)
         imageView.contentMode = .scaleToFill
         view.addSubview(nameLabel)

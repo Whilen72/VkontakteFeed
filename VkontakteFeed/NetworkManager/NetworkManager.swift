@@ -100,10 +100,10 @@ class NetworkManager {
     }
 
     enum getUserDataFields: String, CaseIterable {
-        case photo_max_orig, followers_count, city, online, bdate
+        case photo_max, followers_count, city, online, bdate
     }
     
-    func getUserData (fields: [getUserDataFields] = [.photo_max_orig, .followers_count, .city, .online, .bdate], completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
+    func getUserData (fields: [getUserDataFields] = [.photo_max, .followers_count, .city, .online, .bdate], completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
         let params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:",")]
         let url = buildMethodURL(method: "users.get", params: params)
@@ -127,9 +127,9 @@ class NetworkManager {
             }
         }.resume()
     }
-    func getAlbum(offset: Int = 0, count: Int = 500, completion: @escaping (Result<[SizeAndPhotoUrl], Error>)->(Void)) {
+    func getAlbum(offset: Int = 0, count: Int = 500, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
         let params: [String: String] = [
-            "album_id": "profile",
+            "album_id": "wall",
             "offset": "\(offset)",
             "count": "\(count)",
         ]
@@ -145,10 +145,10 @@ class NetworkManager {
                     }
                     let responseModel = try? decoder.decode(Response.self, from: data!)
                     DispatchQueue.main.async {
-                        completion(.success(responseModel!.response.items?.first?.sizes ?? []))
+                        completion(.success(responseModel!.response.items ?? []))
                     }
                 } catch let error {
-                    completion(.failure(error))
+                    completion(.failure(error))  
                 }
             }
         }.resume()

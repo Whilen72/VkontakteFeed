@@ -15,7 +15,7 @@ struct UserInfo: Decodable {
         case last_name
         case online
         case city
-        case photo_max_orig
+        case photo_max
         case followers_count
         case bdate
     }
@@ -25,7 +25,7 @@ struct UserInfo: Decodable {
     let last_name: String
     let online: Int
     let city: City
-    let photo_max_orig: String
+    let photo_max: String
     let followers_count: Int
     let bdate: String
 }
