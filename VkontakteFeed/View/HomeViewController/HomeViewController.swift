@@ -28,27 +28,33 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var imageFriends: UIImageView!
     @IBOutlet weak var borderLabelMiddle: UILabel!
     @IBOutlet weak var photoLabel: UILabel!
-    @IBOutlet weak var photoImageLeft: UIImageView!
-    @IBOutlet weak var photoImageMiddle: UIImageView!
-    @IBOutlet weak var photoImageRight: UIImageView!
     @IBOutlet weak var borderUpperLabel: UILabel!
     @IBOutlet weak var borderCenterLabel: UILabel!
     @IBOutlet weak var borderLowerLabel: UILabel!
-    
+    @IBOutlet weak var collectionView: UICollectionView!
     
     private let controllerInditefire = "friendsList"
     private var userData: UserInfo?
     private var friendsData = [Item]()
     private var photosData = [Album]()
     private let errors = "error"
+    private let cellIdentifier = "collectionViewCell"
+    private let itemsPerRow: CGFloat = 3
+    private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
+    private var urlArray = [String]()
+    private var imageArray = [UIImage]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.register(UINib(nibName:"HomeCell", bundle: nil), forCellWithReuseIdentifier: cellIdentifier)
         launchScreen()
         getUserData()
         getFriends()
-        getPhotos() 
         tapGesture()
+        getPhotos()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,18 +73,23 @@ class HomeViewController: UIViewController {
             switch result {
             case .success(let userInfo):
                 self.userData = userInfo
-                let name = "\(self.userData!.first_name)" + "\(self.userData!.last_name)"
+                let name = "\(self.userData!.first_name) " + "\(self.userData!.last_name)"
+                self.nameLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
                 self.nameLabel.text = "\(name)"
                 let bDate = self.userData!.bdate
+                self.bDateLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
                 self.bDateLabel.text = "B date \(bDate)"
                 let followers = "\(self.userData!.followers_count)"
+                self.followersCounterLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
                 self.followersCounterLabel.text = "Follower: \(followers)"
                 let city = self.userData!.city.title
+                self.cityLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
                 self.cityLabel.text = "City: \(city)"
+                self.isOnlineLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
                 if self.userData?.online != 0 {
                     self.isOnlineLabel.text = "Is Online"
                 } else {
-                    self.isOnlineLabel.text = "Offline"
+                    self.isOnlineLabel.isHidden = true
                 }
                 
                 guard let url = URL(string: (self.userData!.photo_max)) else { return }
@@ -95,6 +106,7 @@ class HomeViewController: UIViewController {
             switch result {
             case .success(let friends):
                 self.friendsData = friends.items ?? []
+                self.friendsCounterLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
                 self.friendsCounterLabel.text = "Friends: \(self.friendsData.count)"
                 guard let urlFirst = URL(string: (self.friendsData.first?.photo_50)!) else { return }
                 self.loadImageFriends(url: urlFirst, downloadImageView: self.imageViewLower)
@@ -108,45 +120,42 @@ class HomeViewController: UIViewController {
         }
     }
     
-    private func getPhotos() {
+    private func getPhotos()  {
+        
         NetworkManager.shared.getAlbum { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let photoArray):
                 self.photosData = photoArray ?? []
-                var urlArray = [String]()
                 self.photosData.enumerated().forEach({ index, element in
                     element.sizes.forEach { SizeAndPhotoUrl in
                         if SizeAndPhotoUrl.type == "p" {
-                            urlArray.append(SizeAndPhotoUrl.url)
+                            self.urlArray.append(SizeAndPhotoUrl.url)
                         }
                     }
                 })
-                for url in urlArray {
-                    if urlArray.count < 3 {
-                        self.photoImageMiddle.isHidden = true
-                        self.photoImageRight.isHidden = true
-                        guard let url = URL(string: url) else { return }
-                        self.loadImageFriends(url: url, downloadImageView: self.photoImageLeft)
-                    } else {
-                        guard let url = URL(string: urlArray[1]) else { return }
-                        self.loadImageFriends(url: url, downloadImageView: self.photoImageLeft)
-                        guard let url = URL(string: urlArray[2])  else { return }
-                        self.loadImageFriends(url: url, downloadImageView: self.photoImageMiddle)
-                        guard let url = URL(string: urlArray[3]) else { return }
-                        self.loadImageFriends(url: url, downloadImageView: self.photoImageRight)
+                let photoCount = self.photosData.count
+                self.photoLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
+                self.photoLabel.text = "Photos \(photoCount)"
+                self.urlArray.forEach { url in
+                    guard let url = URL(string: url) else { return }
+                    if let data = try? Data(contentsOf: url) {
+                        if let image = UIImage(data: data) {
+                            self.imageArray.append(image)
+                        }
                     }
                 }
-                let photoCount = self.photosData.count
-                self.photoLabel.text = "Photos \(photoCount)"
             case .failure(let error):
                 print("Error processing json data: \(error)")
             }
+            self.collectionView.reloadData()
         }
     }
 
     private func launchScreen() {
-                       
+        
+        view.backgroundColor = hexStringToUIColor(hex: "#171414")
+        
         view.addSubview(imageView)
         imageView.contentMode = .scaleToFill
         view.addSubview(nameLabel)
@@ -205,17 +214,8 @@ class HomeViewController: UIViewController {
         imageViewUpper.layer.cornerRadius = imageViewUpper.frame.width/2
         imageViewUpper.layer.masksToBounds = true
         
-        view.addSubview(photoImageLeft)
-        view.addSubview(photoImageMiddle)
-        view.addSubview(photoImageRight)
-        
-        photoImageLeft.contentMode = .scaleAspectFill
-        photoImageMiddle.contentMode = .scaleAspectFill
-        photoImageRight.contentMode = .scaleAspectFill
-        
         view.addSubview(borderLabelMiddle)
         borderLabelMiddle.backgroundColor = .lightGray
-        
         
         view.addSubview(borderUpperLabel)
         view.addSubview(borderCenterLabel)
@@ -223,9 +223,6 @@ class HomeViewController: UIViewController {
         borderUpperLabel.backgroundColor = .lightGray
         borderCenterLabel.backgroundColor = .lightGray
         borderLowerLabel.backgroundColor = .lightGray
-        
-        
-        
     }
 
     private func tapGesture() {
@@ -248,7 +245,7 @@ class HomeViewController: UIViewController {
         imageViewLower.isUserInteractionEnabled = true    
     }
     
-    @objc func goToFriendsList(_ gesture: UITapGestureRecognizer) {
+    @objc func goToFriendsList(_ gesture: UITapGestureRecognizer) { // Why i cant use private?
         goToFriendsListController()
     }
     
@@ -270,7 +267,7 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-    private func hexStringToUIColor (hex:String) -> UIColor {
+    func hexStringToUIColor (hex:String) -> UIColor {
         var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
         if (cString.hasPrefix("#")) {
             cString.remove(at: cString.startIndex)
@@ -286,3 +283,50 @@ class HomeViewController: UIViewController {
                         alpha: CGFloat(1.0))
     }
 }
+
+extension HomeViewController: UICollectionViewDataSource{
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        if self.imageArray.count < 6 {
+            return self.imageArray.count
+        } else {
+            return 6
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+       
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! HomeCell
+        cell.configure(with: imageArray[indexPath.row])
+        return cell
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegate {
+     
+}
+
+extension HomeViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView,layout collectionViewLayout: UICollectionViewLayout,sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
+        let availableWidth = view.frame.width - paddingSpace
+        let widthPerItem = availableWidth / itemsPerRow
+        
+        return CGSize(width: widthPerItem, height: widthPerItem)
+    }
+      
+    func collectionView(_ collectionView: UICollectionView,layout collectionViewLayout: UICollectionViewLayout,insetForSectionAt section: Int) -> UIEdgeInsets {
+        
+        return sectionInsets
+    }
+      
+    func collectionView(_ collectionView: UICollectionView,layout collectionViewLayout: UICollectionViewLayout,minimumLineSpacingForSectionAt section:Int)->CGFloat {
+        
+        return sectionInsets.left
+    }
+}
+
+

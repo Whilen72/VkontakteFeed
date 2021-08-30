@@ -33,7 +33,6 @@ class LoginViewController: UIViewController, WKUIDelegate {
     }
          
     private func showAuthWebView() {
-        //add guard for check token and expire
             let webView = WKWebView(frame: view.frame)
             webView.navigationDelegate = self
             self.view.addSubview(webView)

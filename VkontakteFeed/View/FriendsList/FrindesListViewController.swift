@@ -18,10 +18,17 @@ class FriendListController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        NetworkManager.shared.getUserData {[weak self] (result) in
-            print("asdasdasd")
-        }
-        NetworkManager.shared.getList {[weak self] (result) in //remove from viewDidLoad in to method
+        
+        getFriendsList()
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(FriendsCell.self, forCellReuseIdentifier: "friendsCell")
+        addConstraints()
+    }
+
+    private func getFriendsList() {
+        NetworkManager.shared.getList {[weak self] (result) in
             switch result {
             case .success(let listOf):
                 self?.data = listOf.items ?? []
@@ -30,13 +37,9 @@ class FriendListController: UIViewController {
             }
             self!.tableView.reloadData()
         }
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(FriendsCell.self, forCellReuseIdentifier: "friendsCell")
-        addConstraints()
     }
-
-   private func addConstraints(){
+    
+    private func addConstraints(){
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
@@ -58,7 +61,8 @@ extension FriendListController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
                 
         let cell = tableView.dequeueReusableCell(withIdentifier: "friendsCell", for: indexPath) as! FriendsCell
-        cell.nameLabel.text = (data[indexPath.row].firstName)
+        print((data[indexPath.row].firstName)!)
+        cell.nameLabelCell?.text = "lol lol lol" //(data[indexPath.row].firstName)
       
         return cell
     }

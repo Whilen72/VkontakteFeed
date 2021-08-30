@@ -6,10 +6,10 @@
 //
 
 import Foundation
-//1)
+//1)static func
 //2)
 //3) 
 
 
 
-// add HomeViewController
+
