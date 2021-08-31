@@ -43,6 +43,7 @@ class HomeViewController: UIViewController {
     private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
     private var urlArray = [String]()
     private var imageArray = [UIImage]()
+    private let sectionInserts = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -129,7 +130,7 @@ class HomeViewController: UIViewController {
                 self.photosData = photoArray ?? []
                 self.photosData.enumerated().forEach({ index, element in
                     element.sizes.forEach { SizeAndPhotoUrl in
-                        if SizeAndPhotoUrl.type == "p" {
+                        if SizeAndPhotoUrl.type == "m" {
                             self.urlArray.append(SizeAndPhotoUrl.url)
                         }
                     }
@@ -155,6 +156,7 @@ class HomeViewController: UIViewController {
     private func launchScreen() {
         
         view.backgroundColor = hexStringToUIColor(hex: "#171414")
+        collectionView.backgroundColor = hexStringToUIColor(hex: "#171414")
         
         view.addSubview(imageView)
         imageView.contentMode = .scaleToFill
@@ -299,6 +301,7 @@ extension HomeViewController: UICollectionViewDataSource{
        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! HomeCell
         cell.configure(with: imageArray[indexPath.row])
+        
         return cell
     }
 }
@@ -311,8 +314,8 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView,layout collectionViewLayout: UICollectionViewLayout,sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
-        let availableWidth = view.frame.width - paddingSpace
+        let paddingWidth = sectionInserts.left * (itemsPerRow + 1)
+        let availableWidth = collectionView.frame.width - paddingWidth
         let widthPerItem = availableWidth / itemsPerRow
         
         return CGSize(width: widthPerItem, height: widthPerItem)
