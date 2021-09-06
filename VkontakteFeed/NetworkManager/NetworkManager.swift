@@ -7,10 +7,6 @@
 
 import Foundation
 
-//example: https://api.vk.com/method/users.get?user_id=210700286&v=5.52
-
-
-
 class NetworkManager {
     
     static let shared = NetworkManager()
@@ -41,12 +37,13 @@ class NetworkManager {
                     struct Responce: Decodable {
                         let response: FriendsList
                     }
-//                    if let json = try JSONSerialization.jsonObject(with: data!, options: []) as? [String: Any] {
-//                        print(json)
-//                    }
-                    let responceModel = try! decoder.decode(Responce.self, from: data!)
-                    DispatchQueue.main.async {
-                        completion(.success(responceModel.response))
+                    if let data = data {
+                        let responceModel = try decoder.decode(Responce.self, from: data)
+                        DispatchQueue.main.async {
+                            completion(.success(responceModel.response))
+                        }
+                    } else {
+                        completion(.failure(error?.localizedDescription as! Error))
                     }
                 } catch let error {
                     completion(.failure(error))
@@ -55,7 +52,7 @@ class NetworkManager {
         }.resume()
     }
 
-    private func buildMethodURL(method: String, params: [String: String]) -> URL {
+    private func buildMethodURL(method: String, params: [String: String]?) -> URL {
         
         var allParams: [String: String] = [
             "v": "5.131"
@@ -63,16 +60,27 @@ class NetworkManager {
         if let accessToken = token?.accessToken {
             allParams["access_token"] = accessToken
         }
+        if params != nil {
+            params!.forEach { allParams[$0] = $1 }
+            let paramsStr: String = allParams
+                .map { "\($0)=\($1)"}
+                .joined(separator: "&")
         
-        params.forEach { allParams[$0] = $1 }
-        let paramsStr: String = allParams
-            .map { "\($0)=\($1)"}
-            .joined(separator: "&")
-
-        let methodStr = baseUrl + method + "?" + paramsStr
-
-        guard let url = URL.init(string: methodStr) else { fatalError() }
-        return url
+            let methodStr = baseUrl + method + "?" + paramsStr
+            guard let url = URL.init(string: methodStr) else { fatalError() }
+            
+            return url
+        } else {
+            allParams.forEach { allParams[$0] = $1 }
+            let paramsStr: String = allParams
+                .map { "\($0)=\($1)"}
+                .joined(separator: "&")
+            let methodStr = baseUrl + method + "?" + paramsStr
+            guard let url = URL.init(string: methodStr) else { fatalError() }
+            
+            return url
+        }
+            
     }
   
     func getCurrentUser (completion: @escaping (Result<CurrentUser, Error>)->(Void)) {
@@ -88,9 +96,13 @@ class NetworkManager {
                     struct Response: Decodable {
                         let response: [CurrentUser]?
                     }
-                    let responceModel = try decoder.decode(CurrentUser.self, from: data!)
+                    if let data = data {
+                    let responceModel = try decoder.decode(CurrentUser.self, from: data)
                     DispatchQueue.main.async {
                         completion(.success(responceModel))
+                        }
+                    } else {
+                        completion(.failure(error?.localizedDescription as! Error))
                     }
                 } catch let error {
                     print(error.localizedDescription)
@@ -100,10 +112,10 @@ class NetworkManager {
     }
 
     enum getUserDataFields: String, CaseIterable {
-        case photo_max, followers_count, city, online, bdate
+        case photo_max_orig, followers_count, city, online, bdate
     }
     
-    func getUserData (fields: [getUserDataFields] = [.photo_max, .followers_count, .city, .online, .bdate], completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
+    func getUserData (fields: [getUserDataFields] = [.photo_max_orig, .followers_count, .city, .online, .bdate], completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
         let params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:",")]
         let url = buildMethodURL(method: "users.get", params: params)
@@ -116,9 +128,13 @@ class NetworkManager {
                     struct Response: Decodable {
                         let response: [UserInfo]?
                     }
-                    let responseModel = try! decoder.decode(Response.self, from: data!)
+                    if let data = data {
+                    let responseModel = try decoder.decode(Response.self, from: data)
                         DispatchQueue.main.async {
                         completion(.success(responseModel.response?.first))
+                        }
+                    } else {
+                        completion(.failure(error?.localizedDescription as! Error))
                     }
                 } catch let error {
                     print(error.localizedDescription)
@@ -143,9 +159,13 @@ class NetworkManager {
                     struct Response: Decodable {
                         let response: Photos
                     }
-                    let responseModel = try? decoder.decode(Response.self, from: data!)
+                    if let data = data {
+                    let responseModel = try decoder.decode(Response.self, from: data)
                     DispatchQueue.main.async {
-                        completion(.success(responseModel!.response.items ?? []))
+                        completion(.success(responseModel.response.items ?? []))
+                    }
+                    } else {
+                        completion(.failure(error?.localizedDescription as! Error))
                     }
                 } catch let error {
                     completion(.failure(error))  

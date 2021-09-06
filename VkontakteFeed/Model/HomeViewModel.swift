@@ -10,23 +10,23 @@ import Foundation
 struct UserInfo: Decodable {
            
     enum CodingKeys: String, CodingKey {
-        case first_name
+        case firstName = "first_name"
         case id
-        case last_name
+        case lastName = "last_name"
         case online
         case city
-        case photo_max
-        case followers_count
+        case photo_max_orig = "photo_max_orig"
+        case followersCount = "followers_count"
         case bdate
     }
     
-    let first_name: String
+    let firstName: String
     let id: Int
-    let last_name: String
+    let lastName: String
     let online: Int
     let city: City
-    let photo_max: String
-    let followers_count: Int
+    let photo_max_orig: String
+    let followersCount: Int
     let bdate: String
 }
 

@@ -11,6 +11,8 @@ class HomeCell: UICollectionViewCell {
 
     @IBOutlet var imageView: UIImageView!
     
+    static let reuseId = "collectionViewCell"
+    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -18,9 +20,4 @@ class HomeCell: UICollectionViewCell {
     public func configure(with image: UIImage) {
         imageView.image = image
     }
-    
-//    static func nib() -> UINib {
-//        return UINib(nibName: "collectionViewCell", bundle: nil)
-//    }
-
 }

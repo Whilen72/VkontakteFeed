@@ -32,30 +32,30 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var borderCenterLabel: UILabel!
     @IBOutlet weak var borderLowerLabel: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var friendsViewContainer: UIView!
     
-    private let controllerInditefire = "friendsList"
-    private var userData: UserInfo?
-    private var friendsData = [Item]()
-    private var photosData = [Album]()
+    static let controllerInditefire = "HomeViewController"
+    var userData: UserInfo?
+    var photosData = [Album]()
+    var urlArray = [String]()
+    var imageArray = [UIImage]()
+    var avatarArray = [UIImage]()
+    var imageFriendArray = [UIImage]()
+    var friendsData = [Item]()
     private let errors = "error"
-    private let cellIdentifier = "collectionViewCell"
     private let itemsPerRow: CGFloat = 3
-    private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
-    private var urlArray = [String]()
-    private var imageArray = [UIImage]()
-    private let sectionInserts = UIEdgeInsets(top: 2, left: 2, bottom: 2, right: 2)
+    private let sectionInsets = UIEdgeInsets(top: 10, left: 2, bottom: 10, right: 2)
+    
+    // MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+    
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(UINib(nibName:"HomeCell", bundle: nil), forCellWithReuseIdentifier: cellIdentifier)
+        collectionView.register(UINib(nibName:"HomeCell", bundle: nil), forCellWithReuseIdentifier: HomeCell.reuseId)
         launchScreen()
-        getUserData()
-        getFriends()
         tapGesture()
-        getPhotos()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,59 +66,6 @@ class HomeViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
-    }
-
-    private func getUserData() {
-        NetworkManager.shared.getUserData { [weak self] (result) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let userInfo):
-                self.userData = userInfo
-                let name = "\(self.userData!.first_name) " + "\(self.userData!.last_name)"
-                self.nameLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
-                self.nameLabel.text = "\(name)"
-                let bDate = self.userData!.bdate
-                self.bDateLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
-                self.bDateLabel.text = "B date \(bDate)"
-                let followers = "\(self.userData!.followers_count)"
-                self.followersCounterLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
-                self.followersCounterLabel.text = "Follower: \(followers)"
-                let city = self.userData!.city.title
-                self.cityLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
-                self.cityLabel.text = "City: \(city)"
-                self.isOnlineLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
-                if self.userData?.online != 0 {
-                    self.isOnlineLabel.text = "Is Online"
-                } else {
-                    self.isOnlineLabel.isHidden = true
-                }
-                
-                guard let url = URL(string: (self.userData!.photo_max)) else { return }
-                self.loadImageFriends(url: url, downloadImageView: self.imageView)
-            case .failure(let error):
-                print("Error processing json data: \(error)")
-            }
-        }
-    }
-    
-    private func getFriends() {
-        NetworkManager.shared.getList { [weak self] (result) in
-            guard let self = self else { return }
-            switch result {
-            case .success(let friends):
-                self.friendsData = friends.items ?? []
-                self.friendsCounterLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
-                self.friendsCounterLabel.text = "Friends: \(self.friendsData.count)"
-                guard let urlFirst = URL(string: (self.friendsData.first?.photo_50)!) else { return }
-                self.loadImageFriends(url: urlFirst, downloadImageView: self.imageViewLower)
-                guard let urlSecond = URL(string: (self.friendsData[2].photo_50)!) else { return }
-                self.loadImageFriends(url: urlSecond, downloadImageView: self.imageViewMiddle)
-                guard let urlThird = URL(string: (self.friendsData[3].photo_50)!) else { return }
-                self.loadImageFriends(url: urlThird, downloadImageView: self.imageViewUpper)
-            case .failure(let error):
-                print("Error processing json data: \(error)")
-            }
-        }
     }
     
     private func getPhotos()  {
@@ -136,7 +83,7 @@ class HomeViewController: UIViewController {
                     }
                 })
                 let photoCount = self.photosData.count
-                self.photoLabel.textColor = self.hexStringToUIColor(hex:"c9c9c9")
+                self.photoLabel.textColor = .fontColor
                 self.photoLabel.text = "Photos \(photoCount)"
                 self.urlArray.forEach { url in
                     guard let url = URL(string: url) else { return }
@@ -155,73 +102,87 @@ class HomeViewController: UIViewController {
 
     private func launchScreen() {
         
-        view.backgroundColor = hexStringToUIColor(hex: "#171414")
-        collectionView.backgroundColor = hexStringToUIColor(hex: "#171414")
+        imageView.image = avatarArray.first
+        imageView.contentMode = .center
         
-        view.addSubview(imageView)
-        imageView.contentMode = .scaleToFill
-        view.addSubview(nameLabel)
+        imageViewLower.image = imageFriendArray[0]
+        imageViewMiddle.image = imageFriendArray[1]
+        imageViewUpper.image = imageFriendArray[2]
+        
+        guard let userData = userData else { return }
+        
+        friendsViewContainer.backgroundColor = .backgroundColor
+        
+        nameLabel.textColor = .fontColor
+        nameLabel.text = "\(userData.firstName) " + "\(userData.lastName)"
+        
+        bDateLabel.textColor = .fontColor
+        bDateLabel.text = "B date \(userData.bdate)"
+        
+        followersCounterLabel.textColor = .fontColor
+        followersCounterLabel.text = "Follower: \(userData.followersCount)"
+        
+        self.cityLabel.textColor = .fontColor
+        self.cityLabel.text = "City: \(userData.city.title)"
+        
+        self.isOnlineLabel.textColor = .fontColor
+        if self.userData?.online != 0 {
+            self.isOnlineLabel.text = "Is Online"
+        } else {
+            self.isOnlineLabel.isHidden = true
+        }
+        
+        self.photoLabel.textColor = .fontColor
+        self.photoLabel.text = "Photos \(self.imageArray.count)"
+        
+        self.friendsCounterLabel.textColor = .fontColor
+        self.friendsCounterLabel.text = "Friends: \(self.friendsData.count)"
+        
+        view.backgroundColor =  UIColor.backgroundColor
+        collectionView.backgroundColor = UIColor.backgroundColor
+        
         nameLabel.font = nameLabel.font.withSize(20)
         nameLabel.textColor = .white
 
-        view.addSubview(isOnlineLabel)
         isOnlineLabel.font = isOnlineLabel.font.withSize(8)
         isOnlineLabel.textColor = .white
         
-        view.addSubview(photoLabel)
-        view.addSubview(bDateLabel)
-        view.addSubview(cityLabel)
-        view.addSubview(followersCounterLabel)
-        view.addSubview(friendsCounterLabel)
         photoLabel.font = cityLabel.font.withSize(14)
         bDateLabel.font = bDateLabel.font.withSize(14)
         cityLabel.font = cityLabel.font.withSize(14)
         followersCounterLabel.font = followersCounterLabel.font.withSize(14)
         friendsCounterLabel.font = followersCounterLabel.font.withSize(14)
         
-        view.addSubview(imageCity)
         imageCity.contentMode = .scaleToFill
         imageCity.image = UIImage(systemName: "house")
 
-        view.addSubview(imageFollowers)
         imageFollowers.contentMode = .scaleToFill
         imageFollowers.image = UIImage(systemName: "person.circle")
 
-        view.addSubview(imageBdate)
         imageBdate.contentMode = .scaleToFill
         imageBdate.image = UIImage(systemName: "giftcard")
         
-        view.addSubview(imageFriends)
         imageFriends.contentMode = .scaleAspectFit
         imageFriends.image = UIImage(systemName: "person.3")
         
-        view.addSubview(circleViewLower)
         circleViewLower.addSubview(imageViewLower)
         circleViewLower.layer.cornerRadius = circleViewLower.frame.width/2
         circleViewLower.layer.masksToBounds = true
         imageViewLower.layer.cornerRadius = imageViewLower.frame.width/2
         imageViewLower.layer.masksToBounds = true
         
-        view.addSubview(circleViewMiddle)
-        circleViewMiddle.addSubview(imageViewMiddle)
         circleViewMiddle.layer.cornerRadius = circleViewMiddle.frame.width/2
         circleViewMiddle.layer.masksToBounds = true
         imageViewMiddle.layer.cornerRadius = imageViewMiddle.frame.width/2
         imageViewMiddle.layer.masksToBounds = true
         
-        view.addSubview(circleViewUpper)
-        circleViewUpper.addSubview(imageViewUpper)
         circleViewUpper.layer.cornerRadius = circleViewUpper.frame.width/2
         circleViewUpper.layer.masksToBounds = true
         imageViewUpper.layer.cornerRadius = imageViewUpper.frame.width/2
         imageViewUpper.layer.masksToBounds = true
         
-        view.addSubview(borderLabelMiddle)
         borderLabelMiddle.backgroundColor = .lightGray
         
-        view.addSubview(borderUpperLabel)
-        view.addSubview(borderCenterLabel)
-        view.addSubview(borderLowerLabel)
         borderUpperLabel.backgroundColor = .lightGray
         borderCenterLabel.backgroundColor = .lightGray
         borderLowerLabel.backgroundColor = .lightGray
@@ -229,62 +190,30 @@ class HomeViewController: UIViewController {
 
     private func tapGesture() {
         let gestureRecognizerUpper = UITapGestureRecognizer(target: self, action: #selector(goToFriendsList(_:)))
-        gestureRecognizerUpper.numberOfTapsRequired = 1
-        gestureRecognizerUpper.numberOfTouchesRequired = 1
-        imageViewUpper.addGestureRecognizer(gestureRecognizerUpper)
-        imageViewUpper.isUserInteractionEnabled = true
         
-        let gestureRecognizerMiddle = UITapGestureRecognizer(target: self, action: #selector(goToFriendsList(_:)))
-        gestureRecognizerMiddle.numberOfTapsRequired = 1
-        gestureRecognizerMiddle.numberOfTouchesRequired = 1
-        imageViewMiddle.addGestureRecognizer(gestureRecognizerMiddle)
-        imageViewMiddle.isUserInteractionEnabled = true
-        
-        let gestureRecognizerLower = UITapGestureRecognizer(target: self, action: #selector(goToFriendsList(_:)))
-        gestureRecognizerLower.numberOfTapsRequired = 1
-        gestureRecognizerLower.numberOfTouchesRequired = 1
-        imageViewLower.addGestureRecognizer(gestureRecognizerLower)
-        imageViewLower.isUserInteractionEnabled = true    
+        friendsViewContainer.addGestureRecognizer(gestureRecognizerUpper)
+        friendsViewContainer.isUserInteractionEnabled = true
     }
     
-    @objc func goToFriendsList(_ gesture: UITapGestureRecognizer) { // Why i cant use private?
+    @objc private func goToFriendsList(_ gesture: UITapGestureRecognizer) {
         goToFriendsListController()
     }
     
-    private func loadImageFriends(url: URL, downloadImageView: UIImageView?) {
-        guard  let neededImageView = downloadImageView  else { return }
-        DispatchQueue.global().async { [weak self] in
+    func loadImageFriends(url: URL, completion: @escaping (UIImage)->())  {
             if let data = try? Data(contentsOf: url) {
                 if let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        neededImageView.image = image
-                    }
+                        completion(image)
                 }
             }
-        }
     }
     
     private func goToFriendsListController() {
-        let vc = self.storyboard!.instantiateViewController(withIdentifier: controllerInditefire) as! FriendListController
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: FriendListController.controllerInditefire) as! FriendListController
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
-    func hexStringToUIColor (hex:String) -> UIColor {
-        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-        if (cString.hasPrefix("#")) {
-            cString.remove(at: cString.startIndex)
-        }
-        if ((cString.count) != 6) {
-            return UIColor.gray
-        }
-        var rgbValue:UInt64 = 0
-        Scanner(string: cString).scanHexInt64(&rgbValue)
-        return UIColor( red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
-                        green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-                        blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
-                        alpha: CGFloat(1.0))
-    }
 }
+
+// MARK: - CollectionView
 
 extension HomeViewController: UICollectionViewDataSource{
     
@@ -299,9 +228,9 @@ extension HomeViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as! HomeCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCell.reuseId, for: indexPath) as! HomeCell
         cell.configure(with: imageArray[indexPath.row])
-        
+        cell.imageView.contentMode = .scaleAspectFill
         return cell
     }
 }
@@ -314,9 +243,9 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView,layout collectionViewLayout: UICollectionViewLayout,sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let paddingWidth = sectionInserts.left * (itemsPerRow + 1)
+        let paddingWidth = sectionInsets.left * (itemsPerRow + 1)
         let availableWidth = collectionView.frame.width - paddingWidth
-        let widthPerItem = availableWidth / itemsPerRow
+        let widthPerItem = (availableWidth  / itemsPerRow)
         
         return CGSize(width: widthPerItem, height: widthPerItem)
     }

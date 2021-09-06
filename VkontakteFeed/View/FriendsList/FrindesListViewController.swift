@@ -13,7 +13,7 @@ class FriendListController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
    
    private var data = [Item]()
-    
+   static let controllerInditefire = "friendsList"
     // MARK: - ViewDidLoad
     
     override func viewDidLoad() {
