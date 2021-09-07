@@ -291,25 +291,6 @@
                                             <constraint firstItem="yUP-Qy-dtw" firstAttribute="centerX" secondItem="q99-fN-w5V" secondAttribute="centerX" id="yca-dl-pRf"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J52-xb-ljh">
-                                        <rect key="frame" x="376" y="0.0" width="30" height="30"/>
-                                        <subviews>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fLu-kw-cGu">
-                                                <rect key="frame" x="2.6666666666666856" y="2.6666666666666856" width="25" height="25"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="25" id="jMw-2c-QCL"/>
-                                                    <constraint firstAttribute="height" constant="25" id="zVT-5v-1Fa"/>
-                                                </constraints>
-                                            </imageView>
-                                        </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <constraints>
-                                            <constraint firstItem="fLu-kw-cGu" firstAttribute="centerX" secondItem="J52-xb-ljh" secondAttribute="centerX" id="6iR-xt-nUP"/>
-                                            <constraint firstAttribute="width" constant="30" id="Plm-MX-DbR"/>
-                                            <constraint firstAttribute="height" constant="30" id="ihr-TX-bh2"/>
-                                            <constraint firstItem="fLu-kw-cGu" firstAttribute="centerY" secondItem="J52-xb-ljh" secondAttribute="centerY" id="isP-CM-Ah3"/>
-                                        </constraints>
-                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DF2-eO-VjM">
                                         <rect key="frame" x="361" y="0.0" width="30" height="30"/>
                                         <subviews>
@@ -327,6 +308,25 @@
                                             <constraint firstAttribute="width" constant="30" id="P1R-kg-l4H"/>
                                             <constraint firstItem="wBg-jT-D1O" firstAttribute="centerY" secondItem="DF2-eO-VjM" secondAttribute="centerY" id="VEN-Tj-Rp5"/>
                                             <constraint firstAttribute="height" constant="30" id="zGK-fX-1hN"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J52-xb-ljh">
+                                        <rect key="frame" x="376" y="0.0" width="30" height="30"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fLu-kw-cGu">
+                                                <rect key="frame" x="2.6666666666666856" y="2.6666666666666856" width="25" height="25"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="25" id="jMw-2c-QCL"/>
+                                                    <constraint firstAttribute="height" constant="25" id="zVT-5v-1Fa"/>
+                                                </constraints>
+                                            </imageView>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstItem="fLu-kw-cGu" firstAttribute="centerX" secondItem="J52-xb-ljh" secondAttribute="centerX" id="6iR-xt-nUP"/>
+                                            <constraint firstAttribute="width" constant="30" id="Plm-MX-DbR"/>
+                                            <constraint firstAttribute="height" constant="30" id="ihr-TX-bh2"/>
+                                            <constraint firstItem="fLu-kw-cGu" firstAttribute="centerY" secondItem="J52-xb-ljh" secondAttribute="centerY" id="isP-CM-Ah3"/>
                                         </constraints>
                                     </view>
                                 </subviews>
