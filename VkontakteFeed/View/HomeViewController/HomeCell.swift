@@ -17,7 +17,7 @@ class HomeCell: UICollectionViewCell {
         super.awakeFromNib()
     }
     
-    public func configure(with image: UIImage) {
+    func configure(with image: UIImage) {
         imageView.image = image
     }
 }

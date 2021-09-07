@@ -53,34 +53,27 @@ class NetworkManager {
     }
 
     private func buildMethodURL(method: String, params: [String: String]?) -> URL {
-        
         var allParams: [String: String] = [
             "v": "5.131"
         ]
         if let accessToken = token?.accessToken {
             allParams["access_token"] = accessToken
         }
-        if params != nil {
-            params!.forEach { allParams[$0] = $1 }
-            let paramsStr: String = allParams
-                .map { "\($0)=\($1)"}
-                .joined(separator: "&")
-        
-            let methodStr = baseUrl + method + "?" + paramsStr
-            guard let url = URL.init(string: methodStr) else { fatalError() }
             
-            return url
-        } else {
-            allParams.forEach { allParams[$0] = $1 }
-            let paramsStr: String = allParams
-                .map { "\($0)=\($1)"}
-                .joined(separator: "&")
-            let methodStr = baseUrl + method + "?" + paramsStr
-            guard let url = URL.init(string: methodStr) else { fatalError() }
-            
-            return url
-        }
-            
+        let keysToRemove: [String] = allParams.reduce([], { result, keyValue in
+            return keyValue.value.isEmpty ? result + [keyValue.key] : result
+        })
+        keysToRemove.forEach { allParams.removeValue(forKey: $0) }
+
+        params!.forEach { allParams[$0] = $1 }
+        let paramsStr: String = allParams
+            .map { "\($0)=\($1)"}
+            .joined(separator: "&")
+
+        let methodStr = baseUrl + method + "?" + paramsStr
+        guard let url = URL.init(string: methodStr) else { fatalError() }
+
+        return url
     }
   
     func getCurrentUser (completion: @escaping (Result<CurrentUser, Error>)->(Void)) {

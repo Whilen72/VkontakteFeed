@@ -6,7 +6,7 @@
 //
 
 import Foundation
-//1)static func
+//1)Change layout
 //2)
 //3) 
 

@@ -39,7 +39,7 @@ class HomeViewController: UIViewController {
     var photosData = [Album]()
     var urlArray = [String]()
     var imageArray = [UIImage]()
-    var avatarArray = [UIImage]()
+    var avatar = UIImage()
     var imageFriendArray = [UIImage]()
     var friendsData = [Item]()
     private let errors = "error"
@@ -102,8 +102,8 @@ class HomeViewController: UIViewController {
 
     private func launchScreen() {
         
-        imageView.image = avatarArray.first
-        imageView.contentMode = .center
+        imageView.image = avatar
+        imageView.contentMode = .top
         
         imageViewLower.image = imageFriendArray[0]
         imageViewMiddle.image = imageFriendArray[1]

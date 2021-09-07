@@ -39,58 +39,50 @@ class LoginViewController: UIViewController, WKUIDelegate {
     
     func reciveDataForHomeVC(){
 
-        var avArray = [UIImage]()
+        var avatarFromNetwork = UIImage()
         var linkArray = [String]()
         var imageToHomeVC = [UIImage]()
         var dataToVC: UserInfo?
         var picArray = [Album]()
 
-        getUserData { [weak self] userInfo in
+        getUserData { [weak self] userInfo in // [weak self] kuda?
             let group = DispatchGroup()
             guard let self = self else { return }
             dataToVC = userInfo
 
-            self.getPhotos { album in
+            self.getPhotos { [weak self] album in
                 picArray = album
-
+                guard let self = self else { return }
                 self.getFriends { friend in
-                    var PhotoToVC = [UIImage]()
+                    var photoToVC = [UIImage]()
                     let itemToVC = friend
 
                     group.notify(queue: .main) {
                         let vc = self.storyboard!.instantiateViewController(withIdentifier: HomeViewController.controllerInditefire) as! HomeViewController
-                        vc.avatarArray = avArray
+                        vc.avatar = avatarFromNetwork
                         vc.imageArray = imageToHomeVC
                         vc.userData = dataToVC
-                        vc.imageFriendArray = PhotoToVC
+                        vc.imageFriendArray = photoToVC
                         vc.friendsData = itemToVC.items!
                         self.navigationController?.pushViewController(vc, animated: true)
 
                     }
-
-                    group.enter()
-                    guard let url = URL(string: (friend.items?.first?.photo_50)!) else { return }
-                    UIImage.loadImageFromUrl(url: url) { image in
-                        PhotoToVC.append(image)
-                        group.leave()
-                    }
-                    group.enter()
-                    guard let url = URL(string: (friend.items?[2].photo_50)!) else { return }
-                    UIImage.loadImageFromUrl(url: url) { image in
-                        PhotoToVC.append(image)
-                        group.leave()
-                    }
-                    group.enter()
-                    guard let url = URL(string: (friend.items?[3].photo_50)!) else { return }
-                    UIImage.loadImageFromUrl(url: url) { image in
-                        PhotoToVC.append(image)
-                        group.leave()
-                    }
-
+                    
+                    friend.items?.enumerated().forEach({ index, element in
+                        if index < 4 {
+                            group.enter()
+                            guard let url = URL(string: element.photo_50!) else { return }
+                            UIImage.loadImageFromUrl(url: url) { image in
+                            photoToVC.append(image)
+                            }
+                            group.leave()
+                        }
+                    })
+                    
                     group.enter()
                     guard let url = URL(string: dataToVC!.photo_max_orig) else { return }
                     HomeViewController().loadImageFriends(url: url) { image in
-                        avArray.append(image)
+                        avatarFromNetwork = image
                         group.leave()
                     }
 
@@ -139,7 +131,7 @@ class LoginViewController: UIViewController, WKUIDelegate {
         }
     }
     private func getFriends(completion: @escaping (FriendsList)->()) {
-        NetworkManager.shared.getList { [weak self] (result) in
+        NetworkManager.shared.getList { (result) in
                 switch result {
                 case .success(let friends):
                     completion(friends)
