@@ -121,14 +121,14 @@
             <objects>
                 <viewController storyboardIdentifier="HomeViewController" id="pvJ-jw-MAK" customClass="HomeViewController" customModule="VkontakteFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EwD-1z-oRU">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="1300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OVY-Ct-Upi">
-                                <rect key="frame" x="0.0" y="44" width="414" height="1222"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OVY-Ct-Upi">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AwU-bX-usP" userLabel="ContentView">
-                                        <rect key="frame" x="0.0" y="0.0" width="414" height="1222"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="915"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ioi-Ru-wUW">
                                                 <rect key="frame" x="0.0" y="0.0" width="414" height="290"/>
@@ -357,8 +357,11 @@
                                                 </constraints>
                                             </view>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5AP-GX-VMj">
-                                                <rect key="frame" x="0.0" y="615" width="414" height="607"/>
+                                                <rect key="frame" x="0.0" y="615" width="414" height="300"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="300" id="tfc-3t-hRK"/>
+                                                </constraints>
                                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="hwb-dM-KdH">
                                                     <size key="itemSize" width="140" height="140"/>
                                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -390,7 +393,6 @@
                                             <constraint firstItem="D30-Wa-g4u" firstAttribute="top" secondItem="JXD-eZ-yle" secondAttribute="bottom" constant="30" id="4uV-nO-9CH"/>
                                             <constraint firstItem="6G7-pX-gz0" firstAttribute="top" secondItem="lK8-gO-kR7" secondAttribute="bottom" constant="5" id="66t-PW-2GE"/>
                                             <constraint firstAttribute="trailing" secondItem="xsp-Qn-gsS" secondAttribute="trailing" constant="60" id="7St-Lo-wLb"/>
-                                            <constraint firstItem="lK8-gO-kR7" firstAttribute="leading" secondItem="uPg-DO-g4c" secondAttribute="trailing" constant="30" id="7w9-ci-PW6"/>
                                             <constraint firstAttribute="trailing" secondItem="PGr-p9-imP" secondAttribute="trailing" constant="20" id="8PP-Nc-dtk"/>
                                             <constraint firstItem="hne-pf-GtC" firstAttribute="top" secondItem="Lcz-Wg-sD3" secondAttribute="bottom" constant="5" id="9DA-0v-sAT"/>
                                             <constraint firstAttribute="trailing" secondItem="Rwe-Z2-pqm" secondAttribute="trailing" constant="162" id="A1y-4p-jeS"/>
@@ -420,7 +422,6 @@
                                             <constraint firstItem="sF6-yn-cP1" firstAttribute="top" secondItem="hne-pf-GtC" secondAttribute="bottom" constant="20" id="eYU-T2-w7V"/>
                                             <constraint firstItem="WCl-0q-Fck" firstAttribute="leading" secondItem="AwU-bX-usP" secondAttribute="leading" constant="60" id="eab-wg-uAU"/>
                                             <constraint firstAttribute="trailing" secondItem="lK8-gO-kR7" secondAttribute="trailing" constant="60" id="eey-dE-9Z2"/>
-                                            <constraint firstItem="jFG-qu-ct1" firstAttribute="leading" secondItem="JXD-eZ-yle" secondAttribute="trailing" constant="30" id="fHo-H0-ter"/>
                                             <constraint firstItem="JXD-eZ-yle" firstAttribute="top" secondItem="uPg-DO-g4c" secondAttribute="bottom" constant="30" id="h21-F5-fq7"/>
                                             <constraint firstItem="5AP-GX-VMj" firstAttribute="top" secondItem="xsp-Qn-gsS" secondAttribute="bottom" constant="30" id="io0-3a-pjB"/>
                                             <constraint firstItem="uPg-DO-g4c" firstAttribute="top" secondItem="ioi-Ru-wUW" secondAttribute="bottom" constant="30" id="jdZ-ir-Pum"/>
@@ -429,7 +430,6 @@
                                             <constraint firstAttribute="trailing" secondItem="Lcz-Wg-sD3" secondAttribute="trailing" constant="60" id="p1G-jA-47T"/>
                                             <constraint firstItem="Rwe-Z2-pqm" firstAttribute="leading" secondItem="AwU-bX-usP" secondAttribute="leading" constant="53" id="pTD-ry-osb"/>
                                             <constraint firstItem="uPg-DO-g4c" firstAttribute="leading" secondItem="AwU-bX-usP" secondAttribute="leading" constant="8" id="r9a-cs-iRf"/>
-                                            <constraint firstItem="Lcz-Wg-sD3" firstAttribute="leading" secondItem="D30-Wa-g4u" secondAttribute="trailing" constant="30" id="sL6-HH-gdz"/>
                                             <constraint firstAttribute="trailing" secondItem="sF6-yn-cP1" secondAttribute="trailing" id="vYW-j0-dUz"/>
                                             <constraint firstItem="WCl-0q-Fck" firstAttribute="top" secondItem="jFG-qu-ct1" secondAttribute="bottom" constant="5" id="yDy-KS-1jY"/>
                                             <constraint firstAttribute="trailing" secondItem="6G7-pX-gz0" secondAttribute="trailing" constant="20" id="zvK-QC-wl9"/>
@@ -438,6 +438,7 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="AwU-bX-usP" firstAttribute="height" secondItem="OVY-Ct-Upi" secondAttribute="height" priority="250" id="A03-vf-pXt"/>
+                                    <constraint firstAttribute="bottom" secondItem="AwU-bX-usP" secondAttribute="bottom" id="Byi-ay-PV0"/>
                                     <constraint firstAttribute="trailing" secondItem="AwU-bX-usP" secondAttribute="trailing" id="ENl-1K-qme"/>
                                     <constraint firstItem="AwU-bX-usP" firstAttribute="top" secondItem="OVY-Ct-Upi" secondAttribute="top" id="NTG-pD-Ima"/>
                                     <constraint firstItem="AwU-bX-usP" firstAttribute="width" secondItem="OVY-Ct-Upi" secondAttribute="width" id="qLN-tn-ygv"/>
@@ -454,7 +455,7 @@
                             <constraint firstItem="xMD-Hm-8Zr" firstAttribute="trailing" secondItem="OVY-Ct-Upi" secondAttribute="trailing" id="xXd-aA-Yoz"/>
                         </constraints>
                     </view>
-                    <size key="freeformSize" width="414" height="1300"/>
+                    <size key="freeformSize" width="414" height="896"/>
                     <connections>
                         <outlet property="bDateLabel" destination="Lcz-Wg-sD3" id="KAX-5Y-OuP"/>
                         <outlet property="borderCenterLabel" destination="hne-pf-GtC" id="z3v-3b-G8n"/>
