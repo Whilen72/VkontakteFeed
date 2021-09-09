@@ -33,6 +33,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var borderLowerLabel: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var friendsViewContainer: UIView!
+    @IBOutlet weak var contentView: UIView!
     
     static let controllerInditefire = "HomeViewController"
     var userData: UserInfo?
@@ -101,6 +102,7 @@ class HomeViewController: UIViewController {
     }
 
     private func launchScreen() {
+        contentView.backgroundColor = .backgroundColor
         
         imageView.image = avatar
         imageView.contentMode = .top
