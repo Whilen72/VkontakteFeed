@@ -198,18 +198,6 @@ class HomeViewController: UIViewController {
     }
     
     @objc private func goToFriendsList(_ gesture: UITapGestureRecognizer) {
-        goToFriendsListController()
-    }
-    
-    func loadImageFriends(url: URL, completion: @escaping (UIImage)->())  {
-            if let data = try? Data(contentsOf: url) {
-                if let image = UIImage(data: data) {
-                        completion(image)
-                }
-            }
-    }
-    
-    private func goToFriendsListController() {
         let vc = self.storyboard!.instantiateViewController(withIdentifier: FriendListController.controllerInditefire) as! FriendListController
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -235,10 +223,6 @@ extension HomeViewController: UICollectionViewDataSource{
         cell.imageView.contentMode = .scaleAspectFill
         return cell
     }
-}
-
-extension HomeViewController: UICollectionViewDelegate {
-     
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {

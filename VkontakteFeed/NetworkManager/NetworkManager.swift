@@ -72,7 +72,7 @@ class NetworkManager {
 
         let methodStr = baseUrl + method + "?" + paramsStr
         guard let url = URL.init(string: methodStr) else { fatalError() }
-
+    
         return url
     }
   

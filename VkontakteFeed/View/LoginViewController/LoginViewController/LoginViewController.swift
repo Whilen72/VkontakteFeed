@@ -12,6 +12,7 @@ import Foundation
 class LoginViewController: UIViewController, WKUIDelegate {
         
     @IBOutlet weak var loginButtonOutlet: UIButton!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     
     var data: UserInfo?
     
@@ -19,43 +20,49 @@ class LoginViewController: UIViewController, WKUIDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        spinner.isHidden = true
         loginButtonOutlet.setTitle("VK sign in", for: .normal)
-       
     }
     
-
     @IBAction func loginAction(_ sender: Any) {
         showAuthWebView()
     }
          
     private func showAuthWebView() {
-            let webView = WKWebView(frame: view.frame)
-            webView.navigationDelegate = self
-            self.view.addSubview(webView)
-            let url = URL(string: "https://oauth.vk.com/authorize?client_id=7918001&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&response_type=token&v=5.131")
-            let request = URLRequest(url: url!)
-            webView.load(request)
+        let webView = WKWebView(frame: view.frame)
+        
+        webView.navigationDelegate = self
+        self.view.addSubview(webView)
+        let url = URL(string: "https://oauth.vk.com/authorize?client_id=7918001&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&response_type=token&v=5.131")
+        let request = URLRequest(url: url!)
+        webView.load(request)
         }
     
     func reciveDataForHomeVC(){
-
+    
         var avatarFromNetwork = UIImage()
         var linkArray = [String]()
         var imageToHomeVC = [UIImage]()
         var dataToVC: UserInfo?
         var picArray = [Album]()
-
-        getUserData { [weak self] userInfo in // [weak self] kuda?
+        
+        getUserData { [weak self] userInfo in
             let group = DispatchGroup()
             guard let self = self else { return }
+            
+            self.spinner.isHidden = false
+            self.spinner.startAnimating()
+            
             dataToVC = userInfo
 
             self.getPhotos { [weak self] album in
                 picArray = album
                 guard let self = self else { return }
-                self.getFriends { friend in
+                
+                self.getFriends { [weak self] friend in
+                    guard let self = self else { return }
                     var photoToVC = [UIImage]()
-                    let itemToVC = friend
+                    let friendToVC = friend
 
                     group.notify(queue: .main) {
                         let vc = self.storyboard!.instantiateViewController(withIdentifier: HomeViewController.controllerInditefire) as! HomeViewController
@@ -63,29 +70,30 @@ class LoginViewController: UIViewController, WKUIDelegate {
                         vc.imageArray = imageToHomeVC
                         vc.userData = dataToVC
                         vc.imageFriendArray = photoToVC
-                        vc.friendsData = itemToVC.items!
+                        vc.friendsData = friendToVC.items!   // how to change?
                         self.navigationController?.pushViewController(vc, animated: true)
 
                     }
                     
+                    friend.items?.forEach {_ in group.enter()}
+                    
                     friend.items?.enumerated().forEach({ index, element in
-                        if index < 4 {
-                            group.enter()
-                            guard let url = URL(string: element.photo_50!) else { return }
-                            UIImage.loadImageFromUrl(url: url) { image in
+                        if index < 3 {
+                            let url = URL(string: element.photo_50!)
+                            UIImage.loadImageFromUrl(url: url!) { image in
                             photoToVC.append(image)
+                                group.leave()
                             }
-                            group.leave()
                         }
                     })
                     
                     group.enter()
                     guard let url = URL(string: dataToVC!.photo_max_orig) else { return }
-                    HomeViewController().loadImageFriends(url: url) { image in
+                    UIImage.loadImageFromUrl(url: url, completion: { image in
                         avatarFromNetwork = image
                         group.leave()
-                    }
-
+                    })
+                    
                     picArray.enumerated().forEach({ index, element in
                         element.sizes.forEach { SizeAndPhotoUrl in
                             if SizeAndPhotoUrl.type == "m" {
@@ -105,6 +113,7 @@ class LoginViewController: UIViewController, WKUIDelegate {
                     }
                 }
             }
+            self.spinner.stopAnimating()
         }
     }
     
@@ -147,31 +156,40 @@ extension LoginViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         
         if let urlComponents = URLComponents(url: navigationResponse.response.url!, resolvingAgainstBaseURL: true), let queryItems = urlComponents.queryItems {
+            
             let value = queryItems[1].value
+            
             if value?.contains("access_token") ?? false {
+                
                 let encodedString = value?.removingPercentEncoding
                 var stringArray = encodedString?.components(separatedBy: "#")
                 stringArray?.removeFirst()
                 let separators = CharacterSet(charactersIn: "&")
                 guard let stringArray = stringArray else { return }
+                
                 if stringArray.count > 0 {
                     let paramString = stringArray.first
                     let paramArray = paramString!.components(separatedBy: separators)
                     var paramDict = [String: String]()
+                    
                     for element in paramArray {
+                        
                         if element.contains("access_token") {
                             let accessToken = element.components(separatedBy: "=")
                             paramDict[accessToken[0]] = accessToken[1]
                         }
+                        
                         if element.contains("expires_in") {
                             let expires_in = element.components(separatedBy: "=")
                             paramDict[expires_in[0]] = expires_in[1]
                         }
+                        
                         if element.contains("user_id") {
                             let user_id = element.components(separatedBy: "=")
                             paramDict[user_id[0]] = user_id[1]
                         }
                     }
+                    
                     let fetchToken = Token(accessToken: paramDict["access_token"]!, userId: paramDict["user_id"]!, expiresIn: paramDict["expires_in"]!)
                     NetworkManager.shared.token = fetchToken
                     reciveDataForHomeVC()
