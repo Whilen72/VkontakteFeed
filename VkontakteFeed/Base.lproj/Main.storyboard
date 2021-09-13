@@ -28,23 +28,16 @@
                                     <action selector="loginAction:" destination="fxF-Rv-GjG" eventType="touchUpInside" id="DCX-Bs-giI"/>
                                 </connections>
                             </button>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="SLc-7N-h4Y">
-                                <rect key="frame" x="188.66666666666666" y="429.66666666666669" width="37" height="37"/>
-                                <color key="color" systemColor="labelColor"/>
-                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="abx-58-jpM"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="SLc-7N-h4Y" firstAttribute="centerY" secondItem="hVr-I9-JWi" secondAttribute="centerY" id="HXE-HR-Lud"/>
                             <constraint firstItem="Wgt-NU-otx" firstAttribute="centerY" secondItem="abx-58-jpM" secondAttribute="centerY" id="LVJ-gK-lPe"/>
-                            <constraint firstItem="SLc-7N-h4Y" firstAttribute="centerX" secondItem="hVr-I9-JWi" secondAttribute="centerX" id="fPO-hZ-ziE"/>
                             <constraint firstItem="Wgt-NU-otx" firstAttribute="centerX" secondItem="abx-58-jpM" secondAttribute="centerX" id="wcS-dT-kLB"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="loginButtonOutlet" destination="Wgt-NU-otx" id="J2D-g6-p5d"/>
-                        <outlet property="spinner" destination="SLc-7N-h4Y" id="PtB-vn-eaj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wGV-kG-I4q" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -497,9 +490,6 @@
         </scene>
     </scenes>
     <resources>
-        <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

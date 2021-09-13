@@ -65,6 +65,7 @@ class NetworkManager {
         })
         keysToRemove.forEach { allParams.removeValue(forKey: $0) }
 
+        
         params!.forEach { allParams[$0] = $1 }
         let paramsStr: String = allParams
             .map { "\($0)=\($1)"}

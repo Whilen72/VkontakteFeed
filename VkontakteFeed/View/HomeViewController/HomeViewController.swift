@@ -83,11 +83,13 @@ class HomeViewController: UIViewController {
                         }
                     }
                 })
+                
                 let photoCount = self.photosData.count
                 self.photoLabel.textColor = .fontColor
                 self.photoLabel.text = "Photos \(photoCount)"
                 self.urlArray.forEach { url in
                     guard let url = URL(string: url) else { return }
+                    
                     if let data = try? Data(contentsOf: url) {
                         if let image = UIImage(data: data) {
                             self.imageArray.append(image)
@@ -104,12 +106,22 @@ class HomeViewController: UIViewController {
     private func launchScreen() {
         contentView.backgroundColor = .backgroundColor
         
+        if imageArray.count == 0 {
+            collectionView.isHidden = true
+        }
+        
         imageView.image = avatar
         imageView.contentMode = .top
-        
-        imageViewLower.image = imageFriendArray[0]
-        imageViewMiddle.image = imageFriendArray[1]
-        imageViewUpper.image = imageFriendArray[2]
+       
+        if imageFriendArray.count < 2 {
+            circleViewLower.isHidden = true
+            circleViewMiddle.isHidden = true
+            circleViewUpper.isHidden = true
+        } else {
+            imageViewLower.image = imageFriendArray[0]
+            imageViewMiddle.image = imageFriendArray[1]
+            imageViewUpper.image = imageFriendArray[2]
+        }
         
         guard let userData = userData else { return }
         
@@ -167,7 +179,6 @@ class HomeViewController: UIViewController {
         imageFriends.contentMode = .scaleAspectFit
         imageFriends.image = UIImage(systemName: "person.3")
         
-        circleViewLower.addSubview(imageViewLower)
         circleViewLower.layer.cornerRadius = circleViewLower.frame.width/2
         circleViewLower.layer.masksToBounds = true
         imageViewLower.layer.cornerRadius = imageViewLower.frame.width/2
@@ -208,13 +219,8 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
-        if self.imageArray.count < 6 {
-            return self.imageArray.count
-        } else {
-            return 6
+        return self.imageArray.count < 6 ?  self.imageArray.count : 6
         }
-    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        

@@ -12,16 +12,17 @@ import Foundation
 class LoginViewController: UIViewController, WKUIDelegate {
         
     @IBOutlet weak var loginButtonOutlet: UIButton!
-    @IBOutlet weak var spinner: UIActivityIndicatorView!
     
-    var data: UserInfo?
+    
+    
     
         // MARK: - viewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        spinner.isHidden = true
+        
         loginButtonOutlet.setTitle("VK sign in", for: .normal)
+        view.backgroundColor = .backgroundColor
     }
     
     @IBAction func loginAction(_ sender: Any) {
@@ -29,8 +30,8 @@ class LoginViewController: UIViewController, WKUIDelegate {
     }
          
     private func showAuthWebView() {
-        let webView = WKWebView(frame: view.frame)
         
+        let webView = WKWebView(frame: view.frame)
         webView.navigationDelegate = self
         self.view.addSubview(webView)
         let url = URL(string: "https://oauth.vk.com/authorize?client_id=7918001&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&response_type=token&v=5.131")
@@ -39,7 +40,7 @@ class LoginViewController: UIViewController, WKUIDelegate {
         }
     
     func reciveDataForHomeVC(){
-    
+        
         var avatarFromNetwork = UIImage()
         var linkArray = [String]()
         var imageToHomeVC = [UIImage]()
@@ -49,9 +50,6 @@ class LoginViewController: UIViewController, WKUIDelegate {
         getUserData { [weak self] userInfo in
             let group = DispatchGroup()
             guard let self = self else { return }
-            
-            self.spinner.isHidden = false
-            self.spinner.startAnimating()
             
             dataToVC = userInfo
 
@@ -70,7 +68,10 @@ class LoginViewController: UIViewController, WKUIDelegate {
                         vc.imageArray = imageToHomeVC
                         vc.userData = dataToVC
                         vc.imageFriendArray = photoToVC
-                        vc.friendsData = friendToVC.items!   // how to change?
+                        if let friendToVC = friendToVC.items {
+                            vc.friendsData = friendToVC
+                        }
+                        
                         self.navigationController?.pushViewController(vc, animated: true)
 
                     }
@@ -113,7 +114,6 @@ class LoginViewController: UIViewController, WKUIDelegate {
                     }
                 }
             }
-            self.spinner.stopAnimating()
         }
     }
     
