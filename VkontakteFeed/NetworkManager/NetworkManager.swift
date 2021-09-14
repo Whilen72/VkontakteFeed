@@ -59,31 +59,39 @@ class NetworkManager {
         var allParams: [String: String] = [
             "v": "5.131"
         ]
+        
         if let accessToken = token?.accessToken {
             allParams["access_token"] = accessToken
         }
         
-        let keysToRemove: [String] = allParams.reduce([], { result, keyValue in
-            return keyValue.value.isEmpty ? result + [keyValue.key] : result
-        })
-        keysToRemove.forEach { allParams.removeValue(forKey: $0) }
-
-        
-        params!.forEach { allParams[$0] = $1 }
-        let paramsStr: String = allParams
-            .map { "\($0)=\($1)"}
-            .joined(separator: "&")
+        if params != nil {
+            params!.forEach { allParams[$0] = $1 }
+            
+            let paramsStr: String = allParams
+                .map { "\($0)=\($1)"}
+                .joined(separator: "&")
 
         let methodStr = baseUrl + method + "?" + paramsStr
         guard let url = URL.init(string: methodStr) else { fatalError() }
     
         return url
+        
+        } else {
+            let paramsStr: String = allParams
+                .map { "\($0)=\($1)"}
+                .joined(separator: "&")
+
+            let methodStr = baseUrl + method + "?" + paramsStr
+            guard let url = URL.init(string: methodStr) else { fatalError() }
+        
+            return url
+        }
     }
   
     func getCurrentUser (completion: @escaping (Result<CurrentUser, Error>)->(Void)) {
-        let param = ["":""]
-        let url = buildMethodURL(method: "account.getProfileInfo", params: param)
-        print(url)
+        
+        let url = buildMethodURL(method: "account.getProfileInfo", params: nil)
+        
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             if let error = error {
                 completion(.failure(error))
@@ -140,6 +148,7 @@ class NetworkManager {
             }
         }.resume()
     }
+    
     func getAlbum(offset: Int = 0, count: Int = 500, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
         let params: [String: String] = [
             "album_id": "wall",

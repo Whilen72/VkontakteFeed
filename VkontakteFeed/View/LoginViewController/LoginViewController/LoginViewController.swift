@@ -49,16 +49,19 @@ class LoginViewController: UIViewController, WKUIDelegate {
         var picArray = [Album]()
         
         getUserData { [weak self] userInfo in
+            
             let group = DispatchGroup()
             guard let self = self else { return }
             
             dataToVC = userInfo
 
             self.getPhotos { [weak self] album in
+                
                 picArray = album
                 guard let self = self else { return }
                 
                 self.getFriends { [weak self] friend in
+                    
                     guard let self = self else { return }
                     var photoToVC = [UIImage]()
                     let friendToVC = friend
@@ -77,23 +80,26 @@ class LoginViewController: UIViewController, WKUIDelegate {
                     }
                     
                     friend.items?.forEach {_ in group.enter()}
+                    linkArray.forEach {_ in group.enter()}
+                    group.enter()
                     
                     friend.items?.enumerated().forEach({ index, element in
                         if index < 3 {
-                            let url = URL(string: element.photo_50!)
-                            UIImage.loadImageFromUrl(url: url!) { image in
-                            photoToVC.append(image)
-                                group.leave()
+                            if let url = URL(string: element.photo_50!) {
+                                UIImage.loadImageFromUrl(url: url) { image in
+                                    photoToVC.append(image)
+                                    group.leave()
+                                }
                             }
                         }
                     })
                     
-                    group.enter()
-                    guard let url = URL(string: dataToVC!.photo_max_orig) else { return }
-                    UIImage.loadImageFromUrl(url: url, completion: { image in
-                        avatarFromNetwork = image
-                        group.leave()
-                    })
+                    if let url = URL(string: dataToVC!.photo_max_orig) {
+                        UIImage.loadImageFromUrl(url: url, completion: { image in
+                            avatarFromNetwork = image
+                            group.leave()
+                        })
+                    }
                     
                     picArray.enumerated().forEach({ index, element in
                         element.sizes.forEach { SizeAndPhotoUrl in
@@ -103,13 +109,12 @@ class LoginViewController: UIViewController, WKUIDelegate {
                         }
                     })
 
-                    linkArray.forEach {_ in group.enter()}
-
                     linkArray.forEach { url in
-                        guard let url = URL(string: url) else { return }
-                        UIImage.loadImageFromUrl(url: url) { image in
-                            imageToHomeVC.append(image)
-                            group.leave()
+                        if let url = URL(string: url) {
+                            UIImage.loadImageFromUrl(url: url) { image in
+                                imageToHomeVC.append(image)
+                                group.leave()
+                            }
                         }
                     }
                 }
