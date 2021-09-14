@@ -85,7 +85,7 @@ class LoginViewController: UIViewController, WKUIDelegate {
                     
                     friend.items?.enumerated().forEach({ index, element in
                         if index < 3 {
-                            if let url = URL(string: element.photo_50!) {
+                            if let urlString = element.photo_50, let url = URL(string: urlString) {
                                 UIImage.loadImageFromUrl(url: url) { image in
                                     photoToVC.append(image)
                                     group.leave()
@@ -94,7 +94,7 @@ class LoginViewController: UIViewController, WKUIDelegate {
                         }
                     })
                     
-                    if let url = URL(string: dataToVC!.photo_max_orig) {
+                    if let urlString = dataToVC?.photo_max_orig, let url = URL(string: urlString) {
                         UIImage.loadImageFromUrl(url: url, completion: { image in
                             avatarFromNetwork = image
                             group.leave()
