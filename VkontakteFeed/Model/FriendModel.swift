@@ -22,8 +22,14 @@ struct Item: Decodable {
         case trackCode = "track_code"
         case photo_50
         case isClosed = "is_closed"
+        case photo_200_orig
+       // case town = "city"
+        case online
     }
-
+    
+    let online: Int
+    //let town: [Town]
+    let photo_200_orig: String?
     let firstName: String?
     let id: Int
     let lastName: String?
@@ -33,7 +39,13 @@ struct Item: Decodable {
     let photo_50: String?
 }
 
-
+//struct Town: Decodable {
+//    
+//    enum CodingKeys: String, CodingKey {
+//       case title
+//    }
+//    let title: String
+//}
 
 
 

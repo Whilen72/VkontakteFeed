@@ -17,8 +17,11 @@ class NetworkManager {
     
     enum GetListFields: String, CaseIterable {
         case photo_50
+        case photo_200_orig
+        case online
+        case city
     }
-    func getList(offset: Int = 0, count: Int = 500, fields: [GetListFields] = [.photo_50], completion: @escaping (Result<FriendsList, Error>)->(Void)) {
+    func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online], completion: @escaping (Result<FriendsList, Error>)->(Void)) {
         let params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:","),
             "name_case": "nom",
@@ -36,7 +39,7 @@ class NetworkManager {
                 do {
                     struct Responce: Decodable {
                         let response: FriendsList
-                    }
+                    } 
                     if let data = data {
                         let responceModel = try decoder.decode(Responce.self, from: data)
                         DispatchQueue.main.async {
@@ -59,7 +62,7 @@ class NetworkManager {
         if let accessToken = token?.accessToken {
             allParams["access_token"] = accessToken
         }
-            
+        
         let keysToRemove: [String] = allParams.reduce([], { result, keyValue in
             return keyValue.value.isEmpty ? result + [keyValue.key] : result
         })

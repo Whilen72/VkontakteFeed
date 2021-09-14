@@ -11,45 +11,35 @@ class FriendListController: UIViewController {
     
     
     @IBOutlet weak var tableView: UITableView!
+    
+    static let controllerInditefire = "friendsList"
+    var friendsImage = [UIImage]()
+    var data = [Item]()
    
-   private var data = [Item]()
-   static let controllerInditefire = "friendsList"
+    
     // MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        getFriendsList()
-        
+      //  getFriendsList()
+        tableView.register(UINib(nibName: "FriendsTableViewCell", bundle: nil), forCellReuseIdentifier: FriendsTableViewCell.reuseId)
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(FriendsCell.self, forCellReuseIdentifier: "friendsCell")
-        addConstraints()
+        tableView.backgroundColor = .backgroundColor
     }
 
-    private func getFriendsList() {
-        NetworkManager.shared.getList {[weak self] (result) in
-            switch result {
-            case .success(let listOf):
-                self?.data = listOf.items ?? []
-            case .failure(let error):
-                print("Error processing json data: \(error)")
-            }
-            self!.tableView.reloadData()
-        }
-    }
-    
-    private func addConstraints(){
-        view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-    }
-        
-    
-
+//    private func getFriendsList() {
+//        NetworkManager.shared.getList {[weak self] (result) in
+//            switch result {
+//            case .success(let listOf):
+//                self?.data = listOf.items ?? []
+//            case .failure(let error):
+//                print("Error processing json data: \(error)")
+//            }
+//            self!.tableView.reloadData()
+//        }
+//    }
 }
 
 extension FriendListController: UITableViewDataSource {
@@ -60,10 +50,14 @@ extension FriendListController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
                 
-        let cell = tableView.dequeueReusableCell(withIdentifier: "friendsCell", for: indexPath) as! FriendsCell
-        print((data[indexPath.row].firstName)!)
-        cell.nameLabelCell?.text = "lol lol lol" //(data[indexPath.row].firstName)
-      
+        let cell = tableView.dequeueReusableCell(withIdentifier: "friendsCell", for: indexPath) as! FriendsTableViewCell
+
+        
+        cell.configure(with: friendsImage[indexPath.row],
+                       name: "\(data[indexPath.row].firstName!) \((data[indexPath.row].lastName!))",
+                       city: "не указан",
+                       onlineStatus: data[indexPath.row].online == 1 ? "is online" : "offline")
+
         return cell
     }
     

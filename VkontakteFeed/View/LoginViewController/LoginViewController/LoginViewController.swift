@@ -12,9 +12,8 @@ import Foundation
 class LoginViewController: UIViewController, WKUIDelegate {
         
     @IBOutlet weak var loginButtonOutlet: UIButton!
-    
-    
-    
+    @IBOutlet weak var waitingView: UIView!
+    @IBOutlet weak var loadIndicator: UIImageView!
     
         // MARK: - viewDidLoad
     
@@ -23,6 +22,8 @@ class LoginViewController: UIViewController, WKUIDelegate {
         
         loginButtonOutlet.setTitle("VK sign in", for: .normal)
         view.backgroundColor = .backgroundColor
+        waitingView.backgroundColor = .backgroundColor
+        waitingView.isHidden = true
     }
     
     @IBAction func loginAction(_ sender: Any) {
@@ -73,7 +74,6 @@ class LoginViewController: UIViewController, WKUIDelegate {
                         }
                         
                         self.navigationController?.pushViewController(vc, animated: true)
-
                     }
                     
                     friend.items?.forEach {_ in group.enter()}
@@ -149,24 +149,32 @@ class LoginViewController: UIViewController, WKUIDelegate {
                 }
         }
     }
+    
+    override var preferredStatusBarStyle : UIStatusBarStyle {   // why black?
+        return .lightContent
+    }
 }
+
+
 
 extension LoginViewController: WKNavigationDelegate {
         
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         
         if let urlComponents = URLComponents(url: navigationResponse.response.url!, resolvingAgainstBaseURL: true), let queryItems = urlComponents.queryItems {
-            
+            webView.addSubview(waitingView)
+            loadIndicator.loadGif(name: "duckGif")
             let value = queryItems[1].value
             
             if value?.contains("access_token") ?? false {
-                
+               
+                waitingView.isHidden = false
                 let encodedString = value?.removingPercentEncoding
                 var stringArray = encodedString?.components(separatedBy: "#")
                 stringArray?.removeFirst()
                 let separators = CharacterSet(charactersIn: "&")
                 guard let stringArray = stringArray else { return }
-                
+               
                 if stringArray.count > 0 {
                     let paramString = stringArray.first
                     let paramArray = paramString!.components(separatedBy: separators)

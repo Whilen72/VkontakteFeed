@@ -46,7 +46,7 @@ class HomeViewController: UIViewController {
     private let errors = "error"
     private let itemsPerRow: CGFloat = 3
     private let sectionInsets = UIEdgeInsets(top: 10, left: 2, bottom: 10, right: 2)
-    
+    private var imagesToFriendList = [UIImage]()
     // MARK: - ViewDidLoad
     
     override func viewDidLoad() {
@@ -57,6 +57,7 @@ class HomeViewController: UIViewController {
         collectionView.register(UINib(nibName:"HomeCell", bundle: nil), forCellWithReuseIdentifier: HomeCell.reuseId)
         launchScreen()
         tapGesture()
+        loadImageFriends()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -112,15 +113,19 @@ class HomeViewController: UIViewController {
         
         imageView.image = avatar
         imageView.contentMode = .top
-       
-        if imageFriendArray.count < 2 {
-            circleViewLower.isHidden = true
-            circleViewMiddle.isHidden = true
-            circleViewUpper.isHidden = true
-        } else {
-            imageViewLower.image = imageFriendArray[0]
-            imageViewMiddle.image = imageFriendArray[1]
-            imageViewUpper.image = imageFriendArray[2]
+        
+        let imageViewArray = [imageViewLower, imageViewMiddle, imageViewUpper]
+        let circleViewArray = [circleViewLower, circleViewMiddle, circleViewUpper]
+        
+        imageViewArray.enumerated().forEach { imageViewIndex, imageView in
+                
+            if imageFriendArray.count >= imageViewIndex {
+            
+                imageView!.image = imageFriendArray[imageViewIndex]
+            } else {
+                
+                circleViewArray[imageViewIndex]!.isHidden = true
+            }
         }
         
         guard let userData = userData else { return }
@@ -200,6 +205,10 @@ class HomeViewController: UIViewController {
         borderCenterLabel.backgroundColor = .lightGray
         borderLowerLabel.backgroundColor = .lightGray
     }
+    
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+        return .lightContent 
+    }
 
     private func tapGesture() {
         let gestureRecognizerUpper = UITapGestureRecognizer(target: self, action: #selector(goToFriendsList(_:)))
@@ -208,8 +217,25 @@ class HomeViewController: UIViewController {
         friendsViewContainer.isUserInteractionEnabled = true
     }
     
+    private func loadImageFriends() {
+        let dispatchGroup = DispatchGroup()
+        
+        friendsData.forEach {_ in dispatchGroup.enter()}
+        
+        friendsData.forEach { element in
+            guard let url = URL (string: element.photo_200_orig!) else { return }
+            
+            UIImage.loadImageFromUrl(url: url) { image in
+                self.imagesToFriendList.append(image)
+                dispatchGroup.leave()
+            }
+        }
+    }
+    
     @objc private func goToFriendsList(_ gesture: UITapGestureRecognizer) {
         let vc = self.storyboard!.instantiateViewController(withIdentifier: FriendListController.controllerInditefire) as! FriendListController
+        vc.friendsImage = imagesToFriendList
+        vc.data = friendsData
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
