@@ -17,10 +17,10 @@
 		5F2A008926BEA20000965A84 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2A008826BEA20000965A84 /* NetworkManager.swift */; };
 		5F2ACFA826BD480B002585F0 /* FrindesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2ACFA726BD480B002585F0 /* FrindesListViewController.swift */; };
 		5F2ACFAF26BD69C8002585F0 /* FriendListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2ACFAE26BD69C8002585F0 /* FriendListModel.swift */; };
-		5F7C3B7026EF799200F54ED4 /* duckGif.gif in Resources */ = {isa = PBXBuildFile; fileRef = 5F7C3B6F26EF799100F54ED4 /* duckGif.gif */; };
 		5F7C3B7226EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7C3B7126EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift */; };
 		5F7C3B7526EF843100F54ED4 /* FriendsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7C3B7326EF843100F54ED4 /* FriendsTableViewCell.swift */; };
 		5F7C3B7626EF843100F54ED4 /* FriendsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F7C3B7426EF843100F54ED4 /* FriendsTableViewCell.xib */; };
+		5F7C3B7926F0FAD000F54ED4 /* duckGif.gif in Resources */ = {isa = PBXBuildFile; fileRef = 5F7C3B7826F0FAD000F54ED4 /* duckGif.gif */; };
 		5F7D833E26CD365A003AB124 /* QandA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D833D26CD365A003AB124 /* QandA.swift */; };
 		5F7D834526CE8CEE003AB124 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D834426CE8CEE003AB124 /* HomeViewController.swift */; };
 		5F7D834726CE916F003AB124 /* UserInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D834626CE916F003AB124 /* UserInfoModel.swift */; };
@@ -47,10 +47,10 @@
 		5F2A008826BEA20000965A84 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		5F2ACFA726BD480B002585F0 /* FrindesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrindesListViewController.swift; sourceTree = "<group>"; };
 		5F2ACFAE26BD69C8002585F0 /* FriendListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendListModel.swift; sourceTree = "<group>"; };
-		5F7C3B6F26EF799100F54ED4 /* duckGif.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = duckGif.gif; path = ../../../Downloads/duckGif.gif; sourceTree = "<group>"; };
 		5F7C3B7126EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageViewExtension+VKFeed.swift"; sourceTree = "<group>"; };
 		5F7C3B7326EF843100F54ED4 /* FriendsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsTableViewCell.swift; sourceTree = "<group>"; };
 		5F7C3B7426EF843100F54ED4 /* FriendsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendsTableViewCell.xib; sourceTree = "<group>"; };
+		5F7C3B7826F0FAD000F54ED4 /* duckGif.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = duckGif.gif; sourceTree = "<group>"; };
 		5F7D833D26CD365A003AB124 /* QandA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QandA.swift; sourceTree = "<group>"; };
 		5F7D834426CE8CEE003AB124 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		5F7D834626CE916F003AB124 /* UserInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoModel.swift; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 				5F0D159526B9496400469A09 /* Model */,
 				5F0D159626B9559600469A09 /* NetworkManager */,
 				5F7D835626E244AA003AB124 /* Extension */,
-				5F7C3B6E26EF795900F54ED4 /* Files */,
+				5F7C3B7726F0FA6F00F54ED4 /* Files */,
 				5F0D158526B948E500469A09 /* Assets.xcassets */,
 				5F0D158226B948E400469A09 /* Main.storyboard */,
 				5F0D158726B948E500469A09 /* LaunchScreen.storyboard */,
@@ -141,10 +141,10 @@
 			path = FriendsList;
 			sourceTree = "<group>";
 		};
-		5F7C3B6E26EF795900F54ED4 /* Files */ = {
+		5F7C3B7726F0FA6F00F54ED4 /* Files */ = {
 			isa = PBXGroup;
 			children = (
-				5F7C3B6F26EF799100F54ED4 /* duckGif.gif */,
+				5F7C3B7826F0FAD000F54ED4 /* duckGif.gif */,
 			);
 			path = Files;
 			sourceTree = "<group>";
@@ -261,7 +261,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F7C3B7026EF799200F54ED4 /* duckGif.gif in Resources */,
+				5F7C3B7926F0FAD000F54ED4 /* duckGif.gif in Resources */,
 				5F0D158926B948E500469A09 /* LaunchScreen.storyboard in Resources */,
 				5F0D158626B948E500469A09 /* Assets.xcassets in Resources */,
 				5F7D835526DD3871003AB124 /* HomeCell.xib in Resources */,
