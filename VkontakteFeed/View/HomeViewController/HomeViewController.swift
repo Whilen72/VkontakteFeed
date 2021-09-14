@@ -118,13 +118,18 @@ class HomeViewController: UIViewController {
         let circleViewArray = [circleViewLower, circleViewMiddle, circleViewUpper]
         
         imageViewArray.enumerated().forEach { imageViewIndex, imageView in
-                
-            if imageFriendArray.count >= imageViewIndex {
             
-                imageView!.image = imageFriendArray[imageViewIndex]
+            if imageFriendArray.count == 0 {
+                circleViewArray.forEach { view in
+                    view?.isHidden = true
+                }
             } else {
                 
-                circleViewArray[imageViewIndex]!.isHidden = true
+                if imageFriendArray.count >= imageViewIndex {
+                    imageView!.image = imageFriendArray[imageViewIndex]
+                } else {
+                    circleViewArray[imageViewIndex]!.isHidden = true
+                }
             }
         }
         
