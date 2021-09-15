@@ -152,7 +152,7 @@ class NetworkManager {
                 let decoder = JSONDecoder()
                 do {
                     struct Response: Decodable {
-                        let response: Photos
+                        let response: PhotosResponse
                     }
                     if let data = data {
                     let responseModel = try decoder.decode(Response.self, from: data)

@@ -7,20 +7,20 @@
 
 import Foundation
 
-struct Photos: Decodable {
+struct PhotosResponse: Decodable {
     let count: Int
     let items: [Album]?
 }
 
 struct Album: Decodable {
-    let sizes: [SizeAndPhotoUrl]
+    let sizes: [PhotoModel]
     
     enum CodingKeys: String, CodingKey {
        case sizes
     }
 }
 
-struct SizeAndPhotoUrl: Decodable {
+struct PhotoModel: Decodable {
     let height: Int
     let url: String
     let type: String

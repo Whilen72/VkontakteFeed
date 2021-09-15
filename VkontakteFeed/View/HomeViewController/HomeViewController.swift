@@ -114,7 +114,7 @@ class HomeViewController: UIViewController {
         
         imageViewArray.enumerated().forEach { imageViewIndex, imageView in
             
-            if imageFriendArray == [] {
+            if imageFriendArray.isEmpty {
                 circleViewArray.forEach { view in
                     view?.isHidden = true
                 }
