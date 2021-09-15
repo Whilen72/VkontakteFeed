@@ -14,7 +14,7 @@ class FriendListController: UIViewController {
     
     static let controllerInditefire = "friendsList"
     var friendsImage = [UIImage]()
-    var data = [Item]()
+    var data = [FriendModel]()
    
     
     // MARK: - ViewDidLoad

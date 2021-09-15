@@ -12,8 +12,9 @@ import Foundation
 class LoginViewController: UIViewController, WKUIDelegate {
         
     @IBOutlet weak var loginButtonOutlet: UIButton!
-    @IBOutlet weak var waitingView: UIView!
-    @IBOutlet weak var loadIndicator: UIImageView!
+    @IBOutlet weak var loadingIndicator: UIImageView!
+    
+    
     
         // MARK: - viewDidLoad
     
@@ -22,8 +23,7 @@ class LoginViewController: UIViewController, WKUIDelegate {
         
         loginButtonOutlet.setTitle("VK sign in", for: .normal)
         view.backgroundColor = .backgroundColor
-        waitingView.backgroundColor = .backgroundColor
-        waitingView.isHidden = true
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     @IBAction func loginAction(_ sender: Any) {
@@ -33,6 +33,9 @@ class LoginViewController: UIViewController, WKUIDelegate {
     private func showAuthWebView() {
         
         let webView = WKWebView(frame: view.frame)
+        webView.backgroundColor = .backgroundColor
+        webView.scrollView.backgroundColor = .backgroundColor
+        webView.isOpaque = false
         webView.navigationDelegate = self
         self.view.addSubview(webView)
         let url = URL(string: "https://oauth.vk.com/authorize?client_id=7918001&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&response_type=token&v=5.131")
@@ -76,8 +79,16 @@ class LoginViewController: UIViewController, WKUIDelegate {
                             vc.friendsData = friendToVC
                         }
                         
-                        self.navigationController?.pushViewController(vc, animated: true)
+                        self.navigationController?.pushViewController(vc, animated: true) // с навигейшн контролерра удалить логинВьюКонтроллер
                     }
+                    
+                    picArray.enumerated().forEach({ index, element in
+                        element.sizes.forEach { SizeAndPhotoUrl in
+                            if SizeAndPhotoUrl.type == "m" {
+                                linkArray.append(SizeAndPhotoUrl.url)
+                            }
+                        }
+                    })
                     
                     friend.items?.forEach {_ in group.enter()}
                     linkArray.forEach {_ in group.enter()}
@@ -100,14 +111,6 @@ class LoginViewController: UIViewController, WKUIDelegate {
                             group.leave()
                         })
                     }
-                    
-                    picArray.enumerated().forEach({ index, element in
-                        element.sizes.forEach { SizeAndPhotoUrl in
-                            if SizeAndPhotoUrl.type == "m" {
-                                linkArray.append(SizeAndPhotoUrl.url)
-                            }
-                        }
-                    })
 
                     linkArray.forEach { url in
                         if let url = URL(string: url) {
@@ -144,7 +147,7 @@ class LoginViewController: UIViewController, WKUIDelegate {
             }
         }
     }
-    private func getFriends(completion: @escaping (FriendsList)->()) {
+    private func getFriends(completion: @escaping (FriendList)->()) {
         NetworkManager.shared.getList { (result) in
                 switch result {
                 case .success(let friends):
@@ -153,6 +156,11 @@ class LoginViewController: UIViewController, WKUIDelegate {
                     print("Error processing json data: \(error)")
                 }
         }
+    }
+    
+    private func showLoadingAnimation() {
+        loadingIndicator.image = UIImage.gif(name: "duckGif")
+        self.view.bringSubviewToFront(loadingIndicator)
     }
     
     override var preferredStatusBarStyle : UIStatusBarStyle {   // why black?
@@ -167,13 +175,11 @@ extension LoginViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         
         if let urlComponents = URLComponents(url: navigationResponse.response.url!, resolvingAgainstBaseURL: true), let queryItems = urlComponents.queryItems {
-            webView.addSubview(waitingView)
-            loadIndicator.loadGif(name: "duckGif")
+            
             let value = queryItems[1].value
             
             if value?.contains("access_token") ?? false {
-               
-                waitingView.isHidden = false
+                
                 let encodedString = value?.removingPercentEncoding
                 var stringArray = encodedString?.components(separatedBy: "#")
                 stringArray?.removeFirst()
@@ -206,6 +212,7 @@ extension LoginViewController: WKNavigationDelegate {
                     let fetchToken = Token(accessToken: paramDict["access_token"]!, userId: paramDict["user_id"]!, expiresIn: paramDict["expires_in"]!)
                     NetworkManager.shared.token = fetchToken
                     reciveDataForHomeVC()
+                    showLoadingAnimation()
                 }
             }
         }

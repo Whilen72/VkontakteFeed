@@ -42,7 +42,7 @@ class HomeViewController: UIViewController {
     var imageArray = [UIImage]()
     var avatar = UIImage()
     var imageFriendArray = [UIImage]()
-    var friendsData = [Item]()
+    var friendsData = [FriendModel]()
     private let errors = "error"
     private let itemsPerRow: CGFloat = 3
     private let sectionInsets = UIEdgeInsets(top: 10, left: 2, bottom: 10, right: 2)
@@ -58,11 +58,6 @@ class HomeViewController: UIViewController {
         launchScreen()
         tapGesture()
         loadImageFriends()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -119,16 +114,16 @@ class HomeViewController: UIViewController {
         
         imageViewArray.enumerated().forEach { imageViewIndex, imageView in
             
-            if imageFriendArray.count == 0 {
+            if imageFriendArray == [] {
                 circleViewArray.forEach { view in
                     view?.isHidden = true
                 }
             } else {
                 
-                if imageFriendArray.count >= imageViewIndex {
-                    imageView!.image = imageFriendArray[imageViewIndex]
-                } else {
+                if imageFriendArray.count <= imageViewIndex {
                     circleViewArray[imageViewIndex]!.isHidden = true
+                } else {
+                    imageView!.image = imageFriendArray[imageViewIndex]
                 }
             }
         }

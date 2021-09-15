@@ -21,7 +21,7 @@ class NetworkManager {
         case online
         case city
     }
-    func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online], completion: @escaping (Result<FriendsList, Error>)->(Void)) {
+    func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online], completion: @escaping (Result<FriendList, Error>)->(Void)) {
         let params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:","),
             "name_case": "nom",
@@ -38,7 +38,7 @@ class NetworkManager {
                 let decoder = JSONDecoder()
                 do {
                     struct Responce: Decodable {
-                        let response: FriendsList
+                        let response: FriendList
                     } 
                     if let data = data {
                         let responceModel = try decoder.decode(Responce.self, from: data)
@@ -65,27 +65,16 @@ class NetworkManager {
         }
         
         if params != nil {
-            params!.forEach { allParams[$0] = $1 }
-            
-            let paramsStr: String = allParams
-                .map { "\($0)=\($1)"}
-                .joined(separator: "&")
+            params?.forEach { allParams[$0] = $1 }
+        }
+        let paramsStr: String = allParams
+            .map { "\($0)=\($1)"}
+            .joined(separator: "&")
 
         let methodStr = baseUrl + method + "?" + paramsStr
         guard let url = URL.init(string: methodStr) else { fatalError() }
     
         return url
-        
-        } else {
-            let paramsStr: String = allParams
-                .map { "\($0)=\($1)"}
-                .joined(separator: "&")
-
-            let methodStr = baseUrl + method + "?" + paramsStr
-            guard let url = URL.init(string: methodStr) else { fatalError() }
-        
-            return url
-        }
     }
   
     func getCurrentUser (completion: @escaping (Result<CurrentUser, Error>)->(Void)) {

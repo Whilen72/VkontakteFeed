@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct FriendsList: Decodable {
+struct FriendList: Decodable {
     let count: Int
-    let items: [Item]?
+    let items: [FriendModel]?
 }
 
 // MARK: - Item
-struct Item: Decodable {
+struct FriendModel: Decodable {
     enum CodingKeys: String, CodingKey {
         case firstName = "first_name"
         case id
