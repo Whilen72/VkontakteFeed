@@ -23,6 +23,7 @@
                                     <constraint firstAttribute="height" constant="75" id="43L-qF-zBJ"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="k6f-Ec-E7S"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="15"/>
                                 <state key="normal" title="Button"/>
                                 <connections>
                                     <action selector="loginAction:" destination="fxF-Rv-GjG" eventType="touchUpInside" id="DCX-Bs-giI"/>
@@ -35,18 +36,55 @@
                                     <constraint firstAttribute="width" constant="200" id="6nU-GK-cS2"/>
                                 </constraints>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Heu-kc-Anb">
+                                <rect key="frame" x="8" y="580.66666666666663" width="200" height="20.333333333333371"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="HkW-Qw-hqd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="WuN-gx-O6J">
+                                <rect key="frame" x="77" y="113" width="260" height="260"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="260" id="lSr-eY-IMk"/>
+                                    <constraint firstAttribute="height" constant="260" id="pEm-3k-Omu"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tgT-H9-4ZH">
+                                <rect key="frame" x="208" y="580.66666666666663" width="5" height="20.333333333333371"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="5" id="Bg3-FS-iMO"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="abx-58-jpM"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="abx-58-jpM" firstAttribute="bottom" secondItem="tgT-H9-4ZH" secondAttribute="bottom" constant="261" id="7Gf-CE-Udn"/>
+                            <constraint firstItem="WuN-gx-O6J" firstAttribute="top" secondItem="abx-58-jpM" secondAttribute="top" constant="69" id="Al4-Wa-0ho"/>
+                            <constraint firstItem="tgT-H9-4ZH" firstAttribute="top" secondItem="gKS-Cg-xuR" secondAttribute="bottom" constant="7" id="CBG-LX-gT8"/>
                             <constraint firstItem="gKS-Cg-xuR" firstAttribute="centerX" secondItem="hVr-I9-JWi" secondAttribute="centerX" id="IzI-GR-CAm"/>
                             <constraint firstItem="Wgt-NU-otx" firstAttribute="centerY" secondItem="abx-58-jpM" secondAttribute="centerY" id="LVJ-gK-lPe"/>
+                            <constraint firstItem="Heu-kc-Anb" firstAttribute="leading" secondItem="abx-58-jpM" secondAttribute="leading" constant="8" id="ZHi-mg-EqE"/>
+                            <constraint firstItem="WuN-gx-O6J" firstAttribute="leading" secondItem="abx-58-jpM" secondAttribute="leading" constant="77" id="fG9-lg-oSX"/>
+                            <constraint firstItem="Heu-kc-Anb" firstAttribute="top" secondItem="gKS-Cg-xuR" secondAttribute="bottom" constant="7" id="gyM-Aa-TkR"/>
+                            <constraint firstItem="abx-58-jpM" firstAttribute="trailing" secondItem="WuN-gx-O6J" secondAttribute="trailing" constant="77" id="n9c-Wj-yJU"/>
+                            <constraint firstItem="abx-58-jpM" firstAttribute="bottom" secondItem="Heu-kc-Anb" secondAttribute="bottom" constant="261" id="o8j-PC-u7a"/>
                             <constraint firstItem="gKS-Cg-xuR" firstAttribute="centerY" secondItem="hVr-I9-JWi" secondAttribute="centerY" id="uDD-ok-KH7"/>
+                            <constraint firstItem="tgT-H9-4ZH" firstAttribute="leading" secondItem="Heu-kc-Anb" secondAttribute="trailing" id="uHz-wR-FGU"/>
                             <constraint firstItem="Wgt-NU-otx" firstAttribute="centerX" secondItem="abx-58-jpM" secondAttribute="centerX" id="wcS-dT-kLB"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="dotLabel" destination="tgT-H9-4ZH" id="lF9-V1-osv"/>
+                        <outlet property="loadInfoLabel" destination="Heu-kc-Anb" id="3Hv-Hn-vbT"/>
                         <outlet property="loadingIndicator" destination="gKS-Cg-xuR" id="mE9-cl-eTt"/>
+                        <outlet property="loginBanner" destination="WuN-gx-O6J" id="Ogd-qf-atQ"/>
                         <outlet property="loginButtonOutlet" destination="Wgt-NU-otx" id="J2D-g6-p5d"/>
                     </connections>
                 </viewController>

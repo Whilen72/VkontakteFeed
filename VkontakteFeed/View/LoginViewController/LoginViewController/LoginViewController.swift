@@ -13,6 +13,10 @@ class LoginViewController: UIViewController, WKUIDelegate {
         
     @IBOutlet weak var loginButtonOutlet: UIButton!
     @IBOutlet weak var loadingIndicator: UIImageView!
+    @IBOutlet weak var loginBanner: UIImageView!
+    @IBOutlet weak var loadInfoLabel: UILabel!
+    @IBOutlet weak var dotLabel: UILabel!
+    
     
     
     
@@ -20,8 +24,9 @@ class LoginViewController: UIViewController, WKUIDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        loginBanner.image = UIImage(named: "vk-logo")
         
-        loginButtonOutlet.setTitle("VK sign in", for: .normal)
+        launchLoginButtonAndLabels()
         view.backgroundColor = .backgroundColor
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
@@ -158,6 +163,35 @@ class LoginViewController: UIViewController, WKUIDelegate {
         }
     }
     
+    private func launchLoginButtonAndLabels() {
+        loginButtonOutlet.backgroundColor = UIColor(red: 75/255, green: 118/255, blue: 164/255, alpha: 1)
+        loginButtonOutlet.layer.cornerRadius = loginButtonOutlet.frame.height/1.9
+        loginButtonOutlet.setTitleColor(.white, for: .normal)
+        loginButtonOutlet.setTitle("VK sign in", for: .normal)
+        
+        dotLabel.isHidden = true
+        dotLabel.textColor = .white
+        dotLabel.font.withSize(20)
+        dotLabel.text = "."
+        
+        loadInfoLabel.isHidden = true
+        loadInfoLabel.textColor = .white
+        loadInfoLabel.font.withSize(20)
+        loadInfoLabel.text = "Please, wait a second.."
+    }
+    
+    private func animationsForLoading() {
+        loadInfoLabel.isHidden = false
+        self.view.bringSubviewToFront(loadInfoLabel)
+        
+        dotLabel.isHidden = false
+        self.view.bringSubviewToFront(dotLabel)
+        
+        UIView.animate(withDuration: 0.8, delay: 0.1, options: .repeat) {
+            self.dotLabel.transform = CGAffineTransform(translationX: +200, y: 0)
+        }
+    }
+    
     private func showLoadingAnimation() {
         loadingIndicator.image = UIImage.gif(name: "duckGif")
         self.view.bringSubviewToFront(loadingIndicator)
@@ -213,6 +247,7 @@ extension LoginViewController: WKNavigationDelegate {
                     NetworkManager.shared.token = fetchToken
                     reciveDataForHomeVC()
                     showLoadingAnimation()
+                    animationsForLoading()
                 }
             }
         }
