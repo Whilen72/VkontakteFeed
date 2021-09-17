@@ -16,6 +16,10 @@ class LoginViewController: UIViewController, WKUIDelegate {
     @IBOutlet weak var loginBanner: UIImageView!
     @IBOutlet weak var loadInfoLabel: UILabel!
     @IBOutlet weak var dotLabel: UILabel!
+    @IBOutlet weak var midDotLabel: UILabel!
+    @IBOutlet weak var leftDotLabel: UILabel!
+    @IBOutlet weak var infoLabel: UILabel!
+    @IBOutlet weak var animationView: UIView!
     
     
     
@@ -24,7 +28,6 @@ class LoginViewController: UIViewController, WKUIDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loginBanner.image = UIImage(named: "vk-logo")
         
         launchLoginButtonAndLabels()
         view.backgroundColor = .backgroundColor
@@ -84,7 +87,8 @@ class LoginViewController: UIViewController, WKUIDelegate {
                             vc.friendsData = friendToVC
                         }
                         
-                        self.navigationController?.pushViewController(vc, animated: true) // с навигейшн контролерра удалить логинВьюКонтроллер
+                        self.navigationController?.pushViewController(vc, animated: true)
+                        self.navigationController?.removeViewController(LoginViewController.self)
                     }
                     
                     picArray.enumerated().forEach({ index, element in
@@ -164,31 +168,60 @@ class LoginViewController: UIViewController, WKUIDelegate {
     }
     
     private func launchLoginButtonAndLabels() {
+        
+        loginBanner.image = UIImage(named: "vk-logo")
+        
+        animationView.isHidden = true
+        animationView.backgroundColor = .backgroundColor
+        
         loginButtonOutlet.backgroundColor = UIColor(red: 75/255, green: 118/255, blue: 164/255, alpha: 1)
         loginButtonOutlet.layer.cornerRadius = loginButtonOutlet.frame.height/1.9
         loginButtonOutlet.setTitleColor(.white, for: .normal)
         loginButtonOutlet.setTitle("VK sign in", for: .normal)
+        
+        infoLabel.textColor = .white
+        infoLabel.font.withSize(20)
+        infoLabel.text = "Just push 'Sign in' button"
         
         dotLabel.isHidden = true
         dotLabel.textColor = .white
         dotLabel.font.withSize(20)
         dotLabel.text = "."
         
+        midDotLabel.isHidden = true
+        midDotLabel.textColor = .white
+        midDotLabel.font.withSize(20)
+        midDotLabel.text = "."
+        
+        leftDotLabel.isHidden = true
+        leftDotLabel.textColor = .white
+        leftDotLabel.font.withSize(20)
+        leftDotLabel.text = "."
+        
         loadInfoLabel.isHidden = true
         loadInfoLabel.textColor = .white
         loadInfoLabel.font.withSize(20)
-        loadInfoLabel.text = "Please, wait a second.."
+        loadInfoLabel.text = "Please, wait a second"
     }
     
     private func animationsForLoading() {
+        
         loadInfoLabel.isHidden = false
         self.view.bringSubviewToFront(loadInfoLabel)
         
         dotLabel.isHidden = false
         self.view.bringSubviewToFront(dotLabel)
         
+        midDotLabel.isHidden = false
+        self.view.bringSubviewToFront(midDotLabel)
+        
+        leftDotLabel.isHidden = false
+        self.view.bringSubviewToFront(leftDotLabel)
+        
         UIView.animate(withDuration: 0.8, delay: 0.1, options: .repeat) {
-            self.dotLabel.transform = CGAffineTransform(translationX: +200, y: 0)
+            self.dotLabel.transform = CGAffineTransform(translationX: self.view.frame.width - self.dotLabel.frame.origin.x - 8, y: 0)
+            self.midDotLabel.transform = CGAffineTransform(translationX: self.view.frame.width - self.midDotLabel.frame.origin.x - 48, y: 0)
+            self.leftDotLabel.transform = CGAffineTransform(translationX: self.view.frame.width - self.leftDotLabel.frame.origin.x - 88, y: 0)
         }
     }
     
@@ -197,12 +230,17 @@ class LoginViewController: UIViewController, WKUIDelegate {
         self.view.bringSubviewToFront(loadingIndicator)
     }
     
-    override var preferredStatusBarStyle : UIStatusBarStyle {   // why black?
+    private func prepareViewForAnimations() {
+        animationView.isHidden = false
+        self.view.bringSubviewToFront(animationView)
+        showLoadingAnimation()
+        animationsForLoading()
+    }
+    
+    override var preferredStatusBarStyle : UIStatusBarStyle {
         return .lightContent
     }
 }
-
-
 
 extension LoginViewController: WKNavigationDelegate {
         
@@ -245,9 +283,10 @@ extension LoginViewController: WKNavigationDelegate {
                     
                     let fetchToken = Token(accessToken: paramDict["access_token"]!, userId: paramDict["user_id"]!, expiresIn: paramDict["expires_in"]!)
                     NetworkManager.shared.token = fetchToken
+                    
+                    webView.removeFromSuperview()
                     reciveDataForHomeVC()
-                    showLoadingAnimation()
-                    animationsForLoading()
+                    prepareViewForAnimations()
                 }
             }
         }
