@@ -218,10 +218,14 @@ class LoginViewController: UIViewController, WKUIDelegate {
         leftDotLabel.isHidden = false
         self.view.bringSubviewToFront(leftDotLabel)
         
+        UIView.animate(withDuration: 0.8, delay: 0.5, options: .repeat) {
+            self.dotLabel.alpha = 0
+        }
+        UIView.animate(withDuration: 0.8, delay: 0.3, options: .repeat) {
+            self.midDotLabel.alpha = 0
+        }
         UIView.animate(withDuration: 0.8, delay: 0.1, options: .repeat) {
-            self.dotLabel.transform = CGAffineTransform(translationX: self.view.frame.width - self.dotLabel.frame.origin.x - 8, y: 0)
-            self.midDotLabel.transform = CGAffineTransform(translationX: self.view.frame.width - self.midDotLabel.frame.origin.x - 48, y: 0)
-            self.leftDotLabel.transform = CGAffineTransform(translationX: self.view.frame.width - self.leftDotLabel.frame.origin.x - 88, y: 0)
+            self.leftDotLabel.alpha = 0
         }
     }
     
