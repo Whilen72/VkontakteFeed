@@ -174,6 +174,10 @@ extension LoginViewController: WKNavigationDelegate {
         
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         
+        if NetworkManager.shared.checkAccessToken() == false {
+            
+        }
+        
         if let urlComponents = URLComponents(url: navigationResponse.response.url!, resolvingAgainstBaseURL: true), let queryItems = urlComponents.queryItems {
             
             let value = queryItems[1].value
@@ -208,7 +212,7 @@ extension LoginViewController: WKNavigationDelegate {
                             paramDict[user_id[0]] = user_id[1]
                         }
                     }
-                    
+                    // need to save accessToken and expireTime to NSUserDefaults
                     let fetchToken = Token(accessToken: paramDict["access_token"]!, userId: paramDict["user_id"]!, expiresIn: paramDict["expires_in"]!)
                     NetworkManager.shared.token = fetchToken
                     reciveDataForHomeVC()

@@ -168,6 +168,21 @@ class NetworkManager {
             }
         }.resume()
     }
+    
+    func checkAccessToken() -> Bool {
+        
+        guard let tokenExpire = token?.expiresIn else { return false }
+        guard let seconds = Double(tokenExpire) else { return false }
+        let expireDate = Date().addingTimeInterval(seconds)
+        
+        if expireDate > Date() {
+            
+            return true
+        } else {
+        
+            return false
+        }
+    }
 }
     
 
