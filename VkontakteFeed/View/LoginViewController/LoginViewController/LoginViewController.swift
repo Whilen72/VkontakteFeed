@@ -201,7 +201,7 @@ class LoginViewController: UIViewController, WKUIDelegate {
         loadInfoLabel.isHidden = true
         loadInfoLabel.textColor = .white
         loadInfoLabel.font.withSize(20)
-        loadInfoLabel.text = "Please, wait a second"
+        loadInfoLabel.text = "Loading"
     }
     
     private func animationsForLoading() {
