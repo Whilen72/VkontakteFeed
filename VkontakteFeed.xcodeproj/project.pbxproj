@@ -17,6 +17,7 @@
 		5F2A008926BEA20000965A84 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2A008826BEA20000965A84 /* NetworkManager.swift */; };
 		5F2ACFA826BD480B002585F0 /* FrindesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2ACFA726BD480B002585F0 /* FrindesListViewController.swift */; };
 		5F2ACFAF26BD69C8002585F0 /* FriendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2ACFAE26BD69C8002585F0 /* FriendModel.swift */; };
+		5F553E6326F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F553E6226F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift */; };
 		5F7C3B7226EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7C3B7126EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift */; };
 		5F7C3B7526EF843100F54ED4 /* FriendsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7C3B7326EF843100F54ED4 /* FriendsTableViewCell.swift */; };
 		5F7C3B7626EF843100F54ED4 /* FriendsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F7C3B7426EF843100F54ED4 /* FriendsTableViewCell.xib */; };
@@ -25,7 +26,6 @@
 		5F7D834526CE8CEE003AB124 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D834426CE8CEE003AB124 /* HomeViewController.swift */; };
 		5F7D834726CE916F003AB124 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D834626CE916F003AB124 /* UserInfo.swift */; };
 		5F7D834926D533B0003AB124 /* PhotoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D834826D533B0003AB124 /* PhotoModel.swift */; };
-		5F7D834D26D932B7003AB124 /* FeedScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D834C26D932B7003AB124 /* FeedScreenViewController.swift */; };
 		5F7D834F26DBB763003AB124 /* FeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D834E26DBB763003AB124 /* FeedModel.swift */; };
 		5F7D835426DD3871003AB124 /* HomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7D835226DD3871003AB124 /* HomeCell.swift */; };
 		5F7D835526DD3871003AB124 /* HomeCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F7D835326DD3871003AB124 /* HomeCell.xib */; };
@@ -47,6 +47,7 @@
 		5F2A008826BEA20000965A84 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		5F2ACFA726BD480B002585F0 /* FrindesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrindesListViewController.swift; sourceTree = "<group>"; };
 		5F2ACFAE26BD69C8002585F0 /* FriendModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendModel.swift; sourceTree = "<group>"; };
+		5F553E6226F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationControllerExtension+VKFeed.swift"; sourceTree = "<group>"; };
 		5F7C3B7126EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageViewExtension+VKFeed.swift"; sourceTree = "<group>"; };
 		5F7C3B7326EF843100F54ED4 /* FriendsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsTableViewCell.swift; sourceTree = "<group>"; };
 		5F7C3B7426EF843100F54ED4 /* FriendsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FriendsTableViewCell.xib; sourceTree = "<group>"; };
@@ -55,7 +56,6 @@
 		5F7D834426CE8CEE003AB124 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		5F7D834626CE916F003AB124 /* UserInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfo.swift; sourceTree = "<group>"; };
 		5F7D834826D533B0003AB124 /* PhotoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoModel.swift; sourceTree = "<group>"; };
-		5F7D834C26D932B7003AB124 /* FeedScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedScreenViewController.swift; sourceTree = "<group>"; };
 		5F7D834E26DBB763003AB124 /* FeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedModel.swift; sourceTree = "<group>"; };
 		5F7D835226DD3871003AB124 /* HomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCell.swift; sourceTree = "<group>"; };
 		5F7D835326DD3871003AB124 /* HomeCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeCell.xib; sourceTree = "<group>"; };
@@ -167,14 +167,6 @@
 			path = HomeViewController;
 			sourceTree = "<group>";
 		};
-		5F7D834A26D9327B003AB124 /* FeedScreenViewController */ = {
-			isa = PBXGroup;
-			children = (
-				5F7D834C26D932B7003AB124 /* FeedScreenViewController.swift */,
-			);
-			path = FeedScreenViewController;
-			sourceTree = "<group>";
-		};
 		5F7D834B26D93294003AB124 /* LoginViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -189,6 +181,7 @@
 				5F7D835726E244BF003AB124 /* UIImageExtension+VKFeed.swift */,
 				5F7D835926E24F85003AB124 /* UIColorExtension+VKFeed.swift */,
 				5F7C3B7126EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift */,
+				5F553E6226F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -196,7 +189,6 @@
 		5F82904726B989850091FEB0 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				5F7D834A26D9327B003AB124 /* FeedScreenViewController */,
 				5F7D834326CE8CD7003AB124 /* HomeViewController */,
 				5F7D834226CE8CC3003AB124 /* LoginViewController */,
 				5F2A008526BD86F600965A84 /* FriendsList */,
@@ -291,10 +283,10 @@
 				5F7D834726CE916F003AB124 /* UserInfo.swift in Sources */,
 				5F7D834526CE8CEE003AB124 /* HomeViewController.swift in Sources */,
 				5F7D835826E244BF003AB124 /* UIImageExtension+VKFeed.swift in Sources */,
-				5F7D834D26D932B7003AB124 /* FeedScreenViewController.swift in Sources */,
 				5F7D833E26CD365A003AB124 /* QandA.swift in Sources */,
 				5F0D157D26B948E400469A09 /* AppDelegate.swift in Sources */,
 				5F7D834926D533B0003AB124 /* PhotoModel.swift in Sources */,
+				5F553E6326F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift in Sources */,
 				5F0D157F26B948E400469A09 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
