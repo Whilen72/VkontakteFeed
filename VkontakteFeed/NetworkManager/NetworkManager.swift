@@ -22,6 +22,11 @@ class NetworkManager {
         case city
     }
     func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online], completion: @escaping (Result<FriendList, Error>)->(Void)) {
+        
+        if checkAccessToken() == false {
+            print("asdasdasdasdasdasdasdasdasdasdasdasd \(checkAccessToken())")
+        }
+        
         let params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:","),
             "name_case": "nom",
@@ -49,6 +54,7 @@ class NetworkManager {
                         completion(.failure(error?.localizedDescription as! Error))
                     }
                 } catch let error {
+                    print("error")
                     completion(.failure(error))
                 }
             }
@@ -60,7 +66,7 @@ class NetworkManager {
             "v": "5.131"
         ]
         
-        if let accessToken = token?.accessToken {
+        if let accessToken = UserDefaults.standard.object(forKey: "savedAccessToken") as? String {
             allParams["access_token"] = accessToken
         }
         
@@ -99,6 +105,7 @@ class NetworkManager {
                         completion(.failure(error?.localizedDescription as! Error))
                     }
                 } catch let error {
+                    print("error")
                     print(error.localizedDescription)
                 }
             }
@@ -131,6 +138,7 @@ class NetworkManager {
                         completion(.failure(error?.localizedDescription as! Error))
                     }
                 } catch let error {
+                    print("error")
                     print(error.localizedDescription)
                     completion(.failure(error))
                 }
@@ -139,6 +147,11 @@ class NetworkManager {
     }
     
     func getAlbum(offset: Int = 0, count: Int = 500, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
+        
+        if checkAccessToken() == false {
+            print("asdasdasdasdasdasdasdasdasdasdasdasd \(checkAccessToken())")
+        }
+        
         let params: [String: String] = [
             "album_id": "wall",
             "offset": "\(offset)",
@@ -163,6 +176,7 @@ class NetworkManager {
                         completion(.failure(error?.localizedDescription as! Error))
                     }
                 } catch let error {
+                    print("error")
                     completion(.failure(error))  
                 }
             }
@@ -171,15 +185,14 @@ class NetworkManager {
     
     func checkAccessToken() -> Bool {
         
-        guard let tokenExpire = token?.expiresIn else { return false }
+        guard let tokenExpire = UserDefaults.standard.object(forKey: "savedExpireIn") as? String else { return false }
         guard let seconds = Double(tokenExpire) else { return false }
+        
         let expireDate = Date().addingTimeInterval(seconds)
         
         if expireDate > Date() {
-            
             return true
         } else {
-        
             return false
         }
     }
