@@ -22,12 +22,12 @@ class LoginViewController: UIViewController {
     
     static let controllerInditefire = "LoginViewController"
     static let shared = LoginViewController()
-    
+
         // MARK: - viewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         launchLoginButtonAndLabels()
         tokenValidityCheck()
         view.backgroundColor = .backgroundColor
@@ -39,8 +39,9 @@ class LoginViewController: UIViewController {
     }
     
     
-    private func showAuthWebView() {
+    func showAuthWebView() {
         let vc = self.storyboard!.instantiateViewController(withIdentifier: WebViewController.controllerInditefire) as! WebViewController
+        vc.delegate = self
         self.navigationController?.pushViewController(vc, animated: false)
     }
     
@@ -133,7 +134,7 @@ class LoginViewController: UIViewController {
         
         if NetworkManager.shared.checkAccessToken() == true {
             
-            NetworkManager.shared.getUserData { (result) in
+            NetworkManager.shared.getUserData { [weak self] (result) in
                 
                 switch result {
                 case .success(let userInfo):
@@ -141,6 +142,7 @@ class LoginViewController: UIViewController {
                     completion(userInfo)
                 case .failure(let error):
                     print("Error processing json data: \(error)")
+                    self?.showAuthWebView()
                 }
             }
         } else {
@@ -152,13 +154,14 @@ class LoginViewController: UIViewController {
         
         if NetworkManager.shared.checkAccessToken() == true {
         
-            NetworkManager.shared.getAlbum { (result) in
+            NetworkManager.shared.getAlbum { [weak self] (result) in
                 
                 switch result {
                 case .success(let photoArray):
                     completion(photoArray ?? [])
                 case .failure(let error):
                     print("Error processing json data: \(error)")
+                    self?.showAuthWebView()
                 }
             }
         } else {
@@ -170,13 +173,14 @@ class LoginViewController: UIViewController {
         
         if NetworkManager.shared.checkAccessToken() == true {
         
-            NetworkManager.shared.getList { (result) in
+            NetworkManager.shared.getList { [weak self] (result) in
                 
                 switch result {
                 case .success(let friends):
                     completion(friends)
                 case .failure(let error):
                     print("Error processing json data: \(error)")
+                    self?.showAuthWebView()
                 }
             }
         } else {
@@ -230,6 +234,8 @@ class LoginViewController: UIViewController {
         loadInfoLabel.textColor = .white
         loadInfoLabel.font.withSize(20)
         loadInfoLabel.text = "Loading"
+        
+        
     }
     
     private func animationsForLoading() {
@@ -274,5 +280,10 @@ class LoginViewController: UIViewController {
     }
 }
 
+extension LoginViewController: webIsReadyDelegate {
+    func netFlowStart() {
+        reciveDataForHomeVC()
+    }
+}
 
 

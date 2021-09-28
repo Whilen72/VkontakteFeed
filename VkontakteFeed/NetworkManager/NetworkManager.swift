@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class NetworkManager {
     
@@ -21,11 +22,8 @@ class NetworkManager {
         case online
         case city
     }
+    
     func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online], completion: @escaping (Result<FriendList, Error>)->(Void)) {
-        
-        if checkAccessToken() == false {
-            print("asdasdasdasdasdasdasdasdasdasdasdasd \(checkAccessToken())")
-        }
         
         let params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:","),
@@ -36,32 +34,31 @@ class NetworkManager {
         ]
 
         let url = buildMethodURL(method: "friends.get", params: params)
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                let decoder = JSONDecoder()
-                do {
-                    struct Responce: Decodable {
-                        let response: FriendList
-                    } 
-                    if let data = data {
-                        let responceModel = try decoder.decode(Responce.self, from: data)
-                        DispatchQueue.main.async {
-                            completion(.success(responceModel.response))
-                        }
-                    } else {
-                        completion(.failure(error?.localizedDescription as! Error))
-                    }
-                } catch let error {
-                    print("error")
-                    completion(.failure(error))
+        
+        performeRequest(url: url) { data, error in
+            
+            let decoder = JSONDecoder()
+            do {
+                struct Responce: Decodable {
+                    let response: FriendList
                 }
+                if let data = data {
+                    let responceModel = try decoder.decode(Responce.self, from: data)
+                    DispatchQueue.main.async {
+                        completion(.success(responceModel.response))
+                    }
+                } else {
+                    completion(.failure(error?.localizedDescription as! Error))
+                }
+            } catch let error {
+                print("error")
+                completion(.failure(error))
             }
-        }.resume()
+        }
     }
 
     private func buildMethodURL(method: String, params: [String: String]?) -> URL {
+   
         var allParams: [String: String] = [
             "v": "5.131"
         ]
@@ -82,34 +79,72 @@ class NetworkManager {
     
         return url
     }
+    
+    enum ServerError: Int {
+        case authError = 5
+    }
+    
+    enum TokenError: Error {
+        case tokenError
+    }
+    
+    private func performeRequest(url: URL, completion: @escaping (Data?, Error?)->(Void)) {
+       
+        URLSession.shared.dataTask(with: url) {(data, response, error) in
+            if let error = error {
+                completion(nil, error)
+            } else {
+                do {
+
+                    if let data = data {
+
+                        if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                            
+                            if let serverError = json["error"] as? [String : Any], let errorCode = serverError["error_code"] as? Int {
+                            
+                                if errorCode == ServerError.authError.rawValue {
+                                    completion(nil ,TokenError.tokenError)
+                                } else {
+                                    completion(data, nil)
+                                }
+                            } else {
+                                completion(data, nil)
+                            }
+                        }
+                    }
+                } catch {
+                    completion(nil, error)
+                }
+            }
+        }.resume()
+    }
   
     func getCurrentUser (completion: @escaping (Result<CurrentUser, Error>)->(Void)) {
         
         let url = buildMethodURL(method: "account.getProfileInfo", params: nil)
-        
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                let decoder = JSONDecoder()
-                do {
-                    struct Response: Decodable {
-                        let response: [CurrentUser]?
-                    }
-                    if let data = data {
-                    let responceModel = try decoder.decode(CurrentUser.self, from: data)
-                    DispatchQueue.main.async {
-                        completion(.success(responceModel))
-                        }
-                    } else {
-                        completion(.failure(error?.localizedDescription as! Error))
-                    }
-                } catch let error {
-                    print("error")
-                    print(error.localizedDescription)
+        performeRequest(url: url) { data, error in
+            
+            let decoder = JSONDecoder()
+            do {
+                struct Response: Decodable {
+                    let response: [CurrentUser]?
                 }
+                
+                if let data = data {
+                    
+                let responceModel = try decoder.decode(CurrentUser.self, from: data)
+                DispatchQueue.main.async {
+                    completion(.success(responceModel))
+                    }
+                } else {
+                    if let error = error {
+                        completion(.failure(error))
+                    }
+                }
+            } catch let error {
+                print(error)
             }
-        }.resume()
+        }
     }
 
     enum getUserDataFields: String, CaseIterable {
@@ -117,70 +152,66 @@ class NetworkManager {
     }
     
     func getUserData (fields: [getUserDataFields] = [.photo_max_orig, .followers_count, .city, .online, .bdate], completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
+        
         let params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:",")]
+        
         let url = buildMethodURL(method: "users.get", params: params)
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                let decoder = JSONDecoder()
-                do {
-                    struct Response: Decodable {
-                        let response: [UserInfo]?
-                    }
-                    if let data = data {
-                    let responseModel = try decoder.decode(Response.self, from: data)
-                        DispatchQueue.main.async {
-                        completion(.success(responseModel.response?.first))
-                        }
-                    } else {
-                        completion(.failure(error?.localizedDescription as! Error))
-                    }
-                } catch let error {
-                    print("error")
-                    print(error.localizedDescription)
-                    completion(.failure(error))
+        
+        performeRequest(url: url) { data, error in
+            
+            let decoder = JSONDecoder()
+            do {
+                struct Response: Decodable {
+                    let response: [UserInfo]?
                 }
+               
+                if let data = data {
+                let responseModel = try decoder.decode(Response.self, from: data)
+                    DispatchQueue.main.async {
+                    completion(.success(responseModel.response?.first))
+                    }
+                } else {
+                    completion(.failure(error!))
+                }
+            } catch let error {
+                completion(.failure(error))
             }
-        }.resume()
+        }
     }
     
     func getAlbum(offset: Int = 0, count: Int = 500, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
-        
-        if checkAccessToken() == false {
-            print("asdasdasdasdasdasdasdasdasdasdasdasd \(checkAccessToken())")
-        }
         
         let params: [String: String] = [
             "album_id": "wall",
             "offset": "\(offset)",
             "count": "\(count)",
         ]
+        
         let url = buildMethodURL(method: "photos.get", params: params)
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            if let error = error {
-                completion(.failure(error))
-            } else {
-                let decoder = JSONDecoder()
-                do {
-                    struct Response: Decodable {
-                        let response: PhotosResponse
-                    }
-                    if let data = data {
+        
+        performeRequest(url: url) { data, error in
+            
+            let decoder = JSONDecoder()
+            do {
+                struct Response: Decodable {
+                    let response: PhotosResponse
+                }
+                
+                if let data = data {
                     let responseModel = try decoder.decode(Response.self, from: data)
                     DispatchQueue.main.async {
                         completion(.success(responseModel.response.items ?? []))
-                    }
-                    } else {
-                        completion(.failure(error?.localizedDescription as! Error))
-                    }
-                } catch let error {
-                    print("error")
-                    completion(.failure(error))  
                 }
+                } else {
+                    if let error = error {
+                    completion(.failure(error))
+                    }
+                }
+            } catch let error {
+                completion(.failure(error))
             }
-        }.resume()
+        }
     }
     
     func checkAccessToken() -> Bool {

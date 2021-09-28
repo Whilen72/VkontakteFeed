@@ -9,14 +9,20 @@ import Foundation
 import UIKit
 import WebKit
 
+protocol webIsReadyDelegate {
+    func netFlowStart()
+}
+
 class WebViewController: UIViewController, WKUIDelegate {
+    
+    var delegate: webIsReadyDelegate?
     
     static let shared = WebViewController()
     static let controllerInditefire = "WebViewController"
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        	
     showAuthWebView()
     }
     
@@ -36,20 +42,6 @@ class WebViewController: UIViewController, WKUIDelegate {
     func returnToScreen() {
     
         self.navigationController?.popViewController(animated: false)
-        //LoginViewController.shared.reciveDataForHomeVC()
-        
-//        if let vcs = self.navigationController?.viewControllers {
-//            let previousVC = vcs[vcs.count - 2]
-//
-//            if previousVC is LoginViewController {
-//                let vc = self.storyboard!.instantiateViewController(withIdentifier:LoginViewController.controllerInditefire) as! LoginViewController
-//                self.navigationController?.pushViewController(vc, animated: true)
-//            }
-//            if previousVC is HomeViewController {
-//                let vc = self.storyboard!.instantiateViewController(withIdentifier:HomeViewController.controllerInditefire) as! HomeViewController
-//                self.navigationController?.pushViewController(vc, animated: true)
-//            }
-//        }
     }
 }
 
@@ -97,7 +89,7 @@ extension  WebViewController: WKNavigationDelegate {
                     UserDefaults.standard.set(fetchToken.accessToken, forKey: "savedAccessToken")
                     UserDefaults.standard.set(fetchToken.expiresIn, forKey: "savedExpireIn")
                     NetworkManager.shared.token = fetchToken
-                    
+                    delegate?.netFlowStart()
                     returnToScreen()
                 }
             }
