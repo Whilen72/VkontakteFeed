@@ -12,8 +12,8 @@ struct FriendList: Decodable {
     let items: [FriendModel]?
 }
 
-// MARK: - Item
 struct FriendModel: Decodable {
+   
     enum CodingKeys: String, CodingKey {
         case firstName = "first_name"
         case id
@@ -23,12 +23,11 @@ struct FriendModel: Decodable {
         case photo_50
         case isClosed = "is_closed"
         case photo_200_orig
-       // case town = "city"
         case online
+        case city
     }
     
     let online: Int
-    //let town: [Town]
     let photo_200_orig: String?
     let firstName: String?
     let id: Int
@@ -37,15 +36,10 @@ struct FriendModel: Decodable {
     let isClosed: Bool?
     let trackCode: String
     let photo_50: String?
+    let city: City
 }
 
-//struct Town: Decodable {
-//    
-//    enum CodingKeys: String, CodingKey {
-//       case title
-//    }
-//    let title: String
-//}
+
 
 
 

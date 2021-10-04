@@ -28,18 +28,6 @@ class FriendListController: UIViewController {
         tableView.delegate = self
         tableView.backgroundColor = .backgroundColor
     }
-
-//    private func getFriendsList() {
-//        NetworkManager.shared.getList {[weak self] (result) in
-//            switch result {
-//            case .success(let listOf):
-//                self?.data = listOf.items ?? []
-//            case .failure(let error):
-//                print("Error processing json data: \(error)")
-//            }
-//            self!.tableView.reloadData()
-//        }
-//    }
 }
 
 extension FriendListController: UITableViewDataSource {
@@ -52,10 +40,9 @@ extension FriendListController: UITableViewDataSource {
                 
         let cell = tableView.dequeueReusableCell(withIdentifier: "friendsCell", for: indexPath) as! FriendsTableViewCell
 
-        
         cell.configure(with: friendsImage[indexPath.row],
                        name: "\(data[indexPath.row].firstName!) \((data[indexPath.row].lastName!))",
-                       city: "не указан",
+                       city: ";'k",
                        onlineStatus: data[indexPath.row].online == 1 ? "is online" : "offline")
 
         return cell

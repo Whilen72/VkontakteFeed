@@ -145,9 +145,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cCs-pE-wzI">
-                                <rect key="frame" x="0.0" y="0.0" width="428" height="926"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cCs-pE-wzI">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
                                     <outlet property="dataSource" destination="IMe-yS-gUP" id="DI9-RX-6zL"/>
@@ -157,6 +156,12 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="p1g-PY-ZXK"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="cCs-pE-wzI" secondAttribute="trailing" id="5Ig-ow-yRe"/>
+                            <constraint firstAttribute="bottom" secondItem="cCs-pE-wzI" secondAttribute="bottom" id="A5G-ap-10Q"/>
+                            <constraint firstItem="cCs-pE-wzI" firstAttribute="leading" secondItem="p1g-PY-ZXK" secondAttribute="leading" id="NrV-Ju-haT"/>
+                            <constraint firstItem="cCs-pE-wzI" firstAttribute="top" secondItem="tni-y7-RaV" secondAttribute="top" id="agP-lx-I9M"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="tableView" destination="cCs-pE-wzI" id="eyS-VJ-Rq7"/>

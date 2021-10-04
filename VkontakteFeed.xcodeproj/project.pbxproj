@@ -18,6 +18,7 @@
 		5F2ACFA826BD480B002585F0 /* FrindesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2ACFA726BD480B002585F0 /* FrindesListViewController.swift */; };
 		5F2ACFAF26BD69C8002585F0 /* FriendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2ACFAE26BD69C8002585F0 /* FriendModel.swift */; };
 		5F44DA5926FCB68D00F4A55D /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F44DA5826FCB68D00F4A55D /* WebViewController.swift */; };
+		5F4A70FF270B38B5003D33C2 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F4A70FE270B38B5003D33C2 /* City.swift */; };
 		5F553E6326F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F553E6226F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift */; };
 		5F7C3B7226EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7C3B7126EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift */; };
 		5F7C3B7526EF843100F54ED4 /* FriendsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7C3B7326EF843100F54ED4 /* FriendsTableViewCell.swift */; };
@@ -49,6 +50,7 @@
 		5F2ACFA726BD480B002585F0 /* FrindesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrindesListViewController.swift; sourceTree = "<group>"; };
 		5F2ACFAE26BD69C8002585F0 /* FriendModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendModel.swift; sourceTree = "<group>"; };
 		5F44DA5826FCB68D00F4A55D /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
+		5F4A70FE270B38B5003D33C2 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		5F553E6226F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationControllerExtension+VKFeed.swift"; sourceTree = "<group>"; };
 		5F7C3B7126EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageViewExtension+VKFeed.swift"; sourceTree = "<group>"; };
 		5F7C3B7326EF843100F54ED4 /* FriendsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsTableViewCell.swift; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				5F7D834626CE916F003AB124 /* UserInfo.swift */,
 				5F7D834826D533B0003AB124 /* PhotoModel.swift */,
 				5F7D834E26DBB763003AB124 /* FeedModel.swift */,
+				5F4A70FE270B38B5003D33C2 /* City.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -292,6 +295,7 @@
 				5F7D834926D533B0003AB124 /* PhotoModel.swift in Sources */,
 				5F553E6326F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift in Sources */,
 				5F0D157F26B948E400469A09 /* SceneDelegate.swift in Sources */,
+				5F4A70FF270B38B5003D33C2 /* City.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

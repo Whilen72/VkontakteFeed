@@ -23,7 +23,7 @@ class NetworkManager {
         case city
     }
     
-    func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online], completion: @escaping (Result<FriendList, Error>)->(Void)) {
+    func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online, .city], completion: @escaping (Result<FriendList, Error>)->(Void)) {
         
         let params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:","),
@@ -43,7 +43,9 @@ class NetworkManager {
                     let response: FriendList
                 }
                 if let data = data {
+                    
                     let responceModel = try decoder.decode(Responce.self, from: data)
+                    print(responceModel)
                     DispatchQueue.main.async {
                         completion(.success(responceModel.response))
                     }
@@ -100,7 +102,7 @@ class NetworkManager {
                     if let data = data {
 
                         if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                            
+                            print(json)
                             if let serverError = json["error"] as? [String : Any], let errorCode = serverError["error_code"] as? Int {
                             
                                 if errorCode == ErrorCodes.authError.rawValue {
@@ -140,6 +142,7 @@ class NetworkManager {
                 if let data = data {
                     
                 let responceModel = try decoder.decode(CurrentUser.self, from: data)
+                    print(responceModel)
                 DispatchQueue.main.async {
                     completion(.success(responceModel))
                     }
@@ -175,6 +178,7 @@ class NetworkManager {
                
                 if let data = data {
                 let responseModel = try decoder.decode(Response.self, from: data)
+                    print(responseModel)
                     DispatchQueue.main.async {
                     completion(.success(responseModel.response?.first))
                     }
