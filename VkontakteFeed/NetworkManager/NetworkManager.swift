@@ -80,12 +80,13 @@ class NetworkManager {
         return url
     }
     
-    enum ServerError: Int {
+    enum ErrorCodes: Int {
         case authError = 5
     }
     
-    enum TokenError: Error {
+    enum ServerError: Error {
         case tokenError
+        case unknownError
     }
     
     private func performeRequest(url: URL, completion: @escaping (Data?, Error?)->(Void)) {
@@ -102,10 +103,16 @@ class NetworkManager {
                             
                             if let serverError = json["error"] as? [String : Any], let errorCode = serverError["error_code"] as? Int {
                             
-                                if errorCode == ServerError.authError.rawValue {
-                                    completion(nil ,TokenError.tokenError)
+                                if errorCode == ErrorCodes.authError.rawValue {
+                                    completion(nil, ServerError.tokenError)
+                                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                                    if let topController = appDelegate.getTopMostVC() {
+                                        let vc = topController.storyboard!.instantiateViewController(withIdentifier: "12") as! WebViewController
+                                        vc.navigationController?.pushViewController(vc, animated: false)
+                                    }
+                                    
                                 } else {
-                                    completion(data, nil)
+                                    completion(nil, ServerError.unknownError)
                                 }
                             } else {
                                 completion(data, nil)

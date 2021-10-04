@@ -25,7 +25,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
         
     }
-
-
+    
+    func getTopMostVC() -> UIViewController? {
+        let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+        var returnController: UIViewController?
+        if var topController = keyWindow?.rootViewController {
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+                returnController = topController
+            }
+        }
+        return returnController
+    }
 }
 

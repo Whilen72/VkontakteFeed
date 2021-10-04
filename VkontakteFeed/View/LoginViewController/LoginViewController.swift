@@ -134,7 +134,7 @@ class LoginViewController: UIViewController {
         
         if NetworkManager.shared.checkAccessToken() == true {
             
-            NetworkManager.shared.getUserData { [weak self] (result) in
+            NetworkManager.shared.getUserData { (result) in
                 
                 switch result {
                 case .success(let userInfo):
@@ -142,7 +142,6 @@ class LoginViewController: UIViewController {
                     completion(userInfo)
                 case .failure(let error):
                     print("Error processing json data: \(error)")
-                    self?.showAuthWebView()
                 }
             }
         } else {
@@ -154,14 +153,13 @@ class LoginViewController: UIViewController {
         
         if NetworkManager.shared.checkAccessToken() == true {
         
-            NetworkManager.shared.getAlbum { [weak self] (result) in
+            NetworkManager.shared.getAlbum { (result) in
                 
                 switch result {
                 case .success(let photoArray):
                     completion(photoArray ?? [])
                 case .failure(let error):
                     print("Error processing json data: \(error)")
-                    self?.showAuthWebView()
                 }
             }
         } else {
@@ -173,14 +171,13 @@ class LoginViewController: UIViewController {
         
         if NetworkManager.shared.checkAccessToken() == true {
         
-            NetworkManager.shared.getList { [weak self] (result) in
+            NetworkManager.shared.getList { (result) in
                 
                 switch result {
                 case .success(let friends):
                     completion(friends)
                 case .failure(let error):
                     print("Error processing json data: \(error)")
-                    self?.showAuthWebView()
                 }
             }
         } else {

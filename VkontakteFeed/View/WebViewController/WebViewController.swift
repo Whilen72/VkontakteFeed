@@ -38,11 +38,6 @@ class WebViewController: UIViewController, WKUIDelegate {
         let request = URLRequest(url: url!)
         webView.load(request)
         }
-    
-    func returnToScreen() {
-    
-        self.navigationController?.popViewController(animated: false)
-    }
 }
 
 extension  WebViewController: WKNavigationDelegate {
@@ -90,7 +85,7 @@ extension  WebViewController: WKNavigationDelegate {
                     UserDefaults.standard.set(fetchToken.expiresIn, forKey: "savedExpireIn")
                     NetworkManager.shared.token = fetchToken
                     delegate?.netFlowStart()
-                    returnToScreen()
+                    self.navigationController?.popViewController(animated: false)
                 }
             }
         }
