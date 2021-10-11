@@ -17,6 +17,7 @@
 		5F2A008926BEA20000965A84 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2A008826BEA20000965A84 /* NetworkManager.swift */; };
 		5F2ACFA826BD480B002585F0 /* FrindesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2ACFA726BD480B002585F0 /* FrindesListViewController.swift */; };
 		5F2ACFAF26BD69C8002585F0 /* FriendModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2ACFAE26BD69C8002585F0 /* FriendModel.swift */; };
+		5F44DA5926FCB68D00F4A55D /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F44DA5826FCB68D00F4A55D /* WebViewController.swift */; };
 		5F553E6326F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F553E6226F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift */; };
 		5F7C3B7226EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7C3B7126EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift */; };
 		5F7C3B7526EF843100F54ED4 /* FriendsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F7C3B7326EF843100F54ED4 /* FriendsTableViewCell.swift */; };
@@ -47,6 +48,7 @@
 		5F2A008826BEA20000965A84 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		5F2ACFA726BD480B002585F0 /* FrindesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrindesListViewController.swift; sourceTree = "<group>"; };
 		5F2ACFAE26BD69C8002585F0 /* FriendModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendModel.swift; sourceTree = "<group>"; };
+		5F44DA5826FCB68D00F4A55D /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		5F553E6226F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationControllerExtension+VKFeed.swift"; sourceTree = "<group>"; };
 		5F7C3B7126EF7B1D00F54ED4 /* UIImageViewExtension+VKFeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageViewExtension+VKFeed.swift"; sourceTree = "<group>"; };
 		5F7C3B7326EF843100F54ED4 /* FriendsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsTableViewCell.swift; sourceTree = "<group>"; };
@@ -141,6 +143,14 @@
 			path = FriendsList;
 			sourceTree = "<group>";
 		};
+		5F44DA5726FCB66100F4A55D /* WebViewController */ = {
+			isa = PBXGroup;
+			children = (
+				5F44DA5826FCB68D00F4A55D /* WebViewController.swift */,
+			);
+			path = WebViewController;
+			sourceTree = "<group>";
+		};
 		5F7C3B7726F0FA6F00F54ED4 /* Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -152,7 +162,7 @@
 		5F7D834226CE8CC3003AB124 /* LoginViewController */ = {
 			isa = PBXGroup;
 			children = (
-				5F7D834B26D93294003AB124 /* LoginViewController */,
+				5F82904826B989B20091FEB0 /* LoginViewController.swift */,
 			);
 			path = LoginViewController;
 			sourceTree = "<group>";
@@ -165,14 +175,6 @@
 				5F7D835326DD3871003AB124 /* HomeCell.xib */,
 			);
 			path = HomeViewController;
-			sourceTree = "<group>";
-		};
-		5F7D834B26D93294003AB124 /* LoginViewController */ = {
-			isa = PBXGroup;
-			children = (
-				5F82904826B989B20091FEB0 /* LoginViewController.swift */,
-			);
-			path = LoginViewController;
 			sourceTree = "<group>";
 		};
 		5F7D835626E244AA003AB124 /* Extension */ = {
@@ -189,6 +191,7 @@
 		5F82904726B989850091FEB0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				5F44DA5726FCB66100F4A55D /* WebViewController */,
 				5F7D834326CE8CD7003AB124 /* HomeViewController */,
 				5F7D834226CE8CC3003AB124 /* LoginViewController */,
 				5F2A008526BD86F600965A84 /* FriendsList */,
@@ -272,6 +275,7 @@
 				5F82904926B989B20091FEB0 /* LoginViewController.swift in Sources */,
 				5F7D835A26E24F85003AB124 /* UIColorExtension+VKFeed.swift in Sources */,
 				5F7D835426DD3871003AB124 /* HomeCell.swift in Sources */,
+				5F44DA5926FCB68D00F4A55D /* WebViewController.swift in Sources */,
 				5F2A008926BEA20000965A84 /* NetworkManager.swift in Sources */,
 				5F2ACFA826BD480B002585F0 /* FrindesListViewController.swift in Sources */,
 				58EED4DF26CA8B0E0032CA57 /* CurrentUser.swift in Sources */,

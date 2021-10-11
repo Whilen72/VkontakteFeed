@@ -6,10 +6,9 @@
 //
 
 import UIKit
-import WebKit
 import Foundation
 
-class LoginViewController: UIViewController, WKUIDelegate {
+class LoginViewController: UIViewController {
         
     @IBOutlet weak var loginButtonOutlet: UIButton!
     @IBOutlet weak var loadingIndicator: UIImageView!
@@ -21,15 +20,16 @@ class LoginViewController: UIViewController, WKUIDelegate {
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var animationView: UIView!
     
-    
-    
-    
+    static let controllerInditefire = "LoginViewController"
+    static let shared = LoginViewController()
+
         // MARK: - viewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         launchLoginButtonAndLabels()
+        tokenValidityCheck()
         view.backgroundColor = .backgroundColor
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
@@ -37,42 +37,38 @@ class LoginViewController: UIViewController, WKUIDelegate {
     @IBAction func loginAction(_ sender: Any) {
         showAuthWebView()
     }
-         
-    private func showAuthWebView() {
-        
-        let webView = WKWebView(frame: view.frame)
-        webView.backgroundColor = .backgroundColor
-        webView.scrollView.backgroundColor = .backgroundColor
-        webView.isOpaque = false
-        webView.navigationDelegate = self
-        self.view.addSubview(webView)
-        let url = URL(string: "https://oauth.vk.com/authorize?client_id=7918001&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&response_type=token&v=5.131")
-        let request = URLRequest(url: url!)
-        webView.load(request)
-        }
+    
+    
+    func showAuthWebView() {
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: WebViewController.controllerInditefire) as! WebViewController
+        vc.delegate = self
+        self.navigationController?.pushViewController(vc, animated: false)
+    }
     
     func reciveDataForHomeVC(){
-        
+                
+        prepareViewForAnimations()
+
         var avatarFromNetwork = UIImage()
         var linkArray = [String]()
         var imageToHomeVC = [UIImage]()
         var dataToVC: UserInfo?
         var picArray = [Album]()
-        
+
         getUserData { [weak self] userInfo in
-            
+
             let group = DispatchGroup()
             guard let self = self else { return }
-            
+
             dataToVC = userInfo
 
             self.getPhotos { [weak self] album in
-                
+
                 picArray = album
                 guard let self = self else { return }
-                
+
                 self.getFriends { [weak self] friend in
-                    
+
                     guard let self = self else { return }
                     var photoToVC = [UIImage]()
                     let friendToVC = friend
@@ -86,11 +82,11 @@ class LoginViewController: UIViewController, WKUIDelegate {
                         if let friendToVC = friendToVC.items {
                             vc.friendsData = friendToVC
                         }
-                        
+
                         self.navigationController?.pushViewController(vc, animated: true)
                         self.navigationController?.removeViewController(LoginViewController.self)
                     }
-                    
+
                     picArray.enumerated().forEach({ index, element in
                         element.sizes.forEach { SizeAndPhotoUrl in
                             if SizeAndPhotoUrl.type == "m" {
@@ -98,11 +94,11 @@ class LoginViewController: UIViewController, WKUIDelegate {
                             }
                         }
                     })
-                    
+
                     friend.items?.forEach {_ in group.enter()}
                     linkArray.forEach {_ in group.enter()}
                     group.enter()
-                    
+
                     friend.items?.enumerated().forEach({ index, element in
                         if index < 3 {
                             if let urlString = element.photo_50, let url = URL(string: urlString) {
@@ -113,7 +109,7 @@ class LoginViewController: UIViewController, WKUIDelegate {
                             }
                         }
                     })
-                    
+
                     if let urlString = dataToVC?.photo_max_orig, let url = URL(string: urlString) {
                         UIImage.loadImageFromUrl(url: url, completion: { image in
                             avatarFromNetwork = image
@@ -135,37 +131,70 @@ class LoginViewController: UIViewController, WKUIDelegate {
     }
     
     private func getUserData(completion: @escaping (UserInfo)->()) {
-        NetworkManager.shared.getUserData { (result) in
-            switch result {
-            case .success(let userInfo):
-                guard let userInfo = userInfo else { return }
-                completion(userInfo)
-            case .failure(let error):
-                print("Error processing json data: \(error)")
+        
+        if NetworkManager.shared.checkAccessToken() == true {
+            
+            NetworkManager.shared.getUserData { (result) in
+                
+                switch result {
+                case .success(let userInfo):
+                    guard let userInfo = userInfo else { return }
+                    completion(userInfo)
+                case .failure(let error):
+                    print("Error processing json data: \(error)")
+                }
             }
+        } else {
+            showAuthWebView()
         }
     }
     
     private func getPhotos(completion: @escaping ([Album])->())  {
-        NetworkManager.shared.getAlbum { (result) in
-            switch result {
-            case .success(let photoArray):
+        
+        if NetworkManager.shared.checkAccessToken() == true {
+        
+            NetworkManager.shared.getAlbum { (result) in
+                
+                switch result {
+                case .success(let photoArray):
                     completion(photoArray ?? [])
-            case .failure(let error):
-                print("Error processing json data: \(error)")
+                case .failure(let error):
+                    print("Error processing json data: \(error)")
+                }
             }
+        } else {
+            showAuthWebView()
         }
     }
+    
     private func getFriends(completion: @escaping (FriendList)->()) {
-        NetworkManager.shared.getList { (result) in
+        
+        if NetworkManager.shared.checkAccessToken() == true {
+        
+            NetworkManager.shared.getList { (result) in
+                
                 switch result {
                 case .success(let friends):
                     completion(friends)
                 case .failure(let error):
                     print("Error processing json data: \(error)")
                 }
+            }
+        } else {
+            showAuthWebView()
         }
     }
+    
+    private func tokenValidityCheck() {
+        if NetworkManager.shared.checkAccessToken() == true {
+            
+            loginButtonOutlet.setTitle("Your profile", for: .normal)
+            infoLabel.text = "Press the button for enter"
+            reciveDataForHomeVC()
+        }
+    }
+    
+    // MARK: - UI
     
     private func launchLoginButtonAndLabels() {
         
@@ -202,6 +231,8 @@ class LoginViewController: UIViewController, WKUIDelegate {
         loadInfoLabel.textColor = .white
         loadInfoLabel.font.withSize(20)
         loadInfoLabel.text = "Loading"
+        
+        
     }
     
     private func animationsForLoading() {
@@ -246,55 +277,10 @@ class LoginViewController: UIViewController, WKUIDelegate {
     }
 }
 
-extension LoginViewController: WKNavigationDelegate {
-        
-    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        
-        if let urlComponents = URLComponents(url: navigationResponse.response.url!, resolvingAgainstBaseURL: true), let queryItems = urlComponents.queryItems {
-            
-            let value = queryItems[1].value
-            
-            if value?.contains("access_token") ?? false {
-                
-                let encodedString = value?.removingPercentEncoding
-                var stringArray = encodedString?.components(separatedBy: "#")
-                stringArray?.removeFirst()
-                let separators = CharacterSet(charactersIn: "&")
-                guard let stringArray = stringArray else { return }
-               
-                if stringArray.count > 0 {
-                    let paramString = stringArray.first
-                    let paramArray = paramString!.components(separatedBy: separators)
-                    var paramDict = [String: String]()
-                    
-                    for element in paramArray {
-                        
-                        if element.contains("access_token") {
-                            let accessToken = element.components(separatedBy: "=")
-                            paramDict[accessToken[0]] = accessToken[1]
-                        }
-                        
-                        if element.contains("expires_in") {
-                            let expires_in = element.components(separatedBy: "=")
-                            paramDict[expires_in[0]] = expires_in[1]
-                        }
-                        
-                        if element.contains("user_id") {
-                            let user_id = element.components(separatedBy: "=")
-                            paramDict[user_id[0]] = user_id[1]
-                        }
-                    }
-                    
-                    let fetchToken = Token(accessToken: paramDict["access_token"]!, userId: paramDict["user_id"]!, expiresIn: paramDict["expires_in"]!)
-                    NetworkManager.shared.token = fetchToken
-                    
-                    webView.removeFromSuperview()
-                    reciveDataForHomeVC()
-                    prepareViewForAnimations()
-                }
-            }
-        }
-        decisionHandler(.allow)
+extension LoginViewController: webIsReadyDelegate {
+    func netFlowStart() {
+        reciveDataForHomeVC()
     }
 }
+
 
