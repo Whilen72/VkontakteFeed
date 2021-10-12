@@ -28,6 +28,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        checkValidityToken()
         launchLoginButtonAndLabels()
         tokenValidityCheck()
         view.backgroundColor = .backgroundColor
@@ -38,6 +39,11 @@ class LoginViewController: UIViewController {
         showAuthWebView()
     }
     
+    private func checkValidityToken() {
+        if NetworkManager.shared.checkAccessToken() == false {
+            showAuthWebView()
+        }
+    }
     
     func showAuthWebView() {
         let vc = self.storyboard!.instantiateViewController(withIdentifier: WebViewController.controllerInditefire) as! WebViewController

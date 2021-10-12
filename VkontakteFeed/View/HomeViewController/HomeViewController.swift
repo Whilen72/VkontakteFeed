@@ -36,6 +36,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var contentView: UIView!
     
     static let controllerInditefire = "HomeViewController"
+    var userID: Int = 0
     var userData: UserInfo?
     var photosData = [Album]()
     var urlArray = [String]()
@@ -47,6 +48,7 @@ class HomeViewController: UIViewController {
     private let itemsPerRow: CGFloat = 3
     private let sectionInsets = UIEdgeInsets(top: 10, left: 2, bottom: 10, right: 2)
     private var imagesToFriendList = [UIImage]()
+    
     // MARK: - ViewDidLoad
     
     override func viewDidLoad() {
@@ -142,7 +144,7 @@ class HomeViewController: UIViewController {
         followersCounterLabel.text = "Follower: \(userData.followersCount)"
         
         self.cityLabel.textColor = .fontColor
-        self.cityLabel.text = "City: \(userData.city.title)"
+        self.cityLabel.text = "City: \(userData.city!.title)"
         
         self.isOnlineLabel.textColor = .fontColor
         if self.userData?.online != 0 {

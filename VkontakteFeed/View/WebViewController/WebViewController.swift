@@ -82,7 +82,9 @@ extension  WebViewController: WKNavigationDelegate {
                     let fetchToken = Token(accessToken: paramDict["access_token"]!, userId: paramDict["user_id"]!, expiresIn: paramDict["expires_in"]!)
                     
                     UserDefaults.standard.set(fetchToken.accessToken, forKey: "savedAccessToken")
-                    UserDefaults.standard.set(fetchToken.expiresIn, forKey: "savedExpireIn")
+                    let seconds = Double(fetchToken.expiresIn)
+                    let currentExpireDate = Date().addingTimeInterval(seconds!)
+                    UserDefaults.standard.set(currentExpireDate, forKey: "savedExpireIn")
                     NetworkManager.shared.token = fetchToken
                     delegate?.netFlowStart()
                     self.navigationController?.popViewController(animated: false)

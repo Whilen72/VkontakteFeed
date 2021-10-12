@@ -12,7 +12,6 @@ class NetworkManager {
     
     static let shared = NetworkManager()
     
-    
     var token: Token?
     private let baseUrl: String = "https://api.vk.com/method/"
     
@@ -92,7 +91,7 @@ class NetworkManager {
     }
     
     private func performeRequest(url: URL, completion: @escaping (Data?, Error?)->(Void)) {
-       
+        
         URLSession.shared.dataTask(with: url) {(data, response, error) in
             if let error = error {
                 completion(nil, error)
@@ -107,12 +106,13 @@ class NetworkManager {
                             
                                 if errorCode == ErrorCodes.authError.rawValue {
                                     completion(nil, ServerError.tokenError)
-                                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                                    if let topController = appDelegate.getTopMostVC() {
-                                        let vc = topController.storyboard!.instantiateViewController(withIdentifier: "12") as! WebViewController
-                                        vc.navigationController?.pushViewController(vc, animated: false)
+                                    DispatchQueue.main.async {
+                                        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                                        if let topController = appDelegate.getTopMostVC() {
+                                            let vc = topController.storyboard!.instantiateViewController(withIdentifier: "WebViewController") as! WebViewController
+                                            vc.navigationController?.pushViewController(vc, animated: false)
+                                        }
                                     }
-                                    
                                 } else {
                                     completion(nil, ServerError.unknownError)
                                 }
@@ -227,19 +227,20 @@ class NetworkManager {
     
     func checkAccessToken() -> Bool {
         
-        guard let tokenExpire = UserDefaults.standard.object(forKey: "savedExpireIn") as? String else { return false }
-        guard let seconds = Double(tokenExpire) else { return false }
-        
-        let expireDate = Date().addingTimeInterval(seconds)
-        
-        if expireDate > Date() {
-            return true
+        let expireDate = UserDefaults.standard.object(forKey: "savedExpireIn") as? Date
+
+        if let expireDate = expireDate {
+
+            if expireDate > Date() {
+                return true
+            } else {
+                return false
+            }
         } else {
             return false
         }
     }
 }
-    
 
 
 

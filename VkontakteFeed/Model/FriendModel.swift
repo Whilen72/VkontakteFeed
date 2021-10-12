@@ -36,7 +36,7 @@ struct FriendModel: Decodable {
     let isClosed: Bool?
     let trackCode: String
     let photo_50: String?
-    let city: City
+    let city: City?
 }
 
 

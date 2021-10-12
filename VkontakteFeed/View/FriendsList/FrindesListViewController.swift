@@ -15,7 +15,7 @@ class FriendListController: UIViewController {
     static let controllerInditefire = "friendsList"
     var friendsImage = [UIImage]()
     var data = [FriendModel]()
-   
+    
     
     // MARK: - ViewDidLoad
     
@@ -42,14 +42,18 @@ extension FriendListController: UITableViewDataSource {
 
         cell.configure(with: friendsImage[indexPath.row],
                        name: "\(data[indexPath.row].firstName!) \((data[indexPath.row].lastName!))",
-                       city: ";'k",
-                       onlineStatus: data[indexPath.row].online == 1 ? "is online" : "offline")
+                       city: data[indexPath.row].city?.title ?? "Не указан",
+                       onlineStatus: data[indexPath.row].online == 1 ? "is online" : "")
 
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //Friend ID
         
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: HomeViewController.controllerInditefire) as! HomeViewController
+        
+        self.navigationController?.pushViewController(vc, animated: false)
     }
     
 }

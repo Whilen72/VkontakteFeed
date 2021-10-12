@@ -25,7 +25,9 @@ class FriendsTableViewCell: UITableViewCell {
         backgroundColor = .backgroundColor
         nameLabel.textColor = .fontColor
         cityLabel.textColor = .fontColor
-        isOnline.textColor = .fontColor
+        cityLabel.font = cityLabel.font.withSize(12)
+        isOnline.textColor = .green
+        isOnline.font = isOnline.font.withSize(12)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -36,7 +38,7 @@ class FriendsTableViewCell: UITableViewCell {
     func configure(with image: UIImage, name: String, city: String, onlineStatus: String) {
         friendImage.image = image
         nameLabel.text = name
-        cityLabel.text = city
+        cityLabel.text = "City: \(city)"
         isOnline.text = onlineStatus
     }
 }

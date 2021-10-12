@@ -25,7 +25,7 @@ struct UserInfo: Decodable {
     let id: Int
     let lastName: String
     let online: Int
-    let city: City
+    let city: City?
     let photo_max_orig: String
     let followersCount: Int
     let bdate: String
