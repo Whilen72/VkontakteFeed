@@ -22,7 +22,7 @@ class WebViewController: UIViewController, WKUIDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        	
+        print("WebView")
     showAuthWebView()
     }
     
@@ -87,7 +87,9 @@ extension  WebViewController: WKNavigationDelegate {
                     UserDefaults.standard.set(currentExpireDate, forKey: "savedExpireIn")
                     NetworkManager.shared.token = fetchToken
                     delegate?.netFlowStart()
-                    self.navigationController?.popViewController(animated: false)
+                   
+                    let vc = self.storyboard!.instantiateViewController(withIdentifier: HomeViewController.controllerInditefire) as! HomeViewController
+                    self.navigationController?.pushViewController(vc, animated: true)
                 }
             }
         }

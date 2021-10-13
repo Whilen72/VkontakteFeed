@@ -50,9 +50,10 @@ extension FriendListController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         //Friend ID
+        didsele
+        NetworkManager.shared.currentID = "\(data[indexPath.row].id)"
         
         let vc = self.storyboard!.instantiateViewController(withIdentifier: HomeViewController.controllerInditefire) as! HomeViewController
-        
         self.navigationController?.pushViewController(vc, animated: false)
     }
     

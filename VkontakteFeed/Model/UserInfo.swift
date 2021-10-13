@@ -21,14 +21,14 @@ struct UserInfo: Decodable {
         
     }
     
-    let firstName: String
-    let id: Int
-    let lastName: String
-    let online: Int
+    let firstName: String?
+    let id: Int?
+    let lastName: String?
+    let online: Int?
     let city: City?
-    let photo_max_orig: String
-    let followersCount: Int
-    let bdate: String
+    let photo_max_orig: String?
+    let followersCount: Int?
+    let bdate: String?
 }
 
 //struct City: Decodable {

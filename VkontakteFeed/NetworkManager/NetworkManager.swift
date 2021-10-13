@@ -11,7 +11,7 @@ import UIKit
 class NetworkManager {
     
     static let shared = NetworkManager()
-    
+    var currentID = ""
     var token: Token?
     private let baseUrl: String = "https://api.vk.com/method/"
     
@@ -24,13 +24,17 @@ class NetworkManager {
     
     func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online, .city], completion: @escaping (Result<FriendList, Error>)->(Void)) {
         
-        let params: [String: String] = [
+        var params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:","),
             "name_case": "nom",
             "offset": "\(offset)",
             "count": "\(count)",
             "order": "name",
         ]
+        
+        if currentID != "" {
+            params["user_id"] = "\(currentID)"
+        }
 
         let url = buildMethodURL(method: "friends.get", params: params)
         
@@ -163,8 +167,13 @@ class NetworkManager {
     
     func getUserData (fields: [getUserDataFields] = [.photo_max_orig, .followers_count, .city, .online, .bdate], completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
         
-        let params: [String: String] = [
-            "fields": fields.map({ $0.rawValue }).joined(separator:",")]
+        var params: [String: String] = [
+            "fields": fields.map({ $0.rawValue }).joined(separator:","),
+        ]
+            
+        if currentID != "" {
+            params["user_ids"] = "\(currentID)"
+        }
         
         let url = buildMethodURL(method: "users.get", params: params)
         
@@ -193,11 +202,17 @@ class NetworkManager {
     
     func getAlbum(offset: Int = 0, count: Int = 500, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
         
-        let params: [String: String] = [
+        
+        
+        var params: [String: String] = [
             "album_id": "wall",
             "offset": "\(offset)",
             "count": "\(count)",
         ]
+         
+        if currentID != "" {
+            params["owner_id"] = "\(currentID)"
+        }
         
         let url = buildMethodURL(method: "photos.get", params: params)
         
