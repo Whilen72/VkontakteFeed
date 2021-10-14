@@ -114,9 +114,11 @@ class HomeViewController: UIViewController {
 //        if imageArray.count == 0 {
 //            collectionView.isHidden = true
 //        }
-        
-        imageView.image = avatar
         imageView.contentMode = .top
+        imageView.layer.cornerRadius = imageView.frame.width/5
+        imageView.layer.masksToBounds = true
+        imageView.image = avatar
+        
         
         let imageViewArray = [imageViewLower, imageViewMiddle, imageViewUpper]
         let circleViewArray = [circleViewLower, circleViewMiddle, circleViewUpper]
