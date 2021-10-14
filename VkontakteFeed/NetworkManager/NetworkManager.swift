@@ -200,7 +200,7 @@ class NetworkManager {
         }
     }
     
-    func getAlbum(offset: Int = 0, count: Int = 500, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
+    func getAlbum(offset: Int = 0, count: Int = 100, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
         
         
         

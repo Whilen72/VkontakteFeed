@@ -46,10 +46,11 @@ class HomeViewController: UIViewController {
     var userData: UserInfo?
     var photosData = [Album]()
     var urlArray = [String]()
-    var imageArray = [UIImage]()
+    var imageArray = [PhotoModel]()
     var avatar = UIImage()
     var imageFriendArray = [UIImage]()
     var friendsData = [FriendModel]()
+    var linkArray = [String]()
     private let errors = "error"
     private let itemsPerRow: CGFloat = 3
     private let sectionInsets = UIEdgeInsets(top: 10, left: 2, bottom: 10, right: 2)
@@ -94,11 +95,11 @@ class HomeViewController: UIViewController {
                 self.urlArray.forEach { url in
                     guard let url = URL(string: url) else { return }
                     
-                    if let data = try? Data(contentsOf: url) {
-                        if let image = UIImage(data: data) {
-                            self.imageArray.append(image)
-                        }
-                    }
+//                    if let data = try? Data(contentsOf: url) {
+//                        if let image = UIImage(data: data) {
+//                            self.imageArray.append(image)
+//                        }
+//                    }
                 }
             case .failure(let error):
                 print("Error processing json data: \(error)")
@@ -110,9 +111,9 @@ class HomeViewController: UIViewController {
     private func launchScreen() {
         contentView.backgroundColor = .backgroundColor
         
-        if imageArray.count == 0 {
-            collectionView.isHidden = true
-        }
+//        if imageArray.count == 0 {
+//            collectionView.isHidden = true
+//        }
         
         imageView.image = avatar
         imageView.contentMode = .top
@@ -162,7 +163,7 @@ class HomeViewController: UIViewController {
         }
         
         self.photoLabel.textColor = .fontColor
-        self.photoLabel.text = "Photos \(self.imageArray.count)"
+        self.photoLabel.text = "Photos \(self.linkArray.count)"
         
         self.friendsCounterLabel.textColor = .fontColor
         self.friendsCounterLabel.text = "Friends: \(self.friendsData.count)"
@@ -317,8 +318,8 @@ class HomeViewController: UIViewController {
         prepareViewForAnimations()
 
         var avatarFromNetwork = UIImage()
-        var linkArray = [String]()
-        var imageToHomeVC = [UIImage]()
+       // var linkArray = [String]()
+      //  var imageToHomeVC = [UIImage]()
         var dataToVC: UserInfo?
         var picArray = [Album]()
 
@@ -340,10 +341,18 @@ class HomeViewController: UIViewController {
                     var photoToVC = [UIImage]()
                     let friendToVC = friend
 
+                    picArray.enumerated().forEach({ index, element in
+                        element.sizes.forEach { SizeAndPhotoUrl in
+                            if SizeAndPhotoUrl.type == "m" {
+                                self.linkArray.append(SizeAndPhotoUrl.url)
+                            }
+                        }
+                    })
+
                     group.notify(queue: .main) {
         
                         self.avatar = avatarFromNetwork
-                        self.imageArray = imageToHomeVC
+//                        self.imageArray = imageToHomeVC
                         self.userData = dataToVC
                         self.imageFriendArray = photoToVC
                         if let friendToVC = friendToVC.items {
@@ -351,20 +360,13 @@ class HomeViewController: UIViewController {
                         }
                         self.launchScreen()
                         self.animationView.isHidden = true
-                        self.collectionView.reloadData()
                         self.loadImageFriends()
+                        //self.collectionView.reloadData()
+                        self.collectionView.reloadData()
+                        
                     }
-
-                    picArray.enumerated().forEach({ index, element in
-                        element.sizes.forEach { SizeAndPhotoUrl in
-                            if SizeAndPhotoUrl.type == "m" {
-                                linkArray.append(SizeAndPhotoUrl.url)
-                            }
-                        }
-                    })
-
+                    
                     friend.items?.forEach {_ in group.enter()}
-                    linkArray.forEach {_ in group.enter()}
                     group.enter()
 
                     friend.items?.enumerated().forEach({ index, element in
@@ -383,15 +385,6 @@ class HomeViewController: UIViewController {
                             avatarFromNetwork = image
                             group.leave()
                         })
-                    }
-
-                    linkArray.forEach { url in
-                        if let url = URL(string: url) {
-                            UIImage.loadImageFromUrl(url: url) { image in
-                                imageToHomeVC.append(image)
-                                group.leave()
-                            }
-                        }
                     }
                 }
             }
@@ -466,13 +459,25 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.imageArray.count < 6 ?  self.imageArray.count : 6
-        }
+        return self.linkArray.count < 6 ?  self.linkArray.count : 6
+    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCell.reuseId, for: indexPath) as! HomeCell
-        cell.configure(with: imageArray[indexPath.row])
+        
+         //take URL for model
+            let imageURL = URL(string: self.linkArray[indexPath.row])
+            DispatchQueue.global(qos: .background).async {
+                guard let imageURL = imageURL else { return }
+                
+                UIImage.loadImageFromUrl(url: imageURL) { image in
+                    DispatchQueue.main.async {
+                        cell.imageView.image = image
+                    }
+                }
+            }
+        
         cell.imageView.contentMode = .scaleAspectFill
         return cell
     }
