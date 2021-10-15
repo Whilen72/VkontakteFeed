@@ -92,15 +92,6 @@ class HomeViewController: UIViewController {
                 let photoCount = self.photosData.count
                 self.photoLabel.textColor = .fontColor
                 self.photoLabel.text = "Photos \(photoCount)"
-                self.urlArray.forEach { url in
-                    guard let url = URL(string: url) else { return }
-                    
-//                    if let data = try? Data(contentsOf: url) {
-//                        if let image = UIImage(data: data) {
-//                            self.imageArray.append(image)
-//                        }
-//                    }
-                }
             case .failure(let error):
                 print("Error processing json data: \(error)")
             }
@@ -145,7 +136,8 @@ class HomeViewController: UIViewController {
         
         nameLabel.textColor = .fontColor
         if let name = userData.firstName, let lastName = userData.lastName {
-        nameLabel.text = "\(name) " + "\(lastName)"
+            
+            nameLabel.text = "\(name) " + "\(lastName)"
         }
         bDateLabel.textColor = .fontColor
         bDateLabel.text = "B date \(userData.bdate ?? "hidden")"
@@ -363,9 +355,7 @@ class HomeViewController: UIViewController {
                         self.launchScreen()
                         self.animationView.isHidden = true
                         self.loadImageFriends()
-                        //self.collectionView.reloadData()
                         self.collectionView.reloadData()
-                        
                     }
                     
                     friend.items?.forEach {_ in group.enter()}
@@ -421,6 +411,9 @@ class HomeViewController: UIViewController {
                 switch result {
                 case .success(let photoArray):
                     completion(photoArray ?? [])
+                    if let photoForVC = photoArray {
+                        self.photosData = photoForVC
+                    }
                 case .failure(let error):
                     print("Error processing json data: \(error)")
                 }
@@ -461,15 +454,23 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UICollectionViewDataSource{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.linkArray.count < 6 ?  self.linkArray.count : 6
+        return self.photosData.count < 6 ?  self.photosData.count : 6
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCell.reuseId, for: indexPath) as! HomeCell
+        var urlArray = [String]()
         
-         //take URL for model
-            let imageURL = URL(string: self.linkArray[indexPath.row])
+        photosData.enumerated().forEach({ index, element in
+            element.sizes.forEach { SizeAndPhotoUrl in
+                if SizeAndPhotoUrl.type == "m" {
+                    urlArray.append(SizeAndPhotoUrl.url)
+                }
+            }
+        })
+        
+        let imageURL = URL(string: urlArray[indexPath.row])
             DispatchQueue.global(qos: .background).async {
                 guard let imageURL = imageURL else { return }
                 
