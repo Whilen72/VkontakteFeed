@@ -42,7 +42,8 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var contentView: UIView!
     
     static let controllerInditefire = "HomeViewController"
-    var userID: Int = 0
+    
+    var userID: String?
     var userData: UserInfo?
     var photosData = [Album]()
     var urlArray = [String]()
@@ -51,6 +52,7 @@ class HomeViewController: UIViewController {
     var imageFriendArray = [UIImage]()
     var friendsData = [FriendModel]()
     var linkArray = [String]()
+    
     private let errors = "error"
     private let itemsPerRow: CGFloat = 3
     private let sectionInsets = UIEdgeInsets(top: 10, left: 2, bottom: 10, right: 2)
@@ -76,7 +78,7 @@ class HomeViewController: UIViewController {
     
     private func getPhotos()  {
         
-        NetworkManager.shared.getAlbum { [weak self] (result) in
+        NetworkManager.shared.getAlbum(id: userID) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let photoArray):
@@ -307,12 +309,12 @@ class HomeViewController: UIViewController {
 
     // MARK: - NetFlow
     
-    func reciveDataForHomeVC(){
+    func reciveDataForHomeVC(){  //rename func
                 
         prepareViewForAnimations()
 
         var avatarFromNetwork = UIImage()
-       // var linkArray = [String]()
+      // var linkArray = [String]()
       //  var imageToHomeVC = [UIImage]()
         var dataToVC: UserInfo?
         var picArray = [Album]()
@@ -387,7 +389,7 @@ class HomeViewController: UIViewController {
         
         if NetworkManager.shared.checkAccessToken() == true {
             
-            NetworkManager.shared.getUserData { (result) in
+            NetworkManager.shared.getUserData(id: userID) { (result) in
                 
                 switch result {
                 case .success(let userInfo):
@@ -406,7 +408,7 @@ class HomeViewController: UIViewController {
         
         if NetworkManager.shared.checkAccessToken() == true {
         
-            NetworkManager.shared.getAlbum { (result) in
+            NetworkManager.shared.getAlbum(id: userID) { (result) in
                 
                 switch result {
                 case .success(let photoArray):
@@ -427,7 +429,7 @@ class HomeViewController: UIViewController {
         
         if NetworkManager.shared.checkAccessToken() == true {
         
-            NetworkManager.shared.getList { (result) in
+            NetworkManager.shared.getList(id: userID) { (result) in
                 
                 switch result {
                 case .success(let friends):
@@ -451,7 +453,7 @@ class HomeViewController: UIViewController {
 
 // MARK: - CollectionView
 
-extension HomeViewController: UICollectionViewDataSource{
+extension HomeViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.photosData.count < 6 ?  self.photosData.count : 6
@@ -484,6 +486,13 @@ extension HomeViewController: UICollectionViewDataSource{
         cell.imageView.contentMode = .scaleAspectFill
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: PhotosCollectionsViewController.controllerInditefire) as! PhotosCollectionsViewController
+        vc.photo = photosData
+        self.navigationController?.pushViewController(vc, animated: false)
+    }
+    
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {

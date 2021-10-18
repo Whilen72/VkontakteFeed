@@ -11,8 +11,9 @@ import UIKit
 class NetworkManager {
     
     static let shared = NetworkManager()
-    var currentID = ""
+    
     var token: Token?
+    
     private let baseUrl: String = "https://api.vk.com/method/"
     
     enum GetListFields: String, CaseIterable {
@@ -22,7 +23,7 @@ class NetworkManager {
         case city
     }
     
-    func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online, .city], completion: @escaping (Result<FriendList, Error>)->(Void)) {
+    func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online, .city], id: String?, completion: @escaping (Result<FriendList, Error>)->(Void)) {
         
         var params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:","),
@@ -32,8 +33,8 @@ class NetworkManager {
             "order": "name",
         ]
         
-        if currentID != "" {
-            params["user_id"] = "\(currentID)"
+        if id != nil {
+            params["user_id"] = id
         }
 
         let url = buildMethodURL(method: "friends.get", params: params)
@@ -165,14 +166,14 @@ class NetworkManager {
         case photo_max_orig, followers_count, city, online, bdate
     }
     
-    func getUserData (fields: [getUserDataFields] = [.photo_max_orig, .followers_count, .city, .online, .bdate], completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
+    func getUserData (fields: [getUserDataFields] = [.photo_max_orig, .followers_count, .city, .online, .bdate], id: String?, completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
         
         var params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:","),
         ]
             
-        if currentID != "" {
-            params["user_ids"] = "\(currentID)"
+        if id != nil {
+            params["user_ids"] = id
         }
         
         let url = buildMethodURL(method: "users.get", params: params)
@@ -200,7 +201,7 @@ class NetworkManager {
         }
     }
     
-    func getAlbum(offset: Int = 0, count: Int = 100, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
+    func getAlbum(offset: Int = 0, count: Int = 100, id: String?, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
         
         
         
@@ -210,8 +211,8 @@ class NetworkManager {
             "count": "\(count)",
         ]
          
-        if currentID != "" {
-            params["owner_id"] = "\(currentID)"
+        if id != nil {
+            params["owner_id"] = id
         }
         
         let url = buildMethodURL(method: "photos.get", params: params)

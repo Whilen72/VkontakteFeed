@@ -15,7 +15,7 @@ class FriendListController: UIViewController {
     static let controllerInditefire = "friendsList"
     var friendsImage = [UIImage]()
     var data = [FriendModel]()
-    
+    var userID: Int?
     
     // MARK: - ViewDidLoad
     
@@ -50,9 +50,9 @@ extension FriendListController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        NetworkManager.shared.currentID = "\(data[indexPath.row].id)"
-        
+         
         let vc = self.storyboard!.instantiateViewController(withIdentifier: HomeViewController.controllerInditefire) as! HomeViewController
+        vc.userID = "\(data[indexPath.row].id)"
         self.navigationController?.pushViewController(vc, animated: false)
     }
     

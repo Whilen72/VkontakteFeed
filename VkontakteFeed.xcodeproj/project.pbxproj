@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		58EED4DD26CA8AFC0032CA57 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58EED4DC26CA8AFC0032CA57 /* Token.swift */; };
 		58EED4DF26CA8B0E0032CA57 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58EED4DE26CA8B0E0032CA57 /* CurrentUser.swift */; };
+		5F0C1DEB271B07C900E95DB8 /* PhotosCollectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0C1DEA271B07C900E95DB8 /* PhotosCollectionsViewController.swift */; };
+		5F0C1DED271B0C0300E95DB8 /* PhotosCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0C1DEC271B0C0300E95DB8 /* PhotosCollectionViewCell.swift */; };
+		5F0C1DF5271B3AF800E95DB8 /* PhotosCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F0C1DF4271B3AF800E95DB8 /* PhotosCollectionViewCell.xib */; };
 		5F0D157D26B948E400469A09 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0D157C26B948E400469A09 /* AppDelegate.swift */; };
 		5F0D157F26B948E400469A09 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0D157E26B948E400469A09 /* SceneDelegate.swift */; };
 		5F0D158426B948E400469A09 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F0D158226B948E400469A09 /* Main.storyboard */; };
@@ -39,6 +42,9 @@
 /* Begin PBXFileReference section */
 		58EED4DC26CA8AFC0032CA57 /* Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		58EED4DE26CA8B0E0032CA57 /* CurrentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
+		5F0C1DEA271B07C900E95DB8 /* PhotosCollectionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionsViewController.swift; sourceTree = "<group>"; };
+		5F0C1DEC271B0C0300E95DB8 /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
+		5F0C1DF4271B3AF800E95DB8 /* PhotosCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhotosCollectionViewCell.xib; sourceTree = "<group>"; };
 		5F0D157926B948E400469A09 /* VkontakteFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VkontakteFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F0D157C26B948E400469A09 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		5F0D157E26B948E400469A09 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -79,6 +85,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5F0C1DE9271B079000E95DB8 /* PhotosCollectionsViewController */ = {
+			isa = PBXGroup;
+			children = (
+				5F0C1DEA271B07C900E95DB8 /* PhotosCollectionsViewController.swift */,
+				5F0C1DEC271B0C0300E95DB8 /* PhotosCollectionViewCell.swift */,
+				5F0C1DF4271B3AF800E95DB8 /* PhotosCollectionViewCell.xib */,
+			);
+			path = PhotosCollectionsViewController;
+			sourceTree = "<group>";
+		};
 		5F0D157026B948E400469A09 = {
 			isa = PBXGroup;
 			children = (
@@ -194,6 +210,7 @@
 		5F82904726B989850091FEB0 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				5F0C1DE9271B079000E95DB8 /* PhotosCollectionsViewController */,
 				5F44DA5726FCB66100F4A55D /* WebViewController */,
 				5F7D834326CE8CD7003AB124 /* HomeViewController */,
 				5F7D834226CE8CC3003AB124 /* LoginViewController */,
@@ -259,6 +276,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F0C1DF5271B3AF800E95DB8 /* PhotosCollectionViewCell.xib in Resources */,
 				5F7C3B7926F0FAD000F54ED4 /* duckGif.gif in Resources */,
 				5F0D158926B948E500469A09 /* LaunchScreen.storyboard in Resources */,
 				5F0D158626B948E500469A09 /* Assets.xcassets in Resources */,
@@ -282,6 +300,7 @@
 				5F2A008926BEA20000965A84 /* NetworkManager.swift in Sources */,
 				5F2ACFA826BD480B002585F0 /* FrindesListViewController.swift in Sources */,
 				58EED4DF26CA8B0E0032CA57 /* CurrentUser.swift in Sources */,
+				5F0C1DEB271B07C900E95DB8 /* PhotosCollectionsViewController.swift in Sources */,
 				5F2ACFAF26BD69C8002585F0 /* FriendModel.swift in Sources */,
 				58EED4DD26CA8AFC0032CA57 /* Token.swift in Sources */,
 				5F7C3B7526EF843100F54ED4 /* FriendsTableViewCell.swift in Sources */,
@@ -291,6 +310,7 @@
 				5F7D834526CE8CEE003AB124 /* HomeViewController.swift in Sources */,
 				5F7D835826E244BF003AB124 /* UIImageExtension+VKFeed.swift in Sources */,
 				5F7D833E26CD365A003AB124 /* QandA.swift in Sources */,
+				5F0C1DED271B0C0300E95DB8 /* PhotosCollectionViewCell.swift in Sources */,
 				5F0D157D26B948E400469A09 /* AppDelegate.swift in Sources */,
 				5F7D834926D533B0003AB124 /* PhotoModel.swift in Sources */,
 				5F553E6326F4B3A7005D5EC4 /* NavigationControllerExtension+VKFeed.swift in Sources */,
