@@ -101,6 +101,8 @@ class HomeViewController: UIViewController {
         }
     }
 
+    // MARK: - UI
+    
     private func launchScreen() {
         contentView.backgroundColor = .backgroundColor
         
@@ -159,7 +161,7 @@ class HomeViewController: UIViewController {
         }
         
         self.photoLabel.textColor = .fontColor
-        self.photoLabel.text = "Photos \(self.linkArray.count)"
+        self.photoLabel.text = "Photos \(self.photosData.count)"
         
         self.friendsCounterLabel.textColor = .fontColor
         self.friendsCounterLabel.text = "Friends: \(self.friendsData.count)"
@@ -225,16 +227,14 @@ class HomeViewController: UIViewController {
     }
     
     private func loadImageFriends() {
-        let dispatchGroup = DispatchGroup()
-        
-        friendsData.forEach {_ in dispatchGroup.enter()}
-        
-        friendsData.forEach { element in
-            guard let url = URL (string: element.photo_200_orig!) else { return }
+        DispatchQueue.global().async {
+         
+            self.friendsData.forEach { element in
+                guard let url = URL (string: element.photo_200_orig!) else { return }
             
-            UIImage.loadImageFromUrl(url: url) { image in
-                self.imagesToFriendList.append(image)
-                dispatchGroup.leave()
+                UIImage.loadImageFromUrl(url: url) { image in
+                    self.imagesToFriendList.append(image)
+                }
             }
         }
     }
@@ -317,7 +317,6 @@ class HomeViewController: UIViewController {
       // var linkArray = [String]()
       //  var imageToHomeVC = [UIImage]()
         var dataToVC: UserInfo?
-        var picArray = [Album]()
 
         getUserData { [weak self] userInfo in
 
@@ -328,7 +327,6 @@ class HomeViewController: UIViewController {
 
             self.getPhotos { [weak self] album in
 
-                picArray = album
                 guard let self = self else { return }
 
                 self.getFriends { [weak self] friend in
@@ -337,26 +335,17 @@ class HomeViewController: UIViewController {
                     var photoToVC = [UIImage]()
                     let friendToVC = friend
 
-                    picArray.enumerated().forEach({ index, element in
-                        element.sizes.forEach { SizeAndPhotoUrl in
-                            if SizeAndPhotoUrl.type == "m" {
-                                self.linkArray.append(SizeAndPhotoUrl.url)
-                            }
-                        }
-                    })
-
                     group.notify(queue: .main) {
         
                         self.avatar = avatarFromNetwork
-//                        self.imageArray = imageToHomeVC
                         self.userData = dataToVC
                         self.imageFriendArray = photoToVC
                         if let friendToVC = friendToVC.items {
                            self.friendsData = friendToVC
                         }
+                        self.loadImageFriends()
                         self.launchScreen()
                         self.animationView.isHidden = true
-                        self.loadImageFriends()
                         self.collectionView.reloadData()
                     }
                     
@@ -489,10 +478,9 @@ extension HomeViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = self.storyboard!.instantiateViewController(withIdentifier: PhotosCollectionsViewController.controllerInditefire) as! PhotosCollectionsViewController
-        vc.photo = photosData
+        vc.photoArray = photosData
         self.navigationController?.pushViewController(vc, animated: false)
     }
-    
 }
 
 extension HomeViewController: UICollectionViewDelegateFlowLayout {

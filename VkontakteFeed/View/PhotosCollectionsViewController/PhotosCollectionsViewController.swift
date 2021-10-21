@@ -13,15 +13,17 @@ class PhotosCollectionsViewController: UIViewController {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var photoPresentView: UIImageView!
     @IBOutlet weak var exiteOutlet: UIButton!
+    @IBOutlet weak var countLabel: UILabel!
     
     static let controllerInditefire = "PhotosCollectionsViewController"
     
-    var photo = [Album]()
+    var photoArray = [Album]()
     
     private let sectionInsets = UIEdgeInsets(top: 10, left: 2, bottom: 10, right: 2)
     private let itemsPerRow: CGFloat = 3
     private var urlArrayTypeM = [String]()
     private var urlArrayTypeY = [String]()
+    private var photoCounter: Int = 0
     
     // MARK: - ViewDidLoad
     
@@ -33,16 +35,89 @@ class PhotosCollectionsViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(UINib(nibName:"PhotosCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: PhotosCollectionViewCell.reuseId)
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector (swipeAction(gesture:)))
+        swipeRight.direction = .right
+        self.view.addGestureRecognizer(swipeRight)
+        
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector (swipeAction(gesture:)))
+        swipeLeft.direction = .left
+        self.view.addGestureRecognizer(swipeLeft)
     }
     
+    @objc func swipeAction(gesture: UISwipeGestureRecognizer) {
+        if gesture.direction == .right {
+            if photoCounter > 0 {
+
+                photoCounter -= 1
+
+                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+                DispatchQueue.global(qos: .background).async {
+
+                    guard let imageURL = imageURL else { return }
+                    UIImage.loadImageFromUrl(url: imageURL) { image in
+                        DispatchQueue.main.async {
+                            self.photoPresentView.image = image
+                        }
+                    }
+                }
+
+                countLabel.text = "\(photoArray.count)/\(photoCounter + 1)"
+            } else {
+                photoCounter = photoArray.count - 1
+                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+                DispatchQueue.global(qos: .background).async {
+
+                    guard let imageURL = imageURL else { return }
+                    UIImage.loadImageFromUrl(url: imageURL) { image in
+                        DispatchQueue.main.async {
+                            self.photoPresentView.image = image
+                        }
+                    }
+                }
+            }
+
+        } else if gesture.direction == .left {
+
+            if photoArray.count - 1 > photoCounter {
+
+                photoCounter += 1
+                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+                DispatchQueue.global(qos: .background).async {
+
+                    guard let imageURL = imageURL else { return }
+                    UIImage.loadImageFromUrl(url: imageURL) { image in
+                        DispatchQueue.main.async {
+                            self.photoPresentView.image = image
+                        }
+                    }
+                }
+
+            } else {
+                photoCounter = 0
+                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+                DispatchQueue.global(qos: .background).async {
+
+                    guard let imageURL = imageURL else { return }
+                    UIImage.loadImageFromUrl(url: imageURL) { image in
+                        DispatchQueue.main.async {
+                            self.photoPresentView.image = image
+                        }
+                    }
+                }
+            }
+            countLabel.text = "\(photoArray.count)/\(photoCounter + 1)"
+
+        }
+    }
+    // MARK: - Event
     @IBAction func exiteEvent(_ sender: Any) {
-        print("I pressed")
-        
         containerView.isHidden = true
         photoPresentView.isHidden = true
         exiteOutlet.isHidden = true
+        countLabel.isHidden = true
     }
-    
+    // MARK: - UI launch
     private func launchScreen() {
         view.backgroundColor = .backgroundColor
         collectionView.backgroundColor = .backgroundColor
@@ -50,6 +125,7 @@ class PhotosCollectionsViewController: UIViewController {
         containerView.isHidden = true
         photoPresentView.isHidden = true
         exiteOutlet.isHidden = true
+        countLabel.isHidden = true
         exiteOutlet.setTitle("", for: .normal)
     }
     
@@ -58,6 +134,7 @@ class PhotosCollectionsViewController: UIViewController {
         containerView.alpha = 1
         photoPresentView.isHidden = false
         exiteOutlet.isHidden = false
+        countLabel.isHidden = false
     }
 }
 
@@ -66,33 +143,32 @@ class PhotosCollectionsViewController: UIViewController {
 extension PhotosCollectionsViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photo.count
+        return photoArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.reuseId, for: indexPath) as! PhotosCollectionViewCell
         
-        var urlArrayTypeM = [String]()
         
         
-        photo.enumerated().forEach({ index, element in
+        
+        
+        
+        photoArray.enumerated().forEach({ index, element in
             element.sizes.forEach { SizeAndPhotoUrl in
-                if SizeAndPhotoUrl.type == "m" {
-                    urlArrayTypeM.append(SizeAndPhotoUrl.url)
-                }
-            }
-        })
-        
-        photo.enumerated().forEach({ index, element in
-            element.sizes.forEach { SizeAndPhotoUrl in
-                if SizeAndPhotoUrl.type == "y" {
+                if SizeAndPhotoUrl.type == "x" {
                     urlArrayTypeY.append(SizeAndPhotoUrl.url)
+                } else {
+                    if SizeAndPhotoUrl.type == "y" {
+                        urlArrayTypeY.removeLast()
+                        urlArrayTypeY.append(SizeAndPhotoUrl.url)
+                    }
                 }
             }
         })
         
-        let imageURL = URL(string: urlArrayTypeM[indexPath.row])
+            let imageURL = URL(string: photoArray[indexPath.row].getUrlM() ?? "[eq")
             DispatchQueue.global(qos: .background).async {
                 guard let imageURL = imageURL else { return }
                 
@@ -112,8 +188,10 @@ extension PhotosCollectionsViewController: UICollectionViewDataSource {
         
         showFullScreenPhoto()
         photoPresentView.contentMode = .center
-        
-        let imageURL = URL(string: urlArrayTypeY[indexPath.row])
+        countLabel.textColor = .white
+        photoCounter = indexPath.row
+        countLabel.text = "\(photoArray.count)/\(indexPath.row + 1)"
+        let imageURL = URL(string: photoArray[indexPath.row].getUrlFullScreen() ?? "nahui")
         DispatchQueue.global(qos: .background).async {
 
             guard let imageURL = imageURL else { return }

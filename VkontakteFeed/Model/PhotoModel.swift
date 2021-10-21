@@ -18,8 +18,34 @@ struct Album: Decodable {
     enum CodingKeys: String, CodingKey {
        case sizes
     }
+    
+    func getUrlM() -> String? {
+        var urlString: String?
+        self.sizes.forEach { photoModel in
+            if photoModel.type == "m" {
+                urlString = photoModel.url
+            }
+        }
+        return urlString
+    }
+    
+    func getUrlFullScreen() -> String? {
+        var urlString: String?
+        self.sizes.forEach { photoModel in
+            if photoModel.type == "y" {
+                urlString = photoModel.url
+            }
+        }
+        if urlString == nil {
+            self.sizes.forEach { photoModel in
+                if photoModel.type == "x" {
+                    urlString = photoModel.url
+                }
+            }
+        }
+        return urlString
+    }
 }
-
 struct PhotoModel: Decodable {
     let height: Int
     let url: String
@@ -32,4 +58,6 @@ struct PhotoModel: Decodable {
         case type
         case width
     }
+    
+    
 }
