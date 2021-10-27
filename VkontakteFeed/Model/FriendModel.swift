@@ -28,7 +28,7 @@ struct FriendModel: Decodable {
     }
     
     let online: Int
-    let photo_200_orig: String?
+    let photo_200_orig: String
     let firstName: String?
     let id: Int
     let lastName: String?

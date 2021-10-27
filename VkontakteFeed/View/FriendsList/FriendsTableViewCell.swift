@@ -35,10 +35,16 @@ class FriendsTableViewCell: UITableViewCell {
 
     }
     
-    func configure(with image: UIImage, name: String, city: String, onlineStatus: String) {
-        friendImage.image = image
+    func configure(with imageURL: URL, name: String, city: String, onlineStatus: String) {
         nameLabel.text = name
         cityLabel.text = "City: \(city)"
         isOnline.text = onlineStatus
+        
+        DispatchQueue.main.async {
+            UIImage.loadImageFromUrl(url: imageURL) { [weak self] image in
+                guard let self = self else { return }
+                self.friendImage.image = image
+            }
+        }
     }
 }

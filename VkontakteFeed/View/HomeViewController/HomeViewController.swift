@@ -56,13 +56,16 @@ class HomeViewController: UIViewController {
     private let errors = "error"
     private let itemsPerRow: CGFloat = 3
     private let sectionInsets = UIEdgeInsets(top: 10, left: 2, bottom: 10, right: 2)
-    private var imagesToFriendList = [UIImage]()
+   
     
     // MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .backgroundColor
+        animationView.backgroundColor = .backgroundColor
+        
         reciveDataForHomeVC()
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -226,22 +229,11 @@ class HomeViewController: UIViewController {
         friendsViewContainer.isUserInteractionEnabled = true
     }
     
-    private func loadImageFriends() {
-        DispatchQueue.global().async {
-         
-            self.friendsData.forEach { element in
-                guard let url = URL (string: element.photo_200_orig!) else { return }
-            
-                UIImage.loadImageFromUrl(url: url) { image in
-                    self.imagesToFriendList.append(image)
-                }
-            }
-        }
-    }
+   
     
     @objc private func goToFriendsList(_ gesture: UITapGestureRecognizer) {
         let vc = self.storyboard!.instantiateViewController(withIdentifier: FriendListController.controllerInditefire) as! FriendListController
-        vc.friendsImage = imagesToFriendList
+
         vc.data = friendsData
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -274,10 +266,10 @@ class HomeViewController: UIViewController {
     }
     
     private func showLoadingAnimation() {
+        
         loadingIndicator.image = UIImage.gif(name: "duckGif")
         self.view.bringSubviewToFront(loadingIndicator)
         
-        animationView.backgroundColor = .backgroundColor
         
         dotLabel.isHidden = true
         dotLabel.textColor = .white
@@ -343,7 +335,7 @@ class HomeViewController: UIViewController {
                         if let friendToVC = friendToVC.items {
                            self.friendsData = friendToVC
                         }
-                        self.loadImageFriends()
+                        
                         self.launchScreen()
                         self.animationView.isHidden = true
                         self.collectionView.reloadData()

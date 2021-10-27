@@ -32,6 +32,7 @@ class LoginViewController: UIViewController {
         
         view.backgroundColor = .backgroundColor
         navigationController?.setNavigationBarHidden(true, animated: false)
+       
     }
     
     @IBAction func loginAction(_ sender: Any) {

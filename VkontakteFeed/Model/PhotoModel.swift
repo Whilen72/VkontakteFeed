@@ -31,6 +31,7 @@ struct Album: Decodable {
     
     func getUrlFullScreen() -> String? {
         var urlString: String?
+        
         self.sizes.forEach { photoModel in
             if photoModel.type == "y" {
                 urlString = photoModel.url

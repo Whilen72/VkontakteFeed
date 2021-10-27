@@ -12,7 +12,7 @@ class PhotosCollectionsViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var photoPresentView: UIImageView!
-    @IBOutlet weak var exiteOutlet: UIButton!
+    
     @IBOutlet weak var countLabel: UILabel!
     
     static let controllerInditefire = "PhotosCollectionsViewController"
@@ -110,13 +110,7 @@ class PhotosCollectionsViewController: UIViewController {
 
         }
     }
-    // MARK: - Event
-    @IBAction func exiteEvent(_ sender: Any) {
-        containerView.isHidden = true
-        photoPresentView.isHidden = true
-        exiteOutlet.isHidden = true
-        countLabel.isHidden = true
-    }
+   
     // MARK: - UI launch
     private func launchScreen() {
         view.backgroundColor = .backgroundColor
@@ -124,17 +118,28 @@ class PhotosCollectionsViewController: UIViewController {
         containerView.backgroundColor = .backgroundColor
         containerView.isHidden = true
         photoPresentView.isHidden = true
-        exiteOutlet.isHidden = true
+       
         countLabel.isHidden = true
-        exiteOutlet.setTitle("", for: .normal)
+        
     }
     
     private func showFullScreenPhoto() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .plain , target: self, action: #selector(addTapped))
+        // i create new button every time?
         containerView.isHidden = false
         containerView.alpha = 1
         photoPresentView.isHidden = false
-        exiteOutlet.isHidden = false
+        
         countLabel.isHidden = false
+    }
+    
+    @objc func addTapped(){
+        self.navigationItem.rightBarButtonItem?.customView?.isHidden = true
+        
+        
+        containerView.isHidden = true
+        photoPresentView.isHidden = true
+        countLabel.isHidden = true
     }
 }
 
@@ -150,11 +155,6 @@ extension PhotosCollectionsViewController: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotosCollectionViewCell.reuseId, for: indexPath) as! PhotosCollectionViewCell
         
-        
-        
-        
-        
-        
         photoArray.enumerated().forEach({ index, element in
             element.sizes.forEach { SizeAndPhotoUrl in
                 if SizeAndPhotoUrl.type == "x" {
@@ -168,7 +168,7 @@ extension PhotosCollectionsViewController: UICollectionViewDataSource {
             }
         })
         
-            let imageURL = URL(string: photoArray[indexPath.row].getUrlM() ?? "[eq")
+            let imageURL = URL(string: photoArray[indexPath.row].getUrlM() ?? "")
             DispatchQueue.global(qos: .background).async {
                 guard let imageURL = imageURL else { return }
                 
@@ -191,7 +191,7 @@ extension PhotosCollectionsViewController: UICollectionViewDataSource {
         countLabel.textColor = .white
         photoCounter = indexPath.row
         countLabel.text = "\(photoArray.count)/\(indexPath.row + 1)"
-        let imageURL = URL(string: photoArray[indexPath.row].getUrlFullScreen() ?? "nahui")
+        let imageURL = URL(string: photoArray[indexPath.row].getUrlFullScreen() ?? "")
         DispatchQueue.global(qos: .background).async {
 
             guard let imageURL = imageURL else { return }
