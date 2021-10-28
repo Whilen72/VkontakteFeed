@@ -12,8 +12,6 @@ class NetworkManager {
     
     static let shared = NetworkManager()
     
-    var token: Token?
-    
     private let baseUrl: String = "https://api.vk.com/method/"
     
     enum GetListFields: String, CaseIterable {

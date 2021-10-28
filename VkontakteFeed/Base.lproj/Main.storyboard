@@ -601,11 +601,38 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bqQ-SS-bhA">
+                                        <rect key="frame" x="315" y="390" width="60" height="100"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="100" id="IMt-X6-fxI"/>
+                                            <constraint firstAttribute="width" constant="60" id="cD4-Gq-7dN"/>
+                                        </constraints>
+                                        <buttonConfiguration key="configuration" style="plain" image="chevron.forward" catalog="system"/>
+                                        <connections>
+                                            <action selector="rightActionButton:" destination="Uc6-SV-APl" eventType="touchUpInside" id="mhH-rL-TGB"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eJn-Ez-alM">
+                                        <rect key="frame" x="0.0" y="390" width="60" height="100"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="60" id="1Vx-2f-BKL"/>
+                                            <constraint firstAttribute="height" constant="100" id="Uxe-9B-HxD"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="chevron.left" catalog="system" title=""/>
+                                        <connections>
+                                            <action selector="leftActionButton:" destination="Uc6-SV-APl" eventType="touchUpInside" id="MNW-Z9-NIJ"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="cfc-gU-gKw" secondAttribute="trailing" constant="8" id="3Jc-hN-EGb"/>
+                                    <constraint firstItem="bqQ-SS-bhA" firstAttribute="centerY" secondItem="cfc-gU-gKw" secondAttribute="centerY" id="8PI-1E-j4I"/>
                                     <constraint firstAttribute="bottom" secondItem="QeV-tM-Ljr" secondAttribute="bottom" constant="32" id="Lpy-Ni-5hR"/>
+                                    <constraint firstAttribute="trailing" secondItem="bqQ-SS-bhA" secondAttribute="trailing" id="Mdp-K2-Eax"/>
+                                    <constraint firstItem="eJn-Ez-alM" firstAttribute="centerY" secondItem="cfc-gU-gKw" secondAttribute="centerY" id="Uqz-Wp-VTU"/>
+                                    <constraint firstItem="eJn-Ez-alM" firstAttribute="leading" secondItem="iyH-Wz-SBP" secondAttribute="leading" id="VDM-AQ-GMT"/>
                                     <constraint firstItem="cfc-gU-gKw" firstAttribute="top" secondItem="iyH-Wz-SBP" secondAttribute="top" constant="110" id="VgC-t6-TIC"/>
                                     <constraint firstItem="QeV-tM-Ljr" firstAttribute="centerX" secondItem="cfc-gU-gKw" secondAttribute="centerX" id="Wvx-PI-ztO"/>
                                     <constraint firstAttribute="bottom" secondItem="cfc-gU-gKw" secondAttribute="bottom" constant="8" id="jGf-ZE-vXL"/>
@@ -630,7 +657,9 @@
                         <outlet property="collectionView" destination="lzk-ug-SFI" id="Udm-tg-DYm"/>
                         <outlet property="containerView" destination="iyH-Wz-SBP" id="8Pi-SX-HIw"/>
                         <outlet property="countLabel" destination="QeV-tM-Ljr" id="8uT-pb-uig"/>
+                        <outlet property="leftButton" destination="eJn-Ez-alM" id="GnP-f5-aBZ"/>
                         <outlet property="photoPresentView" destination="cfc-gU-gKw" id="Jfg-Bo-eHy"/>
+                        <outlet property="rightButton" destination="bqQ-SS-bhA" id="gi6-L1-hSL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uwN-IA-3R6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -639,6 +668,8 @@
         </scene>
     </scenes>
     <resources>
+        <image name="chevron.forward" catalog="system" width="96" height="128"/>
+        <image name="chevron.left" catalog="system" width="96" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

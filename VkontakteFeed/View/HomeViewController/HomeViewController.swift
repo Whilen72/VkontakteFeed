@@ -71,12 +71,24 @@ class HomeViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.register(UINib(nibName:"HomeCell", bundle: nil), forCellWithReuseIdentifier: HomeCell.reuseId)
         tapGesture()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain , target: self, action: #selector(addTapped))
         
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
+
+    }
+    
+    @objc func addTapped() {
+        UserDefaults.standard.removeObject(forKey: "savedAccessToken")
+        UserDefaults.standard.removeObject(forKey: "savedExpireIn")
+        
+        WebViewController.shared.logOutEvent = true
+        
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: LoginViewController.controllerInditefire) as! LoginViewController
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     private func getPhotos()  {
@@ -301,8 +313,7 @@ class HomeViewController: UIViewController {
         prepareViewForAnimations()
 
         var avatarFromNetwork = UIImage()
-      // var linkArray = [String]()
-      //  var imageToHomeVC = [UIImage]()
+
         var dataToVC: UserInfo?
 
         getUserData { [weak self] userInfo in
@@ -424,7 +435,6 @@ class HomeViewController: UIViewController {
         vc.delegate = self
         self.navigationController?.pushViewController(vc, animated: false)
     }
-    
 }
 
 // MARK: - CollectionView
@@ -438,26 +448,19 @@ extension HomeViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCell.reuseId, for: indexPath) as! HomeCell
-        var urlArray = [String]()
-        
-        photosData.enumerated().forEach({ index, element in
-            element.sizes.forEach { SizeAndPhotoUrl in
-                if SizeAndPhotoUrl.type == "m" {
-                    urlArray.append(SizeAndPhotoUrl.url)
-                }
-            }
-        })
-        
-        let imageURL = URL(string: urlArray[indexPath.row])
-            DispatchQueue.global(qos: .background).async {
-                guard let imageURL = imageURL else { return }
+
+        let imageURL = URL(string: photosData[indexPath.row].getUrlM()!) // UNWARP
+       
+        DispatchQueue.global(qos: .background).async {
+           
+            guard let imageURL = imageURL else { return }
+            UIImage.loadImageFromUrl(url: imageURL) { image in
                 
-                UIImage.loadImageFromUrl(url: imageURL) { image in
-                    DispatchQueue.main.async {
-                        cell.imageView.image = image
-                    }
+                DispatchQueue.main.async {
+                    cell.imageView.image = image
                 }
             }
+        }
         
         cell.imageView.contentMode = .scaleAspectFill
         return cell

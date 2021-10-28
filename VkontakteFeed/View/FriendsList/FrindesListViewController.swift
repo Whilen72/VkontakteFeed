@@ -37,14 +37,11 @@ extension FriendListController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-                
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "friendsCell", for: indexPath) as! FriendsTableViewCell
         
+        let url = URL(string: data[indexPath.row].photo_200_orig)
         
-       let url = URL(string: data[indexPath.row].photo_200_orig)
-            
-       
-       
         cell.configure(with: url!,
                        name: "\(data[indexPath.row].firstName!) \((data[indexPath.row].lastName!))",
                        city: data[indexPath.row].city?.title ?? "Не указан",

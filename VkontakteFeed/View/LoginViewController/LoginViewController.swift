@@ -64,9 +64,6 @@ class LoginViewController: UIViewController {
         
         loginBanner.image = UIImage(named: "vk-logo")
         
-        
-       
-        
         loginButtonOutlet.backgroundColor = UIColor(red: 75/255, green: 118/255, blue: 164/255, alpha: 1)
         loginButtonOutlet.layer.cornerRadius = loginButtonOutlet.frame.height/1.9
         loginButtonOutlet.setTitleColor(.white, for: .normal)
@@ -75,9 +72,7 @@ class LoginViewController: UIViewController {
         infoLabel.textColor = .white
         infoLabel.font.withSize(20)
         infoLabel.text = "Just push 'Sign in' button"
-       
     }
-
     
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return .lightContent

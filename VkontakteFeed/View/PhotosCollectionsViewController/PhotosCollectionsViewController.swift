@@ -14,6 +14,8 @@ class PhotosCollectionsViewController: UIViewController {
     @IBOutlet weak var photoPresentView: UIImageView!
     
     @IBOutlet weak var countLabel: UILabel!
+    @IBOutlet weak var rightButton: UIButton!
+    @IBOutlet weak var leftButton: UIButton!
     
     static let controllerInditefire = "PhotosCollectionsViewController"
     
@@ -45,6 +47,71 @@ class PhotosCollectionsViewController: UIViewController {
         self.view.addGestureRecognizer(swipeLeft)
     }
     
+    // MARK: - SwipeActions
+    
+    @IBAction func rightActionButton(_ sender: Any) {
+        if photoArray.count - 1 > photoCounter {
+
+            photoCounter += 1
+            let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+            DispatchQueue.global(qos: .background).async {
+
+                guard let imageURL = imageURL else { return }
+                UIImage.loadImageFromUrl(url: imageURL) { image in
+                    DispatchQueue.main.async {
+                        self.photoPresentView.image = image
+                    }
+                }
+            }
+
+        } else {
+            photoCounter = 0
+            let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+            DispatchQueue.global(qos: .background).async {
+
+                guard let imageURL = imageURL else { return }
+                UIImage.loadImageFromUrl(url: imageURL) { image in
+                    DispatchQueue.main.async {
+                        self.photoPresentView.image = image
+                    }
+                }
+            }
+        }
+        countLabel.text = "\(photoArray.count)/\(photoCounter + 1)"
+    }
+    
+    @IBAction func leftActionButton(_ sender: Any) {
+        if photoCounter > 0 {
+
+            photoCounter -= 1
+
+            let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+            DispatchQueue.global(qos: .background).async {
+
+                guard let imageURL = imageURL else { return }
+                UIImage.loadImageFromUrl(url: imageURL) { image in
+                    DispatchQueue.main.async {
+                        self.photoPresentView.image = image
+                    }
+                }
+            }
+
+            countLabel.text = "\(photoArray.count)/\(photoCounter + 1)"
+        } else {
+            photoCounter = photoArray.count - 1
+            let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "")
+            DispatchQueue.global(qos: .background).async {
+
+                guard let imageURL = imageURL else { return }
+                UIImage.loadImageFromUrl(url: imageURL) { image in
+                    DispatchQueue.main.async {
+                        self.photoPresentView.image = image
+                    }
+                }
+            }
+        }
+    }
+    
     @objc func swipeAction(gesture: UISwipeGestureRecognizer) {
         if gesture.direction == .right {
             if photoCounter > 0 {
@@ -65,7 +132,7 @@ class PhotosCollectionsViewController: UIViewController {
                 countLabel.text = "\(photoArray.count)/\(photoCounter + 1)"
             } else {
                 photoCounter = photoArray.count - 1
-                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "")
                 DispatchQueue.global(qos: .background).async {
 
                     guard let imageURL = imageURL else { return }
@@ -112,6 +179,7 @@ class PhotosCollectionsViewController: UIViewController {
     }
    
     // MARK: - UI launch
+    
     private func launchScreen() {
         view.backgroundColor = .backgroundColor
         collectionView.backgroundColor = .backgroundColor
@@ -125,7 +193,7 @@ class PhotosCollectionsViewController: UIViewController {
     
     private func showFullScreenPhoto() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .plain , target: self, action: #selector(addTapped))
-        // i create new button every time?
+        
         containerView.isHidden = false
         containerView.alpha = 1
         photoPresentView.isHidden = false
@@ -136,7 +204,7 @@ class PhotosCollectionsViewController: UIViewController {
     @objc func addTapped(){
         self.navigationItem.rightBarButtonItem?.customView?.isHidden = true
         
-        
+        photoPresentView.image = nil
         containerView.isHidden = true
         photoPresentView.isHidden = true
         countLabel.isHidden = true
