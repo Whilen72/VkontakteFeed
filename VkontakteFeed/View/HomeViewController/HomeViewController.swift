@@ -109,12 +109,7 @@ class HomeViewController: UIViewController {
     private func launchScreen() {
         contentView.backgroundColor = .backgroundColor
         
-//        if imageArray.count == 0 {
-//            collectionView.isHidden = true
-//        }
         imageView.contentMode = .top
-        imageView.layer.cornerRadius = imageView.frame.width/5
-        imageView.layer.masksToBounds = true
         imageView.image = avatar
         
         

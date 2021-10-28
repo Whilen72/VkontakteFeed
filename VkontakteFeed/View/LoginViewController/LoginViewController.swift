@@ -64,8 +64,8 @@ class LoginViewController: UIViewController {
         
         loginBanner.image = UIImage(named: "vk-logo")
         
-        animationView.isHidden = true
-        animationView.backgroundColor = .backgroundColor
+        
+       
         
         loginButtonOutlet.backgroundColor = UIColor(red: 75/255, green: 118/255, blue: 164/255, alpha: 1)
         loginButtonOutlet.layer.cornerRadius = loginButtonOutlet.frame.height/1.9
@@ -75,26 +75,7 @@ class LoginViewController: UIViewController {
         infoLabel.textColor = .white
         infoLabel.font.withSize(20)
         infoLabel.text = "Just push 'Sign in' button"
-        
-        dotLabel.isHidden = true
-        dotLabel.textColor = .white
-        dotLabel.font.withSize(20)
-        dotLabel.text = "."
-        
-        midDotLabel.isHidden = true
-        midDotLabel.textColor = .white
-        midDotLabel.font.withSize(20)
-        midDotLabel.text = "."
-        
-        leftDotLabel.isHidden = true
-        leftDotLabel.textColor = .white
-        leftDotLabel.font.withSize(20)
-        leftDotLabel.text = "."
-        
-        loadInfoLabel.isHidden = true
-        loadInfoLabel.textColor = .white
-        loadInfoLabel.font.withSize(20)
-        loadInfoLabel.text = "Loading"
+       
     }
 
     

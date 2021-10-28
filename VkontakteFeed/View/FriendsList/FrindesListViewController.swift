@@ -22,7 +22,7 @@ class FriendListController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-      //  getFriendsList()
+        navigationController?.navigationBar.barTintColor = .backgroundColor
         tableView.register(UINib(nibName: "FriendsTableViewCell", bundle: nil), forCellReuseIdentifier: FriendsTableViewCell.reuseId)
         tableView.dataSource = self
         tableView.delegate = self
