@@ -20,8 +20,6 @@ class WebViewController: UIViewController, WKUIDelegate {
     static let shared = WebViewController()
     static let controllerInditefire = "WebViewController"
     
-    var logOutEvent = false
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -38,21 +36,11 @@ class WebViewController: UIViewController, WKUIDelegate {
         webView.navigationDelegate = self
         self.view.addSubview(webView)
         
-        let url = URL(string: clearCacheForRelog(logIutStatus: logOutEvent))
+        let url = URL(string: "https://oauth.vk.com/authorize?client_id=7918001&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&response_type=token&v=5.131&revoke=1")
         let request = URLRequest(url: url!)
         
         webView.load(request)
     }
-    
-    private func clearCacheForRelog (logIutStatus: Bool) -> String {
-        let urlString = "https://oauth.vk.com/authorize?client_id=7918001&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&response_type=token&v=5.131"
-        if logIutStatus == true {
-            let urlStringForRelog = "https://oauth.vk.com/authorize?client_id=7918001&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&response_type=token&v=5.131&revoke=1"
-            return urlString
-        }
-        return urlString
-    }
-    
 }
 
 extension  WebViewController: WKNavigationDelegate {
@@ -100,10 +88,11 @@ extension  WebViewController: WKNavigationDelegate {
                     let seconds = Double(fetchToken.expiresIn)
                     let currentExpireDate = Date().addingTimeInterval(seconds!)
                     UserDefaults.standard.set(currentExpireDate, forKey: "savedExpireIn")
-                  //  NetworkManager.shared.token = fetchToken
+                   // NetworkManager.shared.token = fetchToken
                     delegate?.netFlowStart()
                    
                     let vc = self.storyboard!.instantiateViewController(withIdentifier: HomeViewController.controllerInditefire) as! HomeViewController
+                    vc.currentUser = CurrentUser(id: paramDict["user_id"]!)
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             }

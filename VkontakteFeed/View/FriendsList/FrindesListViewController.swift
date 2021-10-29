@@ -40,6 +40,8 @@ extension FriendListController: UITableViewDataSource {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "friendsCell", for: indexPath) as! FriendsTableViewCell
         
+        cell.selectionStyle = UITableViewCell.SelectionStyle.none
+        
         let url = URL(string: data[indexPath.row].photo_200_orig)
         
         cell.configure(with: url!,
@@ -52,7 +54,7 @@ extension FriendListController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-         
+        
         let vc = self.storyboard!.instantiateViewController(withIdentifier: HomeViewController.controllerInditefire) as! HomeViewController
         vc.userID = "\(data[indexPath.row].id)"
         self.navigationController?.pushViewController(vc, animated: false)

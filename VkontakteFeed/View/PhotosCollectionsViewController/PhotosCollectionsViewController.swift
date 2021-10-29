@@ -50,10 +50,11 @@ class PhotosCollectionsViewController: UIViewController {
     // MARK: - SwipeActions
     
     @IBAction func rightActionButton(_ sender: Any) {
+        
         if photoArray.count - 1 > photoCounter {
-
+            
             photoCounter += 1
-            let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+            let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "")
             DispatchQueue.global(qos: .background).async {
 
                 guard let imageURL = imageURL else { return }
@@ -66,7 +67,7 @@ class PhotosCollectionsViewController: UIViewController {
 
         } else {
             photoCounter = 0
-            let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+            let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "")
             DispatchQueue.global(qos: .background).async {
 
                 guard let imageURL = imageURL else { return }
@@ -77,7 +78,7 @@ class PhotosCollectionsViewController: UIViewController {
                 }
             }
         }
-        countLabel.text = "\(photoArray.count)/\(photoCounter + 1)"
+        countLabel.text = "\(photoCounter + 1)/\(photoArray.count)"
     }
     
     @IBAction func leftActionButton(_ sender: Any) {
@@ -85,7 +86,7 @@ class PhotosCollectionsViewController: UIViewController {
 
             photoCounter -= 1
 
-            let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+            let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "")
             DispatchQueue.global(qos: .background).async {
 
                 guard let imageURL = imageURL else { return }
@@ -96,7 +97,7 @@ class PhotosCollectionsViewController: UIViewController {
                 }
             }
 
-            countLabel.text = "\(photoArray.count)/\(photoCounter + 1)"
+            countLabel.text = "\(photoCounter + 1)/\(photoArray.count)"
         } else {
             photoCounter = photoArray.count - 1
             let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "")
@@ -109,6 +110,7 @@ class PhotosCollectionsViewController: UIViewController {
                     }
                 }
             }
+            countLabel.text = "\(photoArray.count)/\(photoArray.count)"
         }
     }
     
@@ -118,7 +120,7 @@ class PhotosCollectionsViewController: UIViewController {
 
                 photoCounter -= 1
 
-                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "")
                 DispatchQueue.global(qos: .background).async {
 
                     guard let imageURL = imageURL else { return }
@@ -129,7 +131,7 @@ class PhotosCollectionsViewController: UIViewController {
                     }
                 }
 
-                countLabel.text = "\(photoArray.count)/\(photoCounter + 1)"
+                countLabel.text = "\(photoCounter + 1)/\(photoArray.count)"
             } else {
                 photoCounter = photoArray.count - 1
                 let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "")
@@ -142,6 +144,7 @@ class PhotosCollectionsViewController: UIViewController {
                         }
                     }
                 }
+                countLabel.text = "\(photoArray.count)/\(photoArray.count)"
             }
 
         } else if gesture.direction == .left {
@@ -149,7 +152,7 @@ class PhotosCollectionsViewController: UIViewController {
             if photoArray.count - 1 > photoCounter {
 
                 photoCounter += 1
-                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "")
                 DispatchQueue.global(qos: .background).async {
 
                     guard let imageURL = imageURL else { return }
@@ -162,7 +165,7 @@ class PhotosCollectionsViewController: UIViewController {
 
             } else {
                 photoCounter = 0
-                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "nahui")
+                let imageURL = URL(string: photoArray[photoCounter].getUrlFullScreen() ?? "")
                 DispatchQueue.global(qos: .background).async {
 
                     guard let imageURL = imageURL else { return }
@@ -173,7 +176,7 @@ class PhotosCollectionsViewController: UIViewController {
                     }
                 }
             }
-            countLabel.text = "\(photoArray.count)/\(photoCounter + 1)"
+            countLabel.text = "\(photoCounter + 1)/\(photoArray.count)"
 
         }
     }
@@ -202,7 +205,7 @@ class PhotosCollectionsViewController: UIViewController {
     }
     
     @objc func addTapped(){
-        self.navigationItem.rightBarButtonItem?.customView?.isHidden = true
+        self.navigationItem.rightBarButtonItem = nil
         
         photoPresentView.image = nil
         containerView.isHidden = true
@@ -255,11 +258,14 @@ extension PhotosCollectionsViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         showFullScreenPhoto()
+       
         photoPresentView.contentMode = .center
         countLabel.textColor = .white
         photoCounter = indexPath.row
         countLabel.text = "\(photoArray.count)/\(indexPath.row + 1)"
+        
         let imageURL = URL(string: photoArray[indexPath.row].getUrlFullScreen() ?? "")
+        
         DispatchQueue.global(qos: .background).async {
 
             guard let imageURL = imageURL else { return }

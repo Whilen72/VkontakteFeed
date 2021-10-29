@@ -52,6 +52,7 @@ class HomeViewController: UIViewController {
     var imageFriendArray = [UIImage]()
     var friendsData = [FriendModel]()
     var linkArray = [String]()
+    var currentUser: CurrentUser?
     
     private let errors = "error"
     private let itemsPerRow: CGFloat = 3
@@ -65,19 +66,20 @@ class HomeViewController: UIViewController {
         
         view.backgroundColor = .backgroundColor
         animationView.backgroundColor = .backgroundColor
+        navigationController?.navigationBar.barTintColor = .backgroundColor
         
         reciveDataForHomeVC()
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(UINib(nibName:"HomeCell", bundle: nil), forCellWithReuseIdentifier: HomeCell.reuseId)
         tapGesture()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Log out", style: .plain , target: self, action: #selector(addTapped))
+        navBarItems()
         
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
+       
 
     }
     
@@ -85,10 +87,14 @@ class HomeViewController: UIViewController {
         UserDefaults.standard.removeObject(forKey: "savedAccessToken")
         UserDefaults.standard.removeObject(forKey: "savedExpireIn")
         
-        WebViewController.shared.logOutEvent = true
-        
         let vc = self.storyboard!.instantiateViewController(withIdentifier: LoginViewController.controllerInditefire) as! LoginViewController
+        navigationController?.viewControllers.removeAll()
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func goToHome(){
+        userID = currentUser?.id
+        reciveDataForHomeVC()
     }
     
     private func getPhotos()  {
@@ -117,6 +123,14 @@ class HomeViewController: UIViewController {
     }
 
     // MARK: - UI
+    
+    private func navBarItems() {
+        
+        let homeImage = UIImage(systemName: "house")
+        let logOutButton = UIBarButtonItem(title: "Log out", style: .plain , target: self, action: #selector(addTapped))
+        let homeButton = UIBarButtonItem(image: homeImage, style: .plain, target: self, action: #selector(goToHome))
+        self.navigationController?.navigationBar.topItem?.setRightBarButtonItems([logOutButton, homeButton], animated: true)
+    }
     
     private func launchScreen() {
         contentView.backgroundColor = .backgroundColor

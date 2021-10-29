@@ -201,8 +201,6 @@ class NetworkManager {
     
     func getAlbum(offset: Int = 0, count: Int = 100, id: String?, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
         
-        
-        
         var params: [String: String] = [
             "album_id": "wall",
             "offset": "\(offset)",

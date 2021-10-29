@@ -27,7 +27,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+       // launchLoginButtonAndLabels()
         checkValidityToken()
         
         view.backgroundColor = .backgroundColor
@@ -50,11 +50,13 @@ class LoginViewController: UIViewController {
     func showAuthWebView() {
         let vc = self.storyboard!.instantiateViewController(withIdentifier: WebViewController.controllerInditefire) as! WebViewController
         self.navigationController?.pushViewController(vc, animated: false)
+        navigationController?.removeViewController(LoginViewController.self)
     }
     
     func showHomeView() {
         let vc = self.storyboard!.instantiateViewController(withIdentifier: HomeViewController.controllerInditefire) as! HomeViewController
         self.navigationController?.pushViewController(vc, animated: true)
+        navigationController?.removeViewController(LoginViewController.self)
     }
     
     

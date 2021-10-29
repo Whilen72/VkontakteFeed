@@ -40,10 +40,13 @@ class FriendsTableViewCell: UITableViewCell {
         cityLabel.text = "City: \(city)"
         isOnline.text = onlineStatus
         
-        DispatchQueue.main.async {
+        DispatchQueue.global().async {
             UIImage.loadImageFromUrl(url: imageURL) { [weak self] image in
                 guard let self = self else { return }
-                self.friendImage.image = image
+                
+                DispatchQueue.main.async {
+                    self.friendImage.image = image
+                }
             }
         }
     }
