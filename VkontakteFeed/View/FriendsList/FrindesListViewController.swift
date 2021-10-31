@@ -15,31 +15,19 @@ class FriendListController: UIViewController {
     static let controllerInditefire = "friendsList"
     var friendsImage = [UIImage]()
     var data = [FriendModel]()
-   
+    var userID: Int?
     
     // MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-      //  getFriendsList()
+        navigationController?.navigationBar.barTintColor = .backgroundColor
         tableView.register(UINib(nibName: "FriendsTableViewCell", bundle: nil), forCellReuseIdentifier: FriendsTableViewCell.reuseId)
         tableView.dataSource = self
         tableView.delegate = self
         tableView.backgroundColor = .backgroundColor
     }
-
-//    private func getFriendsList() {
-//        NetworkManager.shared.getList {[weak self] (result) in
-//            switch result {
-//            case .success(let listOf):
-//                self?.data = listOf.items ?? []
-//            case .failure(let error):
-//                print("Error processing json data: \(error)")
-//            }
-//            self!.tableView.reloadData()
-//        }
-//    }
 }
 
 extension FriendListController: UITableViewDataSource {
@@ -49,20 +37,27 @@ extension FriendListController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-                
-        let cell = tableView.dequeueReusableCell(withIdentifier: "friendsCell", for: indexPath) as! FriendsTableViewCell
-
         
-        cell.configure(with: friendsImage[indexPath.row],
+        let cell = tableView.dequeueReusableCell(withIdentifier: "friendsCell", for: indexPath) as! FriendsTableViewCell
+        
+        cell.selectionStyle = UITableViewCell.SelectionStyle.none
+        
+        let url = URL(string: data[indexPath.row].photo_200_orig)
+        
+        cell.configure(with: url!,
                        name: "\(data[indexPath.row].firstName!) \((data[indexPath.row].lastName!))",
-                       city: "не указан",
-                       onlineStatus: data[indexPath.row].online == 1 ? "is online" : "offline")
-
+                       city: data[indexPath.row].city?.title ?? "Не указан",
+                       onlineStatus: data[indexPath.row].online == 1 ? "is online" : "")
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: HomeViewController.controllerInditefire) as! HomeViewController
+        vc.userID = "\(data[indexPath.row].id)"
+        self.navigationController?.pushViewController(vc, animated: false)
     }
     
 }

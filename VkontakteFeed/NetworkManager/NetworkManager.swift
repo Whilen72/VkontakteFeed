@@ -12,8 +12,6 @@ class NetworkManager {
     
     static let shared = NetworkManager()
     
-    
-    var token: Token?
     private let baseUrl: String = "https://api.vk.com/method/"
     
     enum GetListFields: String, CaseIterable {
@@ -23,15 +21,19 @@ class NetworkManager {
         case city
     }
     
-    func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online], completion: @escaping (Result<FriendList, Error>)->(Void)) {
+    func getList(offset: Int = 0, count: Int = 100, fields: [GetListFields] = [.photo_200_orig, .photo_50, .online, .city], id: String?, completion: @escaping (Result<FriendList, Error>)->(Void)) {
         
-        let params: [String: String] = [
+        var params: [String: String] = [
             "fields": fields.map({ $0.rawValue }).joined(separator:","),
             "name_case": "nom",
             "offset": "\(offset)",
             "count": "\(count)",
             "order": "name",
         ]
+        
+        if id != nil {
+            params["user_id"] = id
+        }
 
         let url = buildMethodURL(method: "friends.get", params: params)
         
@@ -43,7 +45,9 @@ class NetworkManager {
                     let response: FriendList
                 }
                 if let data = data {
+                    
                     let responceModel = try decoder.decode(Responce.self, from: data)
+                    print(responceModel)
                     DispatchQueue.main.async {
                         completion(.success(responceModel.response))
                     }
@@ -90,7 +94,7 @@ class NetworkManager {
     }
     
     private func performeRequest(url: URL, completion: @escaping (Data?, Error?)->(Void)) {
-       
+        
         URLSession.shared.dataTask(with: url) {(data, response, error) in
             if let error = error {
                 completion(nil, error)
@@ -100,17 +104,18 @@ class NetworkManager {
                     if let data = data {
 
                         if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                            
+                            print(json)
                             if let serverError = json["error"] as? [String : Any], let errorCode = serverError["error_code"] as? Int {
                             
                                 if errorCode == ErrorCodes.authError.rawValue {
                                     completion(nil, ServerError.tokenError)
-                                    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-                                    if let topController = appDelegate.getTopMostVC() {
-                                        let vc = topController.storyboard!.instantiateViewController(withIdentifier: "12") as! WebViewController
-                                        vc.navigationController?.pushViewController(vc, animated: false)
+                                    DispatchQueue.main.async {
+                                        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                                        if let topController = appDelegate.getTopMostVC() {
+                                            let vc = topController.storyboard!.instantiateViewController(withIdentifier: "WebViewController") as! WebViewController
+                                            vc.navigationController?.pushViewController(vc, animated: false)
+                                        }
                                     }
-                                    
                                 } else {
                                     completion(nil, ServerError.unknownError)
                                 }
@@ -140,6 +145,7 @@ class NetworkManager {
                 if let data = data {
                     
                 let responceModel = try decoder.decode(CurrentUser.self, from: data)
+                    print(responceModel)
                 DispatchQueue.main.async {
                     completion(.success(responceModel))
                     }
@@ -158,10 +164,15 @@ class NetworkManager {
         case photo_max_orig, followers_count, city, online, bdate
     }
     
-    func getUserData (fields: [getUserDataFields] = [.photo_max_orig, .followers_count, .city, .online, .bdate], completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
+    func getUserData (fields: [getUserDataFields] = [.photo_max_orig, .followers_count, .city, .online, .bdate], id: String?, completion: @escaping (Result<UserInfo?, Error>)->(Void)) {
         
-        let params: [String: String] = [
-            "fields": fields.map({ $0.rawValue }).joined(separator:",")]
+        var params: [String: String] = [
+            "fields": fields.map({ $0.rawValue }).joined(separator:","),
+        ]
+            
+        if id != nil {
+            params["user_ids"] = id
+        }
         
         let url = buildMethodURL(method: "users.get", params: params)
         
@@ -175,6 +186,7 @@ class NetworkManager {
                
                 if let data = data {
                 let responseModel = try decoder.decode(Response.self, from: data)
+                    print(responseModel)
                     DispatchQueue.main.async {
                     completion(.success(responseModel.response?.first))
                     }
@@ -187,13 +199,17 @@ class NetworkManager {
         }
     }
     
-    func getAlbum(offset: Int = 0, count: Int = 500, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
+    func getAlbum(offset: Int = 0, count: Int = 100, id: String?, completion: @escaping (Result<[Album]?, Error>)->(Void)) {
         
-        let params: [String: String] = [
+        var params: [String: String] = [
             "album_id": "wall",
             "offset": "\(offset)",
             "count": "\(count)",
         ]
+         
+        if id != nil {
+            params["owner_id"] = id
+        }
         
         let url = buildMethodURL(method: "photos.get", params: params)
         
@@ -223,19 +239,20 @@ class NetworkManager {
     
     func checkAccessToken() -> Bool {
         
-        guard let tokenExpire = UserDefaults.standard.object(forKey: "savedExpireIn") as? String else { return false }
-        guard let seconds = Double(tokenExpire) else { return false }
-        
-        let expireDate = Date().addingTimeInterval(seconds)
-        
-        if expireDate > Date() {
-            return true
+        let expireDate = UserDefaults.standard.object(forKey: "savedExpireIn") as? Date
+
+        if let expireDate = expireDate {
+
+            if expireDate > Date() {
+                return true
+            } else {
+                return false
+            }
         } else {
             return false
         }
     }
 }
-    
 
 
 

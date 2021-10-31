@@ -15,9 +15,13 @@ class HomeCell: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        imageView.layer.cornerRadius = imageView.frame.width/8
+        imageView.layer.masksToBounds = true
     }
     
     func configure(with image: UIImage) {
         imageView.image = image
+        
     }
 }

@@ -9,6 +9,12 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
+    @IBOutlet weak var dotLabel: UILabel!
+    @IBOutlet weak var leftDotLabel: UILabel!
+    @IBOutlet weak var midDotLabel: UILabel!
+    @IBOutlet weak var loadingInfoLabel: UILabel!
+    @IBOutlet weak var loadingIndicator: UIImageView!
+    @IBOutlet weak var animationView: UIView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var isOnlineLabel: UILabel!
@@ -36,38 +42,64 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var contentView: UIView!
     
     static let controllerInditefire = "HomeViewController"
+    
+    var userID: String?
     var userData: UserInfo?
     var photosData = [Album]()
     var urlArray = [String]()
-    var imageArray = [UIImage]()
+    var imageArray = [PhotoModel]()
     var avatar = UIImage()
     var imageFriendArray = [UIImage]()
     var friendsData = [FriendModel]()
+    var linkArray = [String]()
+    var currentUser: CurrentUser?
+    
     private let errors = "error"
     private let itemsPerRow: CGFloat = 3
     private let sectionInsets = UIEdgeInsets(top: 10, left: 2, bottom: 10, right: 2)
-    private var imagesToFriendList = [UIImage]()
+   
+    
     // MARK: - ViewDidLoad
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
+        view.backgroundColor = .backgroundColor
+        animationView.backgroundColor = .backgroundColor
+        navigationController?.navigationBar.barTintColor = .backgroundColor
+        
+        reciveDataForHomeVC()
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(UINib(nibName:"HomeCell", bundle: nil), forCellWithReuseIdentifier: HomeCell.reuseId)
-        launchScreen()
         tapGesture()
-        loadImageFriends()
+        navBarItems()
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: false)
+       
+
+    }
+    
+    @objc func addTapped() {
+        UserDefaults.standard.removeObject(forKey: "savedAccessToken")
+        UserDefaults.standard.removeObject(forKey: "savedExpireIn")
+        
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: LoginViewController.controllerInditefire) as! LoginViewController
+        navigationController?.viewControllers.removeAll()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc func goToHome(){
+        userID = currentUser?.id
+        reciveDataForHomeVC()
     }
     
     private func getPhotos()  {
         
-        NetworkManager.shared.getAlbum { [weak self] (result) in
+        NetworkManager.shared.getAlbum(id: userID) { [weak self] (result) in
             guard let self = self else { return }
             switch result {
             case .success(let photoArray):
@@ -83,15 +115,6 @@ class HomeViewController: UIViewController {
                 let photoCount = self.photosData.count
                 self.photoLabel.textColor = .fontColor
                 self.photoLabel.text = "Photos \(photoCount)"
-                self.urlArray.forEach { url in
-                    guard let url = URL(string: url) else { return }
-                    
-                    if let data = try? Data(contentsOf: url) {
-                        if let image = UIImage(data: data) {
-                            self.imageArray.append(image)
-                        }
-                    }
-                }
             case .failure(let error):
                 print("Error processing json data: \(error)")
             }
@@ -99,15 +122,22 @@ class HomeViewController: UIViewController {
         }
     }
 
+    // MARK: - UI
+    
+    private func navBarItems() {
+        
+        let homeImage = UIImage(systemName: "house")
+        let logOutButton = UIBarButtonItem(title: "Log out", style: .plain , target: self, action: #selector(addTapped))
+        let homeButton = UIBarButtonItem(image: homeImage, style: .plain, target: self, action: #selector(goToHome))
+        self.navigationController?.navigationBar.topItem?.setRightBarButtonItems([logOutButton, homeButton], animated: true)
+    }
+    
     private func launchScreen() {
         contentView.backgroundColor = .backgroundColor
         
-        if imageArray.count == 0 {
-            collectionView.isHidden = true
-        }
-        
-        imageView.image = avatar
         imageView.contentMode = .top
+        imageView.image = avatar
+        
         
         let imageViewArray = [imageViewLower, imageViewMiddle, imageViewUpper]
         let circleViewArray = [circleViewLower, circleViewMiddle, circleViewUpper]
@@ -133,16 +163,19 @@ class HomeViewController: UIViewController {
         friendsViewContainer.backgroundColor = .backgroundColor
         
         nameLabel.textColor = .fontColor
-        nameLabel.text = "\(userData.firstName) " + "\(userData.lastName)"
-        
+        if let name = userData.firstName, let lastName = userData.lastName {
+            
+            nameLabel.text = "\(name) " + "\(lastName)"
+        }
         bDateLabel.textColor = .fontColor
-        bDateLabel.text = "B date \(userData.bdate)"
+        bDateLabel.text = "B date \(userData.bdate ?? "hidden")"
         
         followersCounterLabel.textColor = .fontColor
-        followersCounterLabel.text = "Follower: \(userData.followersCount)"
+        followersCounterLabel.text = "Follower: \(userData.followersCount ?? 0)"
         
         self.cityLabel.textColor = .fontColor
-        self.cityLabel.text = "City: \(userData.city.title)"
+        
+        self.cityLabel.text = "City: \(userData.city?.title ?? "hidden")"
         
         self.isOnlineLabel.textColor = .fontColor
         if self.userData?.online != 0 {
@@ -152,7 +185,7 @@ class HomeViewController: UIViewController {
         }
         
         self.photoLabel.textColor = .fontColor
-        self.photoLabel.text = "Photos \(self.imageArray.count)"
+        self.photoLabel.text = "Photos \(self.photosData.count)"
         
         self.friendsCounterLabel.textColor = .fontColor
         self.friendsCounterLabel.text = "Friends: \(self.friendsData.count)"
@@ -217,43 +250,240 @@ class HomeViewController: UIViewController {
         friendsViewContainer.isUserInteractionEnabled = true
     }
     
-    private func loadImageFriends() {
-        let dispatchGroup = DispatchGroup()
+   
+    
+    @objc private func goToFriendsList(_ gesture: UITapGestureRecognizer) {
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: FriendListController.controllerInditefire) as! FriendListController
+
+        vc.data = friendsData
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    // MARK: - animations
+    
+    private func animationsForLoading() {
         
-        friendsData.forEach {_ in dispatchGroup.enter()}
+        loadingInfoLabel.isHidden = false
+        self.view.bringSubviewToFront(loadingInfoLabel)
         
-        friendsData.forEach { element in
-            guard let url = URL (string: element.photo_200_orig!) else { return }
-            
-            UIImage.loadImageFromUrl(url: url) { image in
-                self.imagesToFriendList.append(image)
-                dispatchGroup.leave()
+        dotLabel.isHidden = false
+        self.view.bringSubviewToFront(dotLabel)
+        
+        midDotLabel.isHidden = false
+        self.view.bringSubviewToFront(midDotLabel)
+        
+        leftDotLabel.isHidden = false
+        self.view.bringSubviewToFront(leftDotLabel)
+        
+        UIView.animate(withDuration: 0.8, delay: 0.5, options: .repeat) {
+            self.dotLabel.alpha = 0
+        }
+        UIView.animate(withDuration: 0.8, delay: 0.3, options: .repeat) {
+            self.midDotLabel.alpha = 0
+        }
+        UIView.animate(withDuration: 0.8, delay: 0.1, options: .repeat) {
+            self.leftDotLabel.alpha = 0
+        }
+    }
+    
+    private func showLoadingAnimation() {
+        
+        loadingIndicator.image = UIImage.gif(name: "duckGif")
+        self.view.bringSubviewToFront(loadingIndicator)
+        
+        
+        dotLabel.isHidden = true
+        dotLabel.textColor = .white
+        dotLabel.font.withSize(20)
+        dotLabel.text = "."
+        
+        midDotLabel.isHidden = true
+        midDotLabel.textColor = .white
+        midDotLabel.font.withSize(20)
+        midDotLabel.text = "."
+        
+        leftDotLabel.isHidden = true
+        leftDotLabel.textColor = .white
+        leftDotLabel.font.withSize(20)
+        leftDotLabel.text = "."
+        
+        loadingInfoLabel.isHidden = true
+        loadingInfoLabel.textColor = .white
+        loadingInfoLabel.font.withSize(20)
+        loadingInfoLabel.text = "Loading"
+    }
+    
+    private func prepareViewForAnimations() {
+        animationView.isHidden = false
+        self.view.bringSubviewToFront(animationView)
+        showLoadingAnimation()
+        animationsForLoading()
+    }
+
+    // MARK: - NetFlow
+    
+    func reciveDataForHomeVC(){  //rename func
+                
+        prepareViewForAnimations()
+
+        var avatarFromNetwork = UIImage()
+
+        var dataToVC: UserInfo?
+
+        getUserData { [weak self] userInfo in
+
+            let group = DispatchGroup()
+            guard let self = self else { return }
+
+            dataToVC = userInfo
+
+            self.getPhotos { [weak self] album in
+
+                guard let self = self else { return }
+
+                self.getFriends { [weak self] friend in
+
+                    guard let self = self else { return }
+                    var photoToVC = [UIImage]()
+                    let friendToVC = friend
+
+                    group.notify(queue: .main) {
+        
+                        self.avatar = avatarFromNetwork
+                        self.userData = dataToVC
+                        self.imageFriendArray = photoToVC
+                        if let friendToVC = friendToVC.items {
+                           self.friendsData = friendToVC
+                        }
+                        
+                        self.launchScreen()
+                        self.animationView.isHidden = true
+                        self.collectionView.reloadData()
+                    }
+                    
+                    friend.items?.forEach {_ in group.enter()}
+                    group.enter()
+
+                    friend.items?.enumerated().forEach({ index, element in
+                        if index < 3 {
+                            if let urlString = element.photo_50, let url = URL(string: urlString) {
+                                UIImage.loadImageFromUrl(url: url) { image in
+                                    photoToVC.append(image)
+                                    group.leave()
+                                }
+                            }
+                        }
+                    })
+
+                    if let urlString = dataToVC?.photo_max_orig, let url = URL(string: urlString) {
+                        UIImage.loadImageFromUrl(url: url, completion: { image in
+                            avatarFromNetwork = image
+                            group.leave()
+                        })
+                    }
+                }
             }
         }
     }
     
-    @objc private func goToFriendsList(_ gesture: UITapGestureRecognizer) {
-        let vc = self.storyboard!.instantiateViewController(withIdentifier: FriendListController.controllerInditefire) as! FriendListController
-        vc.friendsImage = imagesToFriendList
-        vc.data = friendsData
-        self.navigationController?.pushViewController(vc, animated: true)
+    private func getUserData(completion: @escaping (UserInfo)->()) {
+        
+        if NetworkManager.shared.checkAccessToken() == true {
+            
+            NetworkManager.shared.getUserData(id: userID) { (result) in
+                
+                switch result {
+                case .success(let userInfo):
+                    guard let userInfo = userInfo else { return }
+                    completion(userInfo)
+                case .failure(let error):
+                    print("Error processing json data: \(error)")
+                }
+            }
+        } else {
+            showAuthWebView()
+        }
+    }
+    
+    private func getPhotos(completion: @escaping ([Album])->())  {
+        
+        if NetworkManager.shared.checkAccessToken() == true {
+        
+            NetworkManager.shared.getAlbum(id: userID) { (result) in
+                
+                switch result {
+                case .success(let photoArray):
+                    completion(photoArray ?? [])
+                    if let photoForVC = photoArray {
+                        self.photosData = photoForVC
+                    }
+                case .failure(let error):
+                    print("Error processing json data: \(error)")
+                }
+            }
+        } else {
+            showAuthWebView()
+        }
+    }
+    
+    private func getFriends(completion: @escaping (FriendList)->()) {
+        
+        if NetworkManager.shared.checkAccessToken() == true {
+        
+            NetworkManager.shared.getList(id: userID) { (result) in
+                
+                switch result {
+                case .success(let friends):
+                    completion(friends)
+                case .failure(let error):
+                    print("Error processing json data: \(error)")
+                }
+            }
+        } else {
+            showAuthWebView()
+        }
+    }
+    
+    func showAuthWebView() {
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: WebViewController.controllerInditefire) as! WebViewController
+        vc.delegate = self
+        self.navigationController?.pushViewController(vc, animated: false)
     }
 }
 
 // MARK: - CollectionView
 
-extension HomeViewController: UICollectionViewDataSource{
+extension HomeViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.imageArray.count < 6 ?  self.imageArray.count : 6
-        }
+        return self.photosData.count < 6 ?  self.photosData.count : 6
+    }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCell.reuseId, for: indexPath) as! HomeCell
-        cell.configure(with: imageArray[indexPath.row])
+
+        let imageURL = URL(string: photosData[indexPath.row].getUrlM()!) // UNWARP
+       
+        DispatchQueue.global(qos: .background).async {
+           
+            guard let imageURL = imageURL else { return }
+            UIImage.loadImageFromUrl(url: imageURL) { image in
+                
+                DispatchQueue.main.async {
+                    cell.imageView.image = image
+                }
+            }
+        }
+        
         cell.imageView.contentMode = .scaleAspectFill
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let vc = self.storyboard!.instantiateViewController(withIdentifier: PhotosCollectionsViewController.controllerInditefire) as! PhotosCollectionsViewController
+        vc.photoArray = photosData
+        self.navigationController?.pushViewController(vc, animated: false)
     }
 }
 
@@ -279,4 +509,9 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+extension HomeViewController: webIsReadyDelegate {
+    func netFlowStart() {
+        reciveDataForHomeVC()
+    }
+}
 
