@@ -79,7 +79,6 @@ class HomeViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-       
 
     }
     
@@ -88,8 +87,12 @@ class HomeViewController: UIViewController {
         UserDefaults.standard.removeObject(forKey: "savedExpireIn")
         
         let vc = self.storyboard!.instantiateViewController(withIdentifier: LoginViewController.controllerInditefire) as! LoginViewController
-        navigationController?.viewControllers.removeAll()
         self.navigationController?.pushViewController(vc, animated: true)
+
+        
+        self.navigationController?.viewControllers.removeAll(where: { controller in
+                    return !(vc === controller)
+                })
     }
     
     @objc func goToHome(){
