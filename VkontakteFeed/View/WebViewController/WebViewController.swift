@@ -93,7 +93,9 @@ extension  WebViewController: WKNavigationDelegate {
                    
                     let vc = self.storyboard!.instantiateViewController(withIdentifier: HomeViewController.controllerInditefire) as! HomeViewController
                     vc.currentUser = CurrentUser(id: paramDict["user_id"]!)
+                    
                     self.navigationController?.pushViewController(vc, animated: true)
+                    self.navigationController?.removeViewController(WebViewController.self)
                 }
             }
         }

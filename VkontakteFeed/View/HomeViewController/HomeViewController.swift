@@ -67,6 +67,7 @@ class HomeViewController: UIViewController {
         view.backgroundColor = .backgroundColor
         animationView.backgroundColor = .backgroundColor
         navigationController?.navigationBar.barTintColor = .backgroundColor
+        navigationController?.setNavigationBarHidden(false, animated: true)
         
         reciveDataForHomeVC()
         collectionView.delegate = self
@@ -89,7 +90,6 @@ class HomeViewController: UIViewController {
         let vc = self.storyboard!.instantiateViewController(withIdentifier: LoginViewController.controllerInditefire) as! LoginViewController
         self.navigationController?.pushViewController(vc, animated: true)
 
-        
         self.navigationController?.viewControllers.removeAll(where: { controller in
                     return !(vc === controller)
                 })
@@ -466,7 +466,7 @@ extension HomeViewController: UICollectionViewDataSource {
        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCell.reuseId, for: indexPath) as! HomeCell
 
-        let imageURL = URL(string: photosData[indexPath.row].getUrlM()!) 
+        let imageURL = URL(string: photosData[indexPath.row].getUrlM()!)
        
         DispatchQueue.global(qos: .background).async {
            
