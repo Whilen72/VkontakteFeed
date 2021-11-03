@@ -466,7 +466,7 @@ extension HomeViewController: UICollectionViewDataSource {
        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCell.reuseId, for: indexPath) as! HomeCell
 
-        let imageURL = URL(string: photosData[indexPath.row].getUrlM()!) // UNWARP
+        let imageURL = URL(string: photosData[indexPath.row].getUrlM()!) 
        
         DispatchQueue.global(qos: .background).async {
            
